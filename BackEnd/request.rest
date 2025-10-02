@@ -1,0 +1,7 @@
+GET http://localhost:3000/post
+Authorization: Bearer eyJhbGciOiJIUzICJ9.eyJuYW1hIjoiQXIiLCJpY._B1DfC8CZ_faIi-UHBRUq-i6bzv78
+
+POST http://localhost:3000/login
+Content-Type: application/json
+
+{ "nama": "Ar"}
