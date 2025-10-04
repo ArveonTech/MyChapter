@@ -1,43 +1,24 @@
-const express = require("express");
+import express from "express";
+import cookieParser from "cookie-parser";
+import { createAccessToken, createRefreshToken } from "./utils/authToken.js";
+import { verifyUser } from "./middleware/authMiddleware.js";
+
 const app = express();
-const jwt = require("jsonwebtoken");
-
-require("dotenv").config();
 app.use(express.json());
-
-const post = [
-  {
-    nama: "saya",
-    email: "saya@gmail.com",
-  },
-  {
-    nama: "Ar",
-    email: "ar@gmail.com",
-  },
-];
-
-app.get("/post", authenticateToken, (req, res) => {
-  res.json(post.filter((post) => post.nama === req.user.nama));
-});
+app.use(cookieParser());
 
 app.post("/login", (req, res) => {
-  const nama = req.body.nama;
-  const user = { nama };
-
-  const accessToken = jwt.sign(user, process.env.ACCESS_SECRET_KEY);
-  res.json({ accessToken });
+  const user = req.body;
+  const accessToken = createAccessToken(user);
+  const refreshToken = createRefreshToken(user);
+  res.setHeader("Access-token", accessToken);
+  res.json({ message: "Data diterima", refreshToken });
 });
 
-function authenticateToken(req, res, next) {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1];
-  if (token === null) return res.sendStatus(401);
+app.get("/dasboard", verifyUser, (req, res) => {
+  res.json(req.user);
+});
 
-  jwt.verify(token, process.env.ACCESS_SECRET_KEY, (Err, user) => {
-    if (Err) return res.sendStatus(403);
-    req.user = user;
-    next();
-  });
-}
-
-app.listen(3000);
+app.listen(3000, () => {
+  console.info(`listen to port 3000`);
+});
