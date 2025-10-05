@@ -14,8 +14,6 @@ export const verifyUser = (req, res, next) => {
 
   const result = authenticateToken(accessToken, refreshToken);
 
-  if (result === "403") return res.status(403).json({ message: "invalid token" });
-
   // kondisi jika dikirim token atau dikirim payload
   if (result.status === "refresh") {
     res.setHeader("Access-token", result.token);
@@ -25,4 +23,11 @@ export const verifyUser = (req, res, next) => {
   }
 
   next();
+};
+
+export const verifyAdmin = (req, res, next) => {
+  verifyUser(req, res, () => {
+    if (req.user.role !== "admin") return res.status(403).json({ message: "Unauthorized" });
+    next();
+  });
 };

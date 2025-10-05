@@ -1,4 +1,4 @@
-const { MongoClient } = require("mongodb");
+import { MongoClient } from "mongodb";
 
 // uri
 const uri = "mongodb://127.0.0.1:27017";
@@ -8,7 +8,7 @@ const dbName = "NotesApp";
 
 const client = new MongoClient(uri);
 
-async function database() {
+export const database = async () => {
   try {
     await client.connect();
 
@@ -18,6 +18,4 @@ async function database() {
   } catch (error) {
     console.info(`Error Connect Database ${error.message}`);
   }
-}
-
-module.exports = database;
+};
