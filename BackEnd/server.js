@@ -1,69 +1,52 @@
 import express from "express";
 import cookieParser from "cookie-parser";
+
+// utils / middleware
 import { createAccessToken, createRefreshToken } from "./utils/authToken.js";
-import { verifyAdmin, verifyUser } from "./middleware/authMiddleware.js";
 import { validateUserMiddleware } from "./middleware/validateUserMiddleware.js";
-import { loadUsers, loadUser } from "./controllers/controllers.js";
+
+// routers
+import adminRoute from "./routers/adminRoutes.js";
+import userRoute from "./routers/userRoutes..js";
+import noteRoute from "./routers/noteRoutes.js";
+import { findUser, addUser } from "./controllers/controllers.js";
 
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
 
-app.post("/signin", (req, res) => {
+app.use("/api/admin", adminRoute);
+app.use("/api/user", userRoute);
+app.use("/api/note", noteRoute);
+
+// auth
+app.post("/auth/signin", async (req, res) => {
   const user = req.body;
+
+  const foundUser = await findUser(user.email, user.password);
+  if (foundUser.message) return res.status(401).json(foundUser.message);
+
+  const accessToken = createAccessToken(foundUser);
+  const refreshToken = createRefreshToken(foundUser);
+
+  res.setHeader("Refresh-token", refreshToken);
+  res.json({ message: "Data diterima", accessToken });
+});
+
+app.post("/auth/signup", validateUserMiddleware, async (req, res) => {
+  const user = req.body;
+  const userNew = await addUser(req.body);
+
   const accessToken = createAccessToken(user);
   const refreshToken = createRefreshToken(user);
+
   res.setHeader("Access-token", accessToken);
-  res.json({ message: "Data diterima", refreshToken });
+  res.json({ message: "User berhasil ditambahkan", userNew, refreshToken });
 });
 
-app.post("/signup", validateUserMiddleware, (req, res) => {});
-
-// user
-app.get("/api/user/:id", verifyUser, async (req, res) => {
-  const user = await loadUser(req.params.id);
-  res.json(user);
-});
-
-app.delete("/api/user/:id", verifyUser, (req, res) => {});
-
-// notes
-app.get("/api/notes", verifyUser, async (req, res) => {
-  const notes = await loadnotes();
-  res.json(notes);
-});
-
-app.get("/api/note/:id", verifyUser, async (req, res) => {
-  const note = await loadNote(req.params.id);
-  res.json(note);
-});
-
-app.put("/api/note/:id", verifyUser, (req, res) => {});
-
-app.path("/api/note/:id", verifyUser, (req, res) => {});
-
-app.delete("/api/note/:id", verifyUser, (req, res) => {});
-
-// admin
-app.get("/api/admin/users", verifyAdmin, async (req, res) => {
-  const users = await loadUsers();
-  res.json(users);
-});
-
-app.get("/api/admin/user/:id", verifyAdmin, async (req, res) => {
-  const user = await loadUser(req.params.id);
-  console.info(user);
-  res.json(user);
-});
-
-app.get("/api/admin/notes", verifyAdmin, async (req, res) => {
-  const notes = await loadnotes();
-  res.json(notes);
-});
-
-app.get("/api/admin/note/:id", verifyAdmin, async (req, res) => {
-  const note = await loadNote(req.params.id);
-  res.json(note);
+app.get("/auth/signout", (req, res) => {
+  res.clearCookie("refreshToken");
+  res.redirect("/auth/signin");
 });
 
 app.listen(3000, () => {
