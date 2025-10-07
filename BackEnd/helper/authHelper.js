@@ -1,7 +1,10 @@
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+
+// utils
 import { createAccessToken } from "../utils/authToken.js";
 
+// config
 dotenv.config({ path: "./env/.env" });
 
 // ambil secret key dari .env

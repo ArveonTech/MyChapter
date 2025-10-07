@@ -9,7 +9,7 @@ import { validateUserMiddleware } from "./middleware/validateUserMiddleware.js";
 import adminRoute from "./routers/adminRoutes.js";
 import userRoute from "./routers/userRoutes..js";
 import noteRoute from "./routers/noteRoutes.js";
-import { findUser, addUser } from "./controllers/controllers.js";
+import { findUser, addUser } from "./controllers/usersControllers.js";
 
 const app = express();
 app.use(express.json());
@@ -25,7 +25,7 @@ app.post("/auth/signin", async (req, res) => {
 
   const foundUser = await findUser(user.email, user.password);
   if (foundUser.message) return res.status(401).json(foundUser.message);
-
+  console.info(foundUser);
   const accessToken = createAccessToken(foundUser);
   const refreshToken = createRefreshToken(foundUser);
 

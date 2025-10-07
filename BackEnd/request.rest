@@ -1,13 +1,13 @@
 // users request
 POST http://localhost:3000/auth/signin
 Content-Type: application/json
-
-{
-    "_id": "68e258799507ca572acebea4",
-    "nama": "saya",
-    "email": "saya@gmail.com",
-    "role": "user"
-}
+ {
+    "_id": "68e258af9507ca572acebea5",
+    "email": "aku@gmail.com",
+    "role": "user",
+    "name": "aku",
+    "password": "akuaku1234"
+  }
 
 ###
 
@@ -15,36 +15,40 @@ Content-Type: application/json
 POST http://localhost:3000/auth/signin
 Content-Type: application/json
 
-  {
-    "_id": "ObjectId('68e240ed5acb92e8c6cebea4')",
-    "nama": "ar",
+ {
+    "_id": "68e240ed5acb92e8c6cebea4",
     "email": "ar.gmail.com",
-    "role": "admin",
-    "password" : "ararar1234"
+    "role": "super admin",
+    "name": "ar",
+    "password": "ararar1234"
   }
+
+
 ###
 
 // admin
-###
 # GET  http://localhost:3000/api/admin/users
-# GET  http://localhost:3000/api/admin/users/68e258799507ca572acebea4
-# GET  http://localhost:3000/api/admin/notes
+# GET  http://localhost:3000/api/admin/users/68e240ed5acb92e8c6cebea4
 # GET  http://localhost:3000/api/admin/users/68e258799507ca572acebea4/notes
+# PATCH   http://localhost:3000/api/admin/users/68e240ed5acb92e8c6cebea4/role
+# DELETE    http://localhost:3000/api/admin/users/68e3a50d2cd79cc2ef862aa4
 # GET  http://localhost:3000/api/admin/notes/68e258799507ca572acebea4
-PATCH   http://localhost:3000/api/admin/users/68e258799507ca572acebea4/role
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OGUyNDBlZDVhY2I5MmU4YzZjZWJlYTQiLCJlbWFpbCI6ImFyLmdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsIm5hbWUiOiJhciIsInBhc3N3b3JkIjoiYXJhcmFyMTIzNCIsImlhdCI6MTc1OTc1Nzc0MywiZXhwIjoxNzU5ODQ0MTQzfQ.Oh2X-2eL23773bbQE0txFDZgLlh2aXQ-5MsKol62v2s
-refreshToken: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OGUyNDBlZDVhY2I5MmU4YzZjZWJlYTQiLCJlbWFpbCI6ImFyLmdtYWlsLmNvbSIsInJvbGUiOiJhZG1pbiIsIm5hbWUiOiJhciIsInBhc3N3b3JkIjoiYXJhcmFyMTIzNCIsImlhdCI6MTc1OTc1Nzc0MywiZXhwIjoxNzYwMzYyNTQzfQ.XodajuC6ClMynSt4k6Jqcv8ygDDd5bwrNEA9F7bIX8M
+# GET  http://localhost:3000/api/admin/notes
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OGUyNDBlZDVhY2I5MmU4YzZjZWJlYTQiLCJlbWFpbCI6ImFyLmdtYWlsLmNvbSIsInJvbGUiOiJzdXBlciBhZG1pbiIsIm5hbWUiOiJhciIsInBhc3N3b3JkIjoiYXJhcmFyMTIzNCIsImlhdCI6MTc1OTgyNzcwOSwiZXhwIjoxNzU5OTE0MTA5fQ.ggcWvvQO_UDPmLuIt5gnEO96ECMeEt33aOuLUWGostU
+refreshToken: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OGUyNDBlZDVhY2I5MmU4YzZjZWJlYTQiLCJlbWFpbCI6ImFyLmdtYWlsLmNvbSIsInJvbGUiOiJzdXBlciBhZG1pbiIsIm5hbWUiOiJhciIsInBhc3N3b3JkIjoiYXJhcmFyMTIzNCIsImlhdCI6MTc1OTgyNzcwOSwiZXhwIjoxNzYwNDMyNTA5fQ.MQLidBVE6TbY8v5L9PfwhIW9CdwDo8Nntr5N7rCo8nE
 Content-Type: application/json
 
-{
-  "role" : "admin"
-}
+# {
+#   "role":"user"
+# }
+
+###
 
 // user
-###
-GET  http://localhost:3000/api/user/68e258799507ca572acebea4
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OGUyNTg3OTk1MDdjYTU3MmFjZWJlYTQiLCJuYW1hIjoic2F5YSIsImVtYWlsIjoic2F5YUBnbWFpbC5jb20iLCJyb2xlIjoidXNlciIsImlhdCI6MTc1OTc0ODAwNSwiZXhwIjoxNzU5ODM0NDA1fQ.XdoKAb0_rp0NNgJAd1BeZSxs2t6wS6ZTUgYuoNT_-xs
-refreshToken: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OGUyNTg3OTk1MDdjYTU3MmFjZWJlYTQiLCJuYW1hIjoic2F5YSIsImVtYWlsIjoic2F5YUBnbWFpbC5jb20iLCJyb2xlIjoidXNlciIsImlhdCI6MTc1OTc0ODAwNSwiZXhwIjoxNzYwMzUyODA1fQ.xlfZJzCrptz9z8lPVGltaYerivdA87eClIAmrV2mfQc
+# GET  http://localhost:3000/api/user/68e258799507ca572acebea4
+# DELETE   http://localhost:3000/api/user/68e258af9507ca572acebea5
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OGUyNThhZjk1MDdjYTU3MmFjZWJlYTUiLCJlbWFpbCI6ImFrdUBnbWFpbC5jb20iLCJyb2xlIjoidXNlciIsIm5hbWUiOiJha3UiLCJwYXNzd29yZCI6ImFrdWFrdTEyMzQiLCJpYXQiOjE3NTk3NjkxMDEsImV4cCI6MTc1OTg1NTUwMX0._TfmrFGFoNvW4HQMD7M5HtCPE8tnwNtbJyRuff3fQO4
+refreshToken: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OGUyNThhZjk1MDdjYTU3MmFjZWJlYTUiLCJlbWFpbCI6ImFrdUBnbWFpbC5jb20iLCJyb2xlIjoidXNlciIsIm5hbWUiOiJha3UiLCJwYXNzd29yZCI6ImFrdWFrdTEyMzQiLCJpYXQiOjE3NTk3NjkxMDEsImV4cCI6MTc2MDM3MzkwMX0.PGdiufIyAndIS4BkesDL7CGlQ-4xAv24eTaEbR7Z0UQ
 
 ###
 

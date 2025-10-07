@@ -27,7 +27,7 @@ export const verifyUser = (req, res, next) => {
 
 export const verifyAdmin = (req, res, next) => {
   verifyUser(req, res, () => {
-    if (req.user?.role !== "admin") return res.status(403).json({ message: "Unauthorized" });
+    if (req.user?.role !== "admin" && req.user?.role !== "super admin") return res.status(403).json({ message: "Unauthorized" });
     next();
   });
 };

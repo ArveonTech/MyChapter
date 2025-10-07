@@ -2,7 +2,7 @@ import express from "express";
 
 // utils
 import { verifyUser } from "../middleware/authMiddleware.js";
-import { loadUser } from "../controllers/controllers.js";
+import { loadUser, deleteUser } from "../controllers/usersControllers.js";
 
 const userRoute = express.Router();
 
@@ -12,7 +12,7 @@ userRoute.get("/:id", verifyUser, async (req, res) => {
 });
 
 userRoute.delete("/:id", verifyUser, async (req, res) => {
-  const dataDelete = await deleteUser(req.params);
+  const dataDelete = await deleteUser(req.params.id);
   res.json(dataDelete);
 });
 
