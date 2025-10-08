@@ -24,10 +24,11 @@ app.post("/auth/signin", async (req, res) => {
   const user = req.body;
 
   const foundUser = await findUser(user.email, user.password);
-  if (foundUser.message) return res.status(401).json(foundUser.message);
-  console.info(foundUser);
-  const accessToken = createAccessToken(foundUser);
-  const refreshToken = createRefreshToken(foundUser);
+
+  if (foundUser.code !== 200) return res.status(401).json(foundUser.message);
+
+  const accessToken = createAccessToken(foundUser.data);
+  const refreshToken = createRefreshToken(foundUser.data);
 
   res.setHeader("Refresh-token", refreshToken);
   res.json({ message: "Data diterima", accessToken });

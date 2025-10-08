@@ -10,9 +10,11 @@ export const verifyUser = (req, res, next) => {
   // ambil refresh token
   const refreshToken = req.headers["refreshtoken"]?.split(" ")[1];
 
-  if (!accessToken && !refreshToken) return res.status(401).json({ message: "No token provided" });
+  if (!accessToken && !refreshToken) return res.status(403).json({ message: "No token provided" });
 
   const result = authenticateToken(accessToken, refreshToken);
+
+  if (result.success === false) return res.status(401).json({ message: result.error });
 
   // kondisi jika dikirim token atau dikirim payload
   if (result.status === "refresh") {

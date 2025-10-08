@@ -15,14 +15,14 @@ const refreshKey = process.env.REFRESH_SECRET_KEY;
 export const authenticateToken = (tokenAccess, tokenRefresh) => {
   try {
     const decodeAccess = jwt.verify(tokenAccess, accessKey);
-    return { status: "ok", payload: decodeAccess };
+    return { success: true, code: 200, status: "ok", payload: decodeAccess };
   } catch (err) {
     try {
       const decodeRefresh = jwt.verify(tokenRefresh, refreshKey);
       const userData = { nama: decodeRefresh.nama, email: decodeRefresh.email };
-      return { status: "refresh", token: createAccessToken(userData) };
+      return { success: true, code: 200, status: "refresh", token: createAccessToken(userData) };
     } catch (err2) {
-      return "403";
+      return { success: false, code: 500, error: err2 };
     }
   }
 };
