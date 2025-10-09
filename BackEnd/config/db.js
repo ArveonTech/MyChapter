@@ -16,6 +16,6 @@ export const database = async () => {
 
     return database;
   } catch (error) {
-    console.info(`Error Connect Database ${error.message}`);
+    throw new Error(`Error Connect Database ${error.message}`);
   }
 };

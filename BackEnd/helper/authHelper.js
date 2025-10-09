@@ -19,7 +19,7 @@ export const authenticateToken = (tokenAccess, tokenRefresh) => {
   } catch (err) {
     try {
       const decodeRefresh = jwt.verify(tokenRefresh, refreshKey);
-      const userData = { nama: decodeRefresh.nama, email: decodeRefresh.email };
+      const userData = { name: decodeRefresh.name, email: decodeRefresh.email };
       return { success: true, code: 200, status: "refresh", token: createAccessToken(userData) };
     } catch (err2) {
       return { success: false, code: 500, error: err2 };

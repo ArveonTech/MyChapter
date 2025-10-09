@@ -5,6 +5,7 @@ import { verifyAdmin } from "../middleware/authMiddleware.js";
 import { loadAllUsers, loadAllNotes } from "../controllers/controllers.js";
 import { deleteUser, loadUser, updateUserRole } from "../controllers/usersControllers.js";
 import { loadNotes, loadNote } from "../controllers/notesControllers.js";
+import { deleteNote } from "../controllers/notesControllers.js";
 
 // config
 const adminRoute = express.Router();
@@ -12,6 +13,7 @@ const adminRoute = express.Router();
 adminRoute.get("/users", verifyAdmin, async (req, res) => {
   try {
     const users = await loadAllUsers();
+
     if (!users.success) return res.status(users.code).json({ message: users.message });
 
     res.json(users);
@@ -19,7 +21,7 @@ adminRoute.get("/users", verifyAdmin, async (req, res) => {
     const errorObject = {
       success: false,
       code: 500,
-      message: `Gagal mengambil data semua user`,
+      message: `Gagal mengambil data users`,
     };
     res.status(errorObject.code).json({ message: errorObject.message });
   }
@@ -72,6 +74,9 @@ adminRoute.patch("/users/:id/role", verifyAdmin, async (req, res) => {
 adminRoute.delete("/users/:id", verifyAdmin, async (req, res) => {
   try {
     const dataDelete = await deleteUser(req.params.id, req.user);
+
+    if (!dataDelete.success) return res.status(dataDelete.code).json({ message: dataDelete.message });
+
     res.json(dataDelete);
   } catch (error) {
     const errorObject = {
@@ -108,6 +113,30 @@ adminRoute.get("/notes/:id", verifyAdmin, async (req, res) => {
       success: false,
       code: 500,
       message: `Gagal menampilkan daftar notes user ${error.message}`,
+    };
+    res.status(errorObject.code).json({ message: errorObject.message });
+  }
+});
+
+adminRoute.delete("/notes/delete", verifyAdmin, async (req, res) => {
+  try {
+    const dataUser = req.user;
+    const dataNoteUser = req.body;
+    const idDeleteNote = req.params.id;
+
+    const foundNote = await loadNote(req.params.id);
+
+    if (foundNote.code !== 200) return res.status(foundNote.code).json({ message: foundNote.message });
+    if (dataUser.userId !== dataNoteUser._id && dataUser.role !== "admin" && dataUser.role !== "super admin") return res.status(403).json({ message: "anda tidak memliki akses" });
+
+    const resultUpdateNote = await deleteNote(idDeleteNote);
+
+    res.status(resultUpdateNote.code).json({ message: resultUpdateNote.message });
+  } catch (error) {
+    const errorObject = {
+      success: false,
+      code: 500,
+      message: `Gagal menghapus note ${error.message}`,
     };
     res.status(errorObject.code).json({ message: errorObject.message });
   }

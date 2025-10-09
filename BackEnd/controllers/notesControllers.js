@@ -39,7 +39,7 @@ export const loadNote = async (id) => {
       success: true,
       code: 200,
       message: "Berhasil mengambil note",
-      return: noteUser,
+      data: noteUser,
     };
   } catch (error) {
     const err = new Error(`Terjadi error saat mengambil data note user ${error.message}`);
@@ -67,13 +67,35 @@ export const addNote = async (userId, data) => {
 // fungsi edit note
 export const updateNote = async (idNote, dataNote) => {
   try {
+    const dataNoteNew = { ...dataNote };
+    delete dataNoteNew._id;
     const dbNotes = await database();
-    const result = await dbNotes.collection("users").updateOne({ _id: new ObjectId(idNote) }, { $set: dataNote });
+    const result = await dbNotes.collection("notes").updateOne({ _id: new ObjectId(idNote) }, { $set: dataNoteNew });
 
     return {
       success: true,
       code: 200,
-      message: `user id-${idDelete} berhasil dihapus`,
+      message: `note id-${idNote} berhasil diupdate`,
+      description: result,
+    };
+  } catch (error) {
+    const err = new Error(`Terjadi error saat mengedit data note user ${error.message}`);
+    err.success = false;
+    err.code = 500;
+    throw err;
+  }
+};
+
+// fungsi delete note
+export const deleteNote = async (idNote) => {
+  try {
+    const dbNotes = await database();
+    const result = await dbNotes.collection("notes").deleteOne({ _id: new ObjectId(idNote) });
+
+    return {
+      success: true,
+      code: 200,
+      message: `note id-${idNote} berhasil dihapus`,
       description: result,
     };
   } catch (error) {

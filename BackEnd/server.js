@@ -31,18 +31,17 @@ app.post("/auth/signin", async (req, res) => {
   const refreshToken = createRefreshToken(foundUser.data);
 
   res.setHeader("Refresh-token", refreshToken);
-  res.json({ message: "Data diterima", accessToken });
+  res.json({ message: "Data user diterima", accessToken });
 });
 
 app.post("/auth/signup", validateUserMiddleware, async (req, res) => {
-  const user = req.body;
   const userNew = await addUser(req.body);
 
-  const accessToken = createAccessToken(user);
-  const refreshToken = createRefreshToken(user);
+  const accessToken = createAccessToken(userNew.data);
+  const refreshToken = createRefreshToken(userNew.data);
 
-  res.setHeader("Access-token", accessToken);
-  res.json({ message: "User berhasil ditambahkan", userNew, refreshToken });
+  res.setHeader("Refresh-token", refreshToken);
+  res.json({ message: "User berhasil ditambahkan", userNew, accessToken });
 });
 
 app.get("/auth/signout", (req, res) => {

@@ -49,8 +49,9 @@ export const findUser = async (email, password) => {
   }
 };
 
-export const addUser = async (dataUser) => {
+export const addUser = async (dataLogin) => {
   try {
+    const dataUser = { role: "user", ...dataLogin };
     const dbUsers = await database();
     const result = await dbUsers.collection("users").insertOne(dataUser);
     return {
@@ -88,9 +89,13 @@ export const updateUserRole = async (admin, idUpdate, roleUpdate) => {
 
 export const deleteUser = async (idDelete, dataUser) => {
   try {
-    const dbUsers = await database();
+    const foundUser = await loadUser(idDelete);
+
+    if (foundUser.code !== 200) return { success: foundUser.success, code: foundUser.code, message: foundUser.message };
 
     if (dataUser.role !== "super admin" && idDelete !== dataUser._id) return { success: false, code: 403, message: "Anda tidak memliki akses" };
+
+    const dbUsers = await database();
 
     const result = await dbUsers.collection("users").deleteOne({ _id: new ObjectId(idDelete) });
     return {

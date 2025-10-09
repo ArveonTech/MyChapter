@@ -25,9 +25,9 @@ userRoute.get("/:id", verifyUser, async (req, res) => {
 
 userRoute.delete("/:id", verifyUser, async (req, res) => {
   try {
-    
-    const dataDelete = await deleteUser(req.params.id, req.body);
-    if (req.user._id !== req.params.id) return res.status(401).json({ message: "Anda tidak memiliki akses" });
+    const dataDelete = await deleteUser(req.params.id, req.user);
+
+    if (!dataDelete.success) return res.status(dataDelete.code).json({ message: dataDelete.message });
 
     res.status(200).json(dataDelete);
   } catch (error) {
