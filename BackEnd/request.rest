@@ -4,16 +4,13 @@
 POST http://localhost:3000/auth/signin
 Content-Type: application/json
 
- {
-      "name": "Budi",
-      "email": "budi@example.com",
-      "password": "budi123"
-    }
+#  { "name": "Budi", "email": "budi@example.com", password": "budi123" }
+
 ###
 
 // sign up
-POST   http://localhost:3000/auth/signup
-Content-Type: application/json
+# POST   http://localhost:3000/auth/signup
+# Content-Type: application/json
 
 # { "name": "Ahmad",  "email": "ahmad@example.com",  "password": "ahmad123" }
 
@@ -29,16 +26,16 @@ Content-Type: application/json
 ###
 
 // admin
-GET  http://localhost:3000/api/admin/users
+# GET  http://localhost:3000/api/admin/users
 # GET  http://localhost:3000/api/admin/users/68e760dfe95802772e1512f0
 # PATCH   http://localhost:3000/api/admin/users/68e763bc0137ff82e495dfbe/role
 # DELETE    http://localhost:3000/api/admin/users/68e763bc0137ff82e495dfbe
 # GET  http://localhost:3000/api/admin/users/68e7642d0137ff82e495dfbf/notes
 # GET  http://localhost:3000/api/admin/notes/68e781be604b48045db6029e
 # GET  http://localhost:3000/api/admin/notes
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OGUyNDBlZDVhY2I5MmU4YzZjZWJlYTQiLCJlbWFpbCI6ImFyLmdtYWlsLmNvbSIsInJvbGUiOiJzdXBlciBhZG1pbiIsIm5hbWUiOiJhciIsInBhc3N3b3JkIjoiYXJhcmFyMTIzNCIsImlhdCI6MTc1OTk5NDExMSwiZXhwIjoxNzYwMDgwNTExfQ.2Ximf-p3taspfJGaWBdBPcJoZ8wKPuoH9EpEZW7EtcQ
-refreshToken: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OGUyNDBlZDVhY2I5MmU4YzZjZWJlYTQiLCJlbWFpbCI6ImFyLmdtYWlsLmNvbSIsInJvbGUiOiJzdXBlciBhZG1pbiIsIm5hbWUiOiJhciIsInBhc3N3b3JkIjoiYXJhcmFyMTIzNCIsImlhdCI6MTc1OTk5NDExMSwiZXhwIjoxNzYwNTk4OTExfQ.J0XwWetFF6Raoj98IixIs1W60iQ_TNM_n9Ogw820f1w
-Content-Type: application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OGUyNDBlZDVhY2I5MmU4YzZjZWJlYTQiLCJlbWFpbCI6ImFyLmdtYWlsLmNvbSIsInJvbGUiOiJzdXBlciBhZG1pbiIsIm5hbWUiOiJhciIsInBhc3N3b3JkIjoiYXJhcmFyMTIzNCIsImlhdCI6MTc1OTk5NDExMSwiZXhwIjoxNzYwMDgwNTExfQ.2Ximf-p3taspfJGaWBdBPcJoZ8wKPuoH9EpEZW7EtcQ
+# refreshToken: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OGUyNDBlZDVhY2I5MmU4YzZjZWJlYTQiLCJlbWFpbCI6ImFyLmdtYWlsLmNvbSIsInJvbGUiOiJzdXBlciBhZG1pbiIsIm5hbWUiOiJhciIsInBhc3N3b3JkIjoiYXJhcmFyMTIzNCIsImlhdCI6MTc1OTk5NDExMSwiZXhwIjoxNzYwNTk4OTExfQ.J0XwWetFF6Raoj98IixIs1W60iQ_TNM_n9Ogw820f1w
+# Content-Type: application/json
 
 # {"role" : "user"}
 
@@ -49,29 +46,29 @@ Content-Type: application/json
 # DELETE   http://localhost:3000/api/user/68e7699b79c657d6c44170f8
 
 // note
-GET  http://localhost:3000/api/note/notes
+# GET  http://localhost:3000/api/note/notes
 # GET  http://localhost:3000/api/note/notes/68e7818b604b48045db6029d
 # POST http://localhost:3000/api/note/notes/add
 # PATCH http://localhost:3000/api/note/notes/update
 # DELETE http://localhost:3000/api/note/notes/delete
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OGU3NjQyZDAxMzdmZjgyZTQ5NWRmYmYiLCJyb2xlIjoidXNlciIsIm5hbWUiOiJCdWRpIiwiZW1haWwiOiJidWRpQGV4YW1wbGUuY29tIiwicGFzc3dvcmQiOiJidWRpMTIzIiwiaWF0IjoxNzYwMDAyNDA0LCJleHAiOjE3NjAwODg4MDR9.rXWxWRHXrFxgNeH4fCxMP9yOOOxqwZcJDxl5BLGq7Xk
-refreshToken: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OGU3NjQyZDAxMzdmZjgyZTQ5NWRmYmYiLCJyb2xlIjoidXNlciIsIm5hbWUiOiJCdWRpIiwiZW1haWwiOiJidWRpQGV4YW1wbGUuY29tIiwicGFzc3dvcmQiOiJidWRpMTIzIiwiaWF0IjoxNzYwMDAyNDA0LCJleHAiOjE3NjA2MDcyMDR9.grErkTPPuY3Vct0hyoFvaKwwQ9n8J1ItD-gnL4Qx3rM
-Content-Type: application/json
+# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OGU3NjQyZDAxMzdmZjgyZTQ5NWRmYmYiLCJyb2xlIjoidXNlciIsIm5hbWUiOiJCdWRpIiwiZW1haWwiOiJidWRpQGV4YW1wbGUuY29tIiwicGFzc3dvcmQiOiJidWRpMTIzIiwiaWF0IjoxNzYwMDAyNDA0LCJleHAiOjE3NjAwODg4MDR9.rXWxWRHXrFxgNeH4fCxMP9yOOOxqwZcJDxl5BLGq7Xk
+# refreshToken: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OGU3NjQyZDAxMzdmZjgyZTQ5NWRmYmYiLCJyb2xlIjoidXNlciIsIm5hbWUiOiJCdWRpIiwiZW1haWwiOiJidWRpQGV4YW1wbGUuY29tIiwicGFzc3dvcmQiOiJidWRpMTIzIiwiaWF0IjoxNzYwMDAyNDA0LCJleHAiOjE3NjA2MDcyMDR9.grErkTPPuY3Vct0hyoFvaKwwQ9n8J1ItD-gnL4Qx3rM
+# Content-Type: application/json
 
-{
-    "judul": "Deadline Project",
-    "isi": "Frontend selesai hari Jumat, Backend Minggu.",
-    "archive": false,
-    "favorite": true,
-    "pinned": true,
-    "tags": [
-      "kerja",
-      "project"
-    ],
-    "color": "#FFA500",
-    "createdAt": "2025-10-08T15:30:00.000Z",
-    "updatedAt": "2025-10-08T15:30:00.000Z"
-  }
+# {
+#     "judul": "Deadline Project",
+#     "isi": "Frontend selesai hari Jumat, Backend Minggu.",
+#     "archive": false,
+#     "favorite": true,
+#     "pinned": true,
+#     "tags": [
+#       "kerja",
+#       "project"
+#     ],
+#     "color": "#FFA500",
+#     "createdAt": "2025-10-08T15:30:00.000Z",
+#     "updatedAt": "2025-10-08T15:30:00.000Z"
+#   }
 
 
 
