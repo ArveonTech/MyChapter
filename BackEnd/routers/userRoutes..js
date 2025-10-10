@@ -10,14 +10,14 @@ userRoute.get("/:id", verifyUser, async (req, res) => {
   try {
     const user = await loadUser(req.params.id);
 
-    if (req.user._id !== req.params.id) return res.status(401).json({ message: "Anda tidak memiliki akses" });
+    if (req.user._id !== req.params.id) return res.status(401).json({ message: "You don't have access!" });
 
     res.json(user);
   } catch (error) {
     const errorObject = {
       success: false,
       code: 500,
-      message: `Gagal mendapatkan user ${error.message}`,
+      message: `An error occurred while retrieving the user: ${error.message}`,
     };
     res.status(errorObject.code).json({ message: errorObject.message });
   }
@@ -34,7 +34,7 @@ userRoute.delete("/:id", verifyUser, async (req, res) => {
     const errorObject = {
       success: false,
       code: 500,
-      message: `Gagal menghapus user ${error.message}`,
+      message: `An error occurred while retrieving the user: ${error.message}`,
     };
     res.status(errorObject.code).json({ message: errorObject.message });
   }

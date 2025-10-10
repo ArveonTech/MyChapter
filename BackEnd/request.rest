@@ -1,8 +1,8 @@
 // USER
 
 // sign in
-POST http://localhost:3000/auth/signin
-Content-Type: application/json
+# POST http://localhost:3000/auth/signin
+# Content-Type: application/json
 
 #  { "name": "Budi", "email": "budi@example.com", password": "budi123" }
 
@@ -26,15 +26,15 @@ Content-Type: application/json
 ###
 
 // admin
-# GET  http://localhost:3000/api/admin/users
+GET  http://localhost:3000/api/admin/users
 # GET  http://localhost:3000/api/admin/users/68e760dfe95802772e1512f0
 # PATCH   http://localhost:3000/api/admin/users/68e763bc0137ff82e495dfbe/role
 # DELETE    http://localhost:3000/api/admin/users/68e763bc0137ff82e495dfbe
 # GET  http://localhost:3000/api/admin/users/68e7642d0137ff82e495dfbf/notes
 # GET  http://localhost:3000/api/admin/notes/68e781be604b48045db6029e
 # GET  http://localhost:3000/api/admin/notes
-# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OGUyNDBlZDVhY2I5MmU4YzZjZWJlYTQiLCJlbWFpbCI6ImFyLmdtYWlsLmNvbSIsInJvbGUiOiJzdXBlciBhZG1pbiIsIm5hbWUiOiJhciIsInBhc3N3b3JkIjoiYXJhcmFyMTIzNCIsImlhdCI6MTc1OTk5NDExMSwiZXhwIjoxNzYwMDgwNTExfQ.2Ximf-p3taspfJGaWBdBPcJoZ8wKPuoH9EpEZW7EtcQ
-# refreshToken: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OGUyNDBlZDVhY2I5MmU4YzZjZWJlYTQiLCJlbWFpbCI6ImFyLmdtYWlsLmNvbSIsInJvbGUiOiJzdXBlciBhZG1pbiIsIm5hbWUiOiJhciIsInBhc3N3b3JkIjoiYXJhcmFyMTIzNCIsImlhdCI6MTc1OTk5NDExMSwiZXhwIjoxNzYwNTk4OTExfQ.J0XwWetFF6Raoj98IixIs1W60iQ_TNM_n9Ogw820f1w
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OGUyNDBlZDVhY2I5MmU4YzZjZWJlYTQiLCJlbWFpbCI6ImFyLmdtYWlsLmNvbSIsInJvbGUiOiJzdXBlciBhZG1pbiIsIm5hbWUiOiJhciIsInBhc3N3b3JkIjoiYXJhcmFyMTIzNCIsImlhdCI6MTc1OTk5NDExMSwiZXhwIjoxNzYwMDgwNTExfQ.2Ximf-p3taspfJGaWBdBPcJoZ8wKPuoH9EpEZW7EtcQ
+refreshToken: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OGUyNDBlZDVhY2I5MmU4YzZjZWJlYTQiLCJlbWFpbCI6ImFyLmdtYWlsLmNvbSIsInJvbGUiOiJzdXBlciBhZG1pbiIsIm5hbWUiOiJhciIsInBhc3N3b3JkIjoiYXJhcmFyMTIzNCIsImlhdCI6MTc1OTk5NDExMSwiZXhwIjoxNzYwNTk4OTExfQ.J0XwWetFF6Raoj98IixIs1W60iQ_TNM_n9Ogw820f1w
 # Content-Type: application/json
 
 # {"role" : "user"}

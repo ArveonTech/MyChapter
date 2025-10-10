@@ -8,16 +8,16 @@ export const loadUser = async (id) => {
     const allUsers = await loadAllUsers();
     const user = allUsers.data.find((user) => user._id.toString() === id);
 
-    if (!user || user.length === 0) return { success: false, code: 404, message: "User kosong atau tidak ditemukan" };
+    if (!user || user.length === 0) return { success: false, code: 404, message: "User not found" };
 
     return {
       success: true,
       code: 200,
-      message: `Berhasil mengambil user`,
+      message: `Successfully retrieved user data`,
       data: user,
     };
   } catch (error) {
-    const err = new Error(`Error loadUser ${error.message}`);
+    const err = new Error(`An error occurred while retrieving user data: ${error.message}`);
     err.success = false;
     err.code = 500;
     throw err;
@@ -29,20 +29,20 @@ export const findUser = async (email, password) => {
     const allUsers = await loadAllUsers();
     const foundUserByEmail = allUsers.data.find((user) => user.email === email);
 
-    if (!foundUserByEmail) return { success: false, code: 404, message: `User dengan email ${email} tidak ditemukan` };
+    if (!foundUserByEmail) return { success: false, code: 404, message: `User with email ${email} cannot be found` };
 
     const foundUserByPassword = foundUserByEmail.password === password;
 
-    if (!foundUserByPassword) return { success: false, code: 404, message: "User tidak ditemukan" };
+    if (!foundUserByPassword) return { success: false, code: 404, message: "Wrong password" };
 
     return {
       success: true,
       code: 200,
-      message: `Berhasil mendapatkan user`,
+      message: `Managed to get users`,
       data: foundUserByEmail,
     };
   } catch (error) {
-    const err = new Error(`Error findUser ${error.message}`);
+    const err = new Error(`An error occurred while searching for the user: ${error.message}`);
     err.success = false;
     err.code = 500;
     throw err;
@@ -57,12 +57,12 @@ export const addUser = async (dataLogin) => {
     return {
       success: true,
       code: 200,
-      message: `Berhasil menambahkan user`,
+      message: `Successfully added user`,
       data: dataUser,
       description: result,
     };
   } catch (error) {
-    const err = new Error(`Error addUser ${error.message}`);
+    const err = new Error(`An error occurred while adding a user: ${error.message}`);
     err.success = false;
     err.code = 500;
     throw err;
@@ -73,14 +73,14 @@ export const updateUserRole = async (admin, idUpdate, roleUpdate) => {
   try {
     const dbUsers = await database();
     if (!(await isSuperAdmin(admin))) {
-      return { success: false, code: 403, message: "Hanya super admin yang bisa!" };
+      return { success: false, code: 403, message: "You don't have access!" };
     }
 
     const result = await dbUsers.collection("users").updateOne({ _id: new ObjectId(idUpdate) }, { $set: { role: roleUpdate.role } });
 
-    return { success: true, code: 200, message: `Role berhasil diupdate`, description: result };
+    return { success: true, code: 200, message: `Role successfully updated`, description: result };
   } catch (error) {
-    const err = new Error(`Error updateUserRole ${error.message}`);
+    const err = new Error(`An error occurred while updating the role: ${error.message}`);
     err.success = false;
     err.code = 500;
     throw err;
@@ -93,7 +93,7 @@ export const deleteUser = async (idDelete, dataUser) => {
 
     if (foundUser.code !== 200) return { success: foundUser.success, code: foundUser.code, message: foundUser.message };
 
-    if (dataUser.role !== "super admin" && idDelete !== dataUser._id) return { success: false, code: 403, message: "Anda tidak memliki akses" };
+    if (dataUser.role !== "super admin" && idDelete !== dataUser._id) return { success: false, code: 403, message: "You don't have access!" };
 
     const dbUsers = await database();
 
@@ -101,11 +101,11 @@ export const deleteUser = async (idDelete, dataUser) => {
     return {
       success: true,
       code: 200,
-      message: `user id-${idDelete} berhasil dihapus`,
+      message: `User with id-${idDelete} successfully deleted`,
       description: result,
     };
   } catch (error) {
-    const err = new Error(`Error deleteUser ${error.message}`);
+    const err = new Error(`An error occurred while deleting the user: ${error.message}`);
     err.success = false;
     err.code = 500;
     throw err;

@@ -22,7 +22,6 @@ app.use("/api/note", noteRoute);
 // auth
 app.post("/auth/signin", async (req, res) => {
   const user = req.body;
-
   const foundUser = await findUser(user.email, user.password);
 
   if (foundUser.code !== 200) return res.status(401).json(foundUser.message);
@@ -31,17 +30,20 @@ app.post("/auth/signin", async (req, res) => {
   const refreshToken = createRefreshToken(foundUser.data);
 
   res.setHeader("Refresh-token", refreshToken);
-  res.json({ message: "Data user diterima", accessToken });
+  res.json({ message: foundUser.message, accessToken });
 });
 
 app.post("/auth/signup", validateUserMiddleware, async (req, res) => {
-  const userNew = await addUser(req.body);
+  const user = req.body;
+  const userNew = await addUser(user);
+
+  if (userNew.code !== 200) return res.status(401).json(userNew.message);
 
   const accessToken = createAccessToken(userNew.data);
   const refreshToken = createRefreshToken(userNew.data);
 
   res.setHeader("Refresh-token", refreshToken);
-  res.json({ message: "User berhasil ditambahkan", userNew, accessToken });
+  res.json({ message: userNew.message, userNew, accessToken });
 });
 
 app.get("/auth/signout", (req, res) => {

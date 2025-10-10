@@ -10,17 +10,17 @@ export const loadNotes = async (userId) => {
 
     const allNotesUser = allNotes.data.filter((note) => note.userId === userId);
 
-    if (!allNotesUser || allNotesUser.length === 0) return { success: true, code: 200, message: "Tidak ada notes user", data: allNotesUser };
+    if (!allNotesUser || allNotesUser.length === 0) return { success: true, code: 200, message: "No user notes", data: allNotesUser };
 
     const dataNotes = {
       success: true,
       code: 200,
-      message: "Berhasil mengambil notes user",
+      message: "Successfully retrieved user notes",
       data: allNotesUser,
     };
     return dataNotes;
   } catch (error) {
-    const err = new Error(`Terjadi error saat mengambil data notes user ${error.message}`);
+    const err = new Error(`An error occurred while retrieving user notes: ${error.message}`);
     err.success = false;
     err.code = 500;
     throw err;
@@ -33,16 +33,16 @@ export const loadNote = async (id) => {
     const allNotes = await loadDatabase("notes");
     const noteUser = allNotes.find((note) => note._id.toString() === id);
 
-    if (!noteUser || noteUser.length === 0) return { success: false, code: 404, message: "tidak ada note" };
+    if (!noteUser || noteUser.length === 0) return { success: false, code: 404, message: "No notes" };
 
     return {
       success: true,
       code: 200,
-      message: "Berhasil mengambil note",
+      message: "Managed to take notes",
       data: noteUser,
     };
   } catch (error) {
-    const err = new Error(`Terjadi error saat mengambil data note user ${error.message}`);
+    const err = new Error(`An error occurred while taking notes: ${error.message}`);
     err.success = false;
     err.code = 500;
     throw err;
@@ -55,9 +55,9 @@ export const addNote = async (userId, data) => {
     const noteData = { userId: userId, ...data };
     const dbNotes = await database();
     const result = await dbNotes.collection("notes").insertOne(noteData);
-    return { success: true, code: 200, message: "Berhasil menambahkan note", desciption: result };
+    return { success: true, code: 200, message: "Successfully added note", desciption: result };
   } catch (error) {
-    const err = new Error(`Terjadi error saat menambah data note user ${error.message}`);
+    const err = new Error(`An error occurred while adding a record: ${error.message}`);
     err.success = false;
     err.code = 500;
     throw err;
@@ -75,11 +75,11 @@ export const updateNote = async (idNote, dataNote) => {
     return {
       success: true,
       code: 200,
-      message: `note id-${idNote} berhasil diupdate`,
+      message: `note with id-${idNote} successfully updated`,
       description: result,
     };
   } catch (error) {
-    const err = new Error(`Terjadi error saat mengedit data note user ${error.message}`);
+    const err = new Error(`an error occurred while updating user notes: ${error.message}`);
     err.success = false;
     err.code = 500;
     throw err;
@@ -95,11 +95,11 @@ export const deleteNote = async (idNote) => {
     return {
       success: true,
       code: 200,
-      message: `note id-${idNote} berhasil dihapus`,
+      message: `Note with id-${idNote} successfully deleted`,
       description: result,
     };
   } catch (error) {
-    const err = new Error(`Terjadi error saat mengedit data note user ${error.message}`);
+    const err = new Error(`An error occurred while deleting user notes: ${error.message}`);
     err.success = false;
     err.code = 500;
     throw err;

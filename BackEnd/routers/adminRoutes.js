@@ -21,7 +21,7 @@ adminRoute.get("/users", verifyAdmin, async (req, res) => {
     const errorObject = {
       success: false,
       code: 500,
-      message: `Gagal mengambil data users`,
+      message: `An error occurred while retrieving all user data: ${error.message}`,
     };
     res.status(errorObject.code).json({ message: errorObject.message });
   }
@@ -36,7 +36,7 @@ adminRoute.get("/users/:userId/notes", verifyAdmin, async (req, res) => {
     const errorObject = {
       success: false,
       code: 500,
-      message: `Gagal mengambil notes user ${error.message}`,
+      message: `An error occurred while retrieving user records: ${error.message}`,
     };
     res.status(errorObject.code).json({ message: errorObject.message });
   }
@@ -51,7 +51,7 @@ adminRoute.get("/users/:id", verifyAdmin, async (req, res) => {
     const errorObject = {
       success: false,
       code: 500,
-      message: `Gagal menampilkan user ${error.message}`,
+      message: `An error occurred while taking notes: ${error.message}`,
     };
     res.status(errorObject.code).json({ message: errorObject.message });
   }
@@ -65,7 +65,7 @@ adminRoute.patch("/users/:id/role", verifyAdmin, async (req, res) => {
     const errorObject = {
       success: false,
       code: 500,
-      message: `Gagal mengubah role user ${error.message}`,
+      message: `An error occurred while updating user roles: ${error.message}`,
     };
     res.status(errorObject.code).json({ message: errorObject.message });
   }
@@ -82,7 +82,7 @@ adminRoute.delete("/users/:id", verifyAdmin, async (req, res) => {
     const errorObject = {
       success: false,
       code: 500,
-      message: `Gagal menghapus user ${error.message}`,
+      message: `An error occurred while deleting the user: ${error.message}`,
     };
     res.status(errorObject.code).json({ message: errorObject.message });
   }
@@ -97,7 +97,7 @@ adminRoute.get("/notes", verifyAdmin, async (req, res) => {
     const errorObject = {
       success: false,
       code: 500,
-      message: `Gagal mengambil semua notes ${error.message}`,
+      message: `An error occurred while retrieving all notes: ${error.message}`,
     };
     res.status(errorObject.code).json({ message: errorObject.message });
   }
@@ -112,7 +112,7 @@ adminRoute.get("/notes/:id", verifyAdmin, async (req, res) => {
     const errorObject = {
       success: false,
       code: 500,
-      message: `Gagal menampilkan daftar notes user ${error.message}`,
+      message: `An error occurred while retrieving the user's notes list: ${error.message}`,
     };
     res.status(errorObject.code).json({ message: errorObject.message });
   }
@@ -136,7 +136,7 @@ adminRoute.delete("/notes/delete", verifyAdmin, async (req, res) => {
     const errorObject = {
       success: false,
       code: 500,
-      message: `Gagal menghapus note ${error.message}`,
+      message: `An error occurred while deleting the note: ${error.message}`,
     };
     res.status(errorObject.code).json({ message: errorObject.message });
   }

@@ -18,7 +18,7 @@ noteRoute.get("/notes", verifyUser, async (req, res) => {
     const errorObject = {
       success: false,
       code: 500,
-      message: `Gagal mengambil daftar note ${error.message}`,
+      message: `An error occurred while retrieving the note list: ${error.message}`,
     };
     res.status(errorObject.code).json({ message: errorObject.message });
   }
@@ -33,7 +33,7 @@ noteRoute.get("/notes/:id", verifyUser, async (req, res) => {
     const errorObject = {
       success: false,
       code: 500,
-      message: `Gagal menampilkan note ${error.message}`,
+      message: `An error occurred while taking notes ${error.message}`,
     };
     res.status(errorObject.code).json({ message: errorObject.message });
   }
@@ -50,7 +50,7 @@ noteRoute.post("/notes/add", verifyUser, async (req, res) => {
     const errorObject = {
       success: false,
       code: 500,
-      message: `Gagal menambahkan note ${error.message}`,
+      message: `An error occurred while adding a note: ${error.message}`,
     };
     res.status(errorObject.code).json({ message: errorObject.message });
   }
@@ -65,7 +65,8 @@ noteRoute.patch("/notes/update", verifyUser, async (req, res) => {
     const foundNote = await loadNote(req.body._id);
 
     if (foundNote.code !== 200) return res.status(foundNote.code).json({ message: foundNote.message });
-    if (idUser !== userIdNotes) return res.status(403).json({ message: "anda tidak memliki akses" });
+
+    if (idUser !== userIdNotes) return res.status(403).json({ message: "You don't have access!" });
 
     const resultUpdateNote = await updateNote(req.body._id, dataNote);
 
@@ -74,7 +75,7 @@ noteRoute.patch("/notes/update", verifyUser, async (req, res) => {
     const errorObject = {
       success: false,
       code: 500,
-      message: `Gagal mengubah note ${error.message}`,
+      message: `An error occurred while updating the note: ${error.message}`,
     };
     res.status(errorObject.code).json({ message: errorObject.message });
   }
@@ -88,7 +89,7 @@ noteRoute.delete("/notes/:delete", verifyUser, async (req, res) => {
     const foundNote = await loadNote(dataNoteDelete._id);
 
     if (foundNote.code !== 200) return res.status(foundNote.code).json({ message: foundNote.message });
-    if (dataUser._id !== dataNoteDelete.userId && dataUser.role !== "admin" && dataUser.role !== "super admin") return res.status(403).json({ message: "anda tidak memliki akses" });
+    if (dataUser._id !== dataNoteDelete.userId && dataUser.role !== "admin" && dataUser.role !== "super admin") return res.status(403).json({ message: "You don't have access!" });
 
     const resultUpdateNote = await deleteNote(dataNoteDelete._id);
 
@@ -97,7 +98,7 @@ noteRoute.delete("/notes/:delete", verifyUser, async (req, res) => {
     const errorObject = {
       success: false,
       code: 500,
-      message: `Gagal menghapus note ${error.message}`,
+      message: `An error occurred while deleting the note: ${error.message}`,
     };
     res.status(errorObject.code).json({ message: errorObject.message });
   }
