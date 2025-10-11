@@ -10,5 +10,4 @@ const refreshKey = process.env.REFRESH_SECRET_KEY;
 // fungsi buat accessToken
 export const createAccessToken = (payload) => jwt.sign(payload, accessKey, { expiresIn: "1d" });
 
-// fungsi buat refreshToken
 export const createRefreshToken = (payload) => jwt.sign(payload, refreshKey, { expiresIn: "7d" });

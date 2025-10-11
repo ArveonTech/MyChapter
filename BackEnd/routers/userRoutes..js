@@ -12,7 +12,7 @@ userRoute.get("/:id", verifyUser, async (req, res) => {
 
     if (req.user._id !== req.params.id) return res.status(401).json({ message: "You don't have access!" });
 
-    res.json(user);
+    res.status(user.code).json(user);
   } catch (error) {
     const errorObject = {
       success: false,
@@ -29,7 +29,7 @@ userRoute.delete("/:id", verifyUser, async (req, res) => {
 
     if (!dataDelete.success) return res.status(dataDelete.code).json({ message: dataDelete.message });
 
-    res.status(200).json(dataDelete);
+    res.status(dataDelete.code).json(dataDelete);
   } catch (error) {
     const errorObject = {
       success: false,

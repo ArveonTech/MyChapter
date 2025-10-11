@@ -28,7 +28,7 @@ noteRoute.get("/notes/:id", verifyUser, async (req, res) => {
   try {
     const note = await loadNote(req.params.id);
     if (!note.success) return res.status(note.code).json(note.message);
-    res.status(200).json(note);
+    res.status(note.code).json(note);
   } catch (error) {
     const errorObject = {
       success: false,

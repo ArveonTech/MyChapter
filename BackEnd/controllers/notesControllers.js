@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 import { database } from "../config/db.js";
 import { loadDatabase, loadAllNotes } from "./controllers.js";
 
-// fungsi menampilkan seluruh notes user
+// function to display all user notes by id
 export const loadNotes = async (userId) => {
   try {
     const allNotes = await loadAllNotes();
@@ -27,7 +27,7 @@ export const loadNotes = async (userId) => {
   }
 };
 
-// fungsi menampilkan 1 note user
+// note display function by id
 export const loadNote = async (id) => {
   try {
     const allNotes = await loadDatabase("notes");
@@ -49,7 +49,7 @@ export const loadNote = async (id) => {
   }
 };
 
-// fungsi menambah note
+// function of adding notes by id
 export const addNote = async (userId, data) => {
   try {
     const noteData = { userId: userId, ...data };
@@ -64,7 +64,7 @@ export const addNote = async (userId, data) => {
   }
 };
 
-// fungsi edit note
+// note editing function by id
 export const updateNote = async (idNote, dataNote) => {
   try {
     const dataNoteNew = { ...dataNote };
@@ -86,7 +86,7 @@ export const updateNote = async (idNote, dataNote) => {
   }
 };
 
-// fungsi delete note
+// note delete function by id
 export const deleteNote = async (idNote) => {
   try {
     const dbNotes = await database();

@@ -1,6 +1,6 @@
 import { database } from "../config/db.js";
 
-// main controller
+// storage collection fetch function
 export const loadDatabase = async (collection) => {
   try {
     const db = await database();
@@ -14,6 +14,7 @@ export const loadDatabase = async (collection) => {
   }
 };
 
+// function fetch all users
 export const loadAllUsers = async () => {
   try {
     const allUsers = await loadDatabase("users");
@@ -41,6 +42,7 @@ export const loadAllUsers = async () => {
   }
 };
 
+// function fetch all notes
 export const loadAllNotes = async () => {
   try {
     const allNotes = await loadDatabase("notes");

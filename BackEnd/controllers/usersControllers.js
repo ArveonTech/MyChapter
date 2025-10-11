@@ -2,7 +2,10 @@ import { database } from "../config/db.js";
 import { ObjectId } from "mongodb";
 import { loadAllUsers } from "./controllers.js";
 import { isSuperAdmin } from "../helper/isSuperAdmin.js";
+import { findUserByEmail } from "../helper/findUserByEmail.js";
+import { validateChangePassword } from "../helper/validateChangePassword.js";
 
+// function fetch user by id
 export const loadUser = async (id) => {
   try {
     const allUsers = await loadAllUsers();
@@ -24,14 +27,14 @@ export const loadUser = async (id) => {
   }
 };
 
+// function to retrieve users based on email and password
 export const findUser = async (email, password) => {
   try {
-    const allUsers = await loadAllUsers();
-    const foundUserByEmail = allUsers.data.find((user) => user.email === email);
+    const dataFindUserByEmail = await findUserByEmail(email);
 
-    if (!foundUserByEmail) return { success: false, code: 404, message: `User with email ${email} cannot be found` };
+    if (dataFindUserByEmail.code !== 200) return { success: dataFindUserByEmail.success, code: dataFindUserByEmail.code, message: dataFindUserByEmail.message };
 
-    const foundUserByPassword = foundUserByEmail.password === password;
+    const foundUserByPassword = dataFindUserByEmail.password === password;
 
     if (!foundUserByPassword) return { success: false, code: 404, message: "Wrong password" };
 
@@ -39,7 +42,7 @@ export const findUser = async (email, password) => {
       success: true,
       code: 200,
       message: `Managed to get users`,
-      data: foundUserByEmail,
+      data: dataFindUserByEmail,
     };
   } catch (error) {
     const err = new Error(`An error occurred while searching for the user: ${error.message}`);
@@ -49,6 +52,7 @@ export const findUser = async (email, password) => {
   }
 };
 
+// function of adding users
 export const addUser = async (dataLogin) => {
   try {
     const dataUser = { role: "user", ...dataLogin };
@@ -69,6 +73,7 @@ export const addUser = async (dataLogin) => {
   }
 };
 
+// role changing function
 export const updateUserRole = async (admin, idUpdate, roleUpdate) => {
   try {
     const dbUsers = await database();
@@ -87,6 +92,7 @@ export const updateUserRole = async (admin, idUpdate, roleUpdate) => {
   }
 };
 
+// user delete function
 export const deleteUser = async (idDelete, dataUser) => {
   try {
     const foundUser = await loadUser(idDelete);

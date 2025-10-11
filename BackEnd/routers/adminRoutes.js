@@ -16,7 +16,7 @@ adminRoute.get("/users", verifyAdmin, async (req, res) => {
 
     if (!users.success) return res.status(users.code).json({ message: users.message });
 
-    res.json(users);
+    res.status(users.code).json(users);
   } catch (error) {
     const errorObject = {
       success: false,
@@ -31,7 +31,7 @@ adminRoute.get("/users/:userId/notes", verifyAdmin, async (req, res) => {
   try {
     const notes = await loadNotes(req.params.userId);
     if (!notes.success) return res.status(notes.code).json({ message: notes.message });
-    res.json(notes);
+    res.status(notes.code).json(notes);
   } catch (error) {
     const errorObject = {
       success: false,
@@ -46,7 +46,7 @@ adminRoute.get("/users/:id", verifyAdmin, async (req, res) => {
   try {
     const user = await loadUser(req.params.id);
     if (!user.success) return res.status(user.code).json({ message: user.message });
-    res.json(user);
+    res.status(user.code).json(user);
   } catch (error) {
     const errorObject = {
       success: false,
@@ -60,7 +60,7 @@ adminRoute.get("/users/:id", verifyAdmin, async (req, res) => {
 adminRoute.patch("/users/:id/role", verifyAdmin, async (req, res) => {
   try {
     const updateRole = await updateUserRole(req.user, req.params.id, req.body);
-    res.json(updateRole);
+    res.status(updateRole.code).json(updateRole);
   } catch (error) {
     const errorObject = {
       success: false,
@@ -77,7 +77,7 @@ adminRoute.delete("/users/:id", verifyAdmin, async (req, res) => {
 
     if (!dataDelete.success) return res.status(dataDelete.code).json({ message: dataDelete.message });
 
-    res.json(dataDelete);
+    res.status(dataDelete.code).json(dataDelete);
   } catch (error) {
     const errorObject = {
       success: false,
@@ -92,7 +92,7 @@ adminRoute.get("/notes", verifyAdmin, async (req, res) => {
   try {
     const notes = await loadAllNotes();
     if (!notes.success) return res.status(notes.code).json({ message: notes.message });
-    res.json(notes);
+    res.status(notes.code).json(notes);
   } catch (error) {
     const errorObject = {
       success: false,
@@ -107,7 +107,7 @@ adminRoute.get("/notes/:id", verifyAdmin, async (req, res) => {
   try {
     const note = await loadNote(req.params.id);
     if (!note.success) return res.status(note.code).json({ message: note.message });
-    res.json(note);
+    res.status(note.code).json(note);
   } catch (error) {
     const errorObject = {
       success: false,

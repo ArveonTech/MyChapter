@@ -18,8 +18,9 @@ export const verifyUser = (req, res, next) => {
 
   // kondisi jika dikirim token atau dikirim payload
   if (result.status === "refresh") {
-    res.setHeader("Access-token", result.token);
-    req.user = jwt.decode(result.token);
+    req.refreshToken = result.refreshToken;
+    req.accessToken = result.accessToken;
+    req.user = jwt.decode(result.accessToken);
   } else if (result.status === "ok") {
     req.user = result.payload;
   }
@@ -29,7 +30,7 @@ export const verifyUser = (req, res, next) => {
 
 export const verifyAdmin = (req, res, next) => {
   verifyUser(req, res, () => {
-    if (req.user?.role !== "admin" && req.user?.role !== "super admin") return res.status(403).json({ message: "Unauthorized" });
+    if (req.user?.role !== "admin" && req.user?.role !== "super admin") return res.status(403).json({ message: "You don't have access" });
     next();
   });
 };
