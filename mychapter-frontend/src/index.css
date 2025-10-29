@@ -1,0 +1,23 @@
+@import "tailwindcss";
+
+@font-face {
+  font-family: saira;
+  src: url("./assets/fonts/sairaFont.ttf");
+  font-display: swap;
+}
+
+body {
+  font-family: "saira", "sans-serif";
+}
+
+@theme {
+  --color-bgPage: #e3fdfd; /* Background utama halaman */
+  --color-bgSurface: #cbf1f5; /* Navbar / section background */
+  --color-bgSurfaceElevated: #bcecef; /* Card / komponen nge-float */
+  --color-bgInteractive: #71c9ce; /* Button, elemen interaktif */
+  --color-bgHighlight: #a6e3e9; /* Hover, accent, emphasis */
+
+  --color-textprimary: #0f172a;
+  --color-textsecondary: #64748b;
+  --color-textonprimary: #ffffff;
+}

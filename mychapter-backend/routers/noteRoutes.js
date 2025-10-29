@@ -5,7 +5,7 @@ app.use(express.json());
 
 // utils
 import { verifyUser } from "../middleware/authMiddleware.js";
-import { addNote, deleteNote, loadNote, loadNotes, updateNote } from "../controllers/notesControllers.js";
+import { addNote, deleteNote, getLimitNotes, loadNote, loadNotes, updateNote } from "../controllers/notesControllers.js";
 
 const noteRoute = express.Router();
 
@@ -24,6 +24,27 @@ noteRoute.get("/notes", verifyUser, async (req, res) => {
   }
 });
 
+app.get("/records", async (req, res) => {
+  try {
+    const searchQuery = parseInt(req.query.searchQuery) || 1;
+    const limit = parseInt(req.query.limit) || 10;
+    const skip = parseInt(req.params.offset);
+
+    const dataGetLimitNotes = await getLimitNotes(skip, limit, searchQuery);
+
+    if (dataGetLimitNotes.code !== 200) return res.status(dataGetLimitNotes.code).json(dataGetLimitNotes.message);
+
+    res.status(dataGetLimitNotes.code).json(dataGetLimitNotes);
+  } catch (error) {
+    const errorObject = {
+      success: false,
+      code: 500,
+      message: `An error occurred while searching for notes: ${error.message}`,
+    };
+    res.status(errorObject.code).json({ message: errorObject.message });
+  }
+});
+
 noteRoute.get("/notes/:id", verifyUser, async (req, res) => {
   try {
     const note = await loadNote(req.params.id);
@@ -33,7 +54,7 @@ noteRoute.get("/notes/:id", verifyUser, async (req, res) => {
     const errorObject = {
       success: false,
       code: 500,
-      message: `An error occurred while taking notes ${error.message}`,
+      message: `An error occurred while taking notes: ${error.message}`,
     };
     res.status(errorObject.code).json({ message: errorObject.message });
   }

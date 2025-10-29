@@ -49,6 +49,28 @@ export const loadNote = async (id) => {
   }
 };
 
+// function to retrieve 20 data notes
+export const getLimitNotes = async (initialNotes, limitNotes, querySearch) => {
+  try {
+    const dbNotes = await database();
+    const dbNotesFilter = dbNotes.collection("notes").find({ title: querySearch }).skip(initialNotes).limit(limitNotes);
+
+    if (!dbNotesFilter || dbNotesFilter.length === 0) return { success: false, code: 404, message: "Note not found" };
+
+    return {
+      success: true,
+      code: 200,
+      message: "note successfully found",
+      data: dbNotesFilter,
+    };
+  } catch (error) {
+    const err = new Error(`An error occurred while searching for notes: ${error.message}`);
+    err.success = false;
+    err.code = 500;
+    throw err;
+  }
+};
+
 // function of adding notes by id
 export const addNote = async (userId, data) => {
   try {
