@@ -1,3 +1,5 @@
+import { database } from "../config/db.js";
+
 export const changePassword = async (idUser, password) => {
   try {
     const dbUsers = await database();

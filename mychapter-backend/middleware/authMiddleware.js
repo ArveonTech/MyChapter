@@ -3,12 +3,11 @@ import jwt from "jsonwebtoken";
 
 // buat middleware dari request
 export const verifyUser = (req, res, next) => {
-  // ambil access token
+  // ambil access token di header
   const authHeader = req.headers["authorization"];
   const accessToken = authHeader && authHeader.split(" ")[1];
 
-  // ambil refresh token
-  const refreshToken = req.headers["refreshtoken"]?.split(" ")[1];
+  const refreshToken = req.cookies["refresh-token"];
 
   if (!accessToken && !refreshToken) return res.status(403).json({ message: "No token provided" });
 

@@ -4,7 +4,7 @@
 # POST http://localhost:3000/auth/signin
 # Content-Type: application/json
 
-#  { "name": "Budi", "email": "budi@example.com", password": "budi123" }
+#  {  "email": "budi@example.com", password": "budi123" }
 
 ###
 

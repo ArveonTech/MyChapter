@@ -1,5 +1,5 @@
-import { findUserByEmail } from "../helper/findUserByEmail";
-import { validateAccount } from "../helper/validateAccount";
+import { findUserByEmail } from "../helper/findUserByEmail.js";
+import { validateAccount } from "../helper/validateAccount.js";
 
 export const validateForgotPassword = async (email, randomToken, tokenSendingTime) => {
   try {

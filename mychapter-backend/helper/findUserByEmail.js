@@ -1,4 +1,4 @@
-import { loadAllUsers } from "../controllers/controllers";
+import { loadAllUsers } from "../controllers/controllers.js";
 
 export const findUserByEmail = async (email) => {
   try {

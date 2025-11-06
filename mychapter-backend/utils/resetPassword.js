@@ -1,4 +1,4 @@
-import { changePassword } from "../helper/changePassword";
+import { changePassword } from "../helper/changePassword.js";
 
 export const resetPassword = async (idUser, newPassword) => {
   try {

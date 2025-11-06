@@ -3,7 +3,6 @@ import { ObjectId } from "mongodb";
 import { loadAllUsers } from "./controllers.js";
 import { isSuperAdmin } from "../helper/isSuperAdmin.js";
 import { findUserByEmail } from "../helper/findUserByEmail.js";
-import { validateChangePassword } from "../helper/validateChangePassword.js";
 
 // function fetch user by id
 export const loadUser = async (id) => {
@@ -34,16 +33,11 @@ export const findUser = async (email, password) => {
 
     if (dataFindUserByEmail.code !== 200) return { success: dataFindUserByEmail.success, code: dataFindUserByEmail.code, message: dataFindUserByEmail.message };
 
-    const foundUserByPassword = dataFindUserByEmail.password === password;
+    const foundUserByPassword = dataFindUserByEmail.data.password === password;
 
     if (!foundUserByPassword) return { success: false, code: 404, message: "Wrong password" };
 
-    return {
-      success: true,
-      code: 200,
-      message: `Managed to get users`,
-      data: dataFindUserByEmail,
-    };
+    return dataFindUserByEmail;
   } catch (error) {
     const err = new Error(`An error occurred while searching for the user: ${error.message}`);
     err.success = false;
@@ -55,14 +49,16 @@ export const findUser = async (email, password) => {
 // function of adding users
 export const addUser = async (dataLogin) => {
   try {
-    const dataUser = { role: "user", ...dataLogin };
+    const dataUser = { role: "user", emailVerified: false, ...dataLogin };
     const dbUsers = await database();
     const result = await dbUsers.collection("users").insertOne(dataUser);
+
+    const user = await dbUsers.collection("users").findOne({ _id: result.insertedId });
     return {
       success: true,
       code: 200,
       message: `Successfully added user`,
-      data: dataUser,
+      data: user.data,
       description: result,
     };
   } catch (error) {
