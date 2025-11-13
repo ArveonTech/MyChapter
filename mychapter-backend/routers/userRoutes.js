@@ -6,13 +6,13 @@ import { loadUser, deleteUser } from "../controllers/usersControllers.js";
 
 const userRoute = express.Router();
 
-userRoute.get("/:id", verifyUser, async (req, res) => {
+userRoute.get("/me", verifyUser, async (req, res) => {
   try {
-    const user = await loadUser(req.params.id);
+    const user = await loadUser(req.user._id);
 
-    if (req.user._id !== req.params.id) return res.status(401).json({ message: "You don't have access!" });
+    const { password, ...rest } = user.data;
 
-    res.status(user.code).json(user);
+    res.status(user.code).json(rest);
   } catch (error) {
     const errorObject = {
       success: false,
@@ -23,9 +23,9 @@ userRoute.get("/:id", verifyUser, async (req, res) => {
   }
 });
 
-userRoute.delete("/:id", verifyUser, async (req, res) => {
+userRoute.delete("/me", verifyUser, async (req, res) => {
   try {
-    const dataDelete = await deleteUser(req.params.id, req.user);
+    const dataDelete = await deleteUser(req.user._id, req.user);
 
     if (!dataDelete.success) return res.status(dataDelete.code).json({ message: dataDelete.message });
 

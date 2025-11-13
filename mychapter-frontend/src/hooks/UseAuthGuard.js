@@ -16,7 +16,7 @@ const UseAuthGuard = () => {
           const result = await generateAccessToken();
           localStorage.setItem("access-token", result.accessToken);
           setStatus("refreshed");
-        } catch {
+        } catch (error) {
           setStatus("failed");
           navigate("/auth/signin");
         }
@@ -28,7 +28,7 @@ const UseAuthGuard = () => {
           const result = await generateAccessToken(accessToken);
           localStorage.setItem("access-token", result.accessToken);
           setStatus("refreshed");
-        } catch {
+        } catch (error) {
           setStatus("failed");
           navigate("/auth/signin");
         }

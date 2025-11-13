@@ -1,104 +1,72 @@
+// components
+import { LoginForm } from "@/components/common/signin/login-form";
+import UseAuthGuard from "@/hooks/UseAuthGuard";
+import { requestBE } from "@/lib/requestBE-lib";
 import { useEffect, useState } from "react";
-import ImageWithCaptionSigninComponents from "../molecules/ImageWithCaptionSigninComponent";
-import FormSigninComponent from "../organisms/FormSigninComponent";
-import { requestBE } from "../../libs/requestBE-lib";
 import { useNavigate } from "react-router-dom";
-import UseAuthGuard from "../../hooks/UseAuthGuard";
-import LoadingPage from "./LoadingPage";
 
 const SigninPage = () => {
   const navigate = useNavigate();
-
-  const [inputFormSigninValue, setinputFormSigninValue] = useState({
+  const [formSignin, setFormSignin] = useState({
     email: "",
     password: "",
   });
+  const [errorForm, setErrorForm] = useState(null);
 
   const [showPassword, setShowPassword] = useState(false);
-  const [errorFormSubmit, setErrorFormSubmit] = useState(null);
-  const verifyToken = UseAuthGuard();
+
+  const authGuard = UseAuthGuard();
 
   useEffect(() => {
-    if (verifyToken === "valid") {
+    if (authGuard === "valid") {
       navigate("/home");
     }
-  }, [verifyToken]);
+  }, [authGuard]);
 
-  const attributEmail = {
-    type: "text",
-    name: "email",
-    value: inputFormSigninValue.email,
-    autoComplete: "email",
-    placeholder: "Type your email",
-    required: true,
-  };
+  const handleChangeInput = (event) => {
+    const { name, value } = event.target;
 
-  const attributPassword = {
-    type: showPassword ? "text" : "password",
-    name: "password",
-    value: inputFormSigninValue.password,
-    autoComplete: "current-password",
-    placeholder: "Type your password",
-    required: true,
-  };
-
-  const handleChangeInputForm = (input) => {
-    const { name, value } = input.target;
-
-    setinputFormSigninValue((previousState) => ({
-      ...previousState,
+    setFormSignin((previous) => ({
+      ...previous,
       [name]: value,
     }));
   };
 
-  const handleSubmitFormSignin = async (e) => {
-    e.preventDefault();
-
-    if (!inputFormSigninValue.email.trim() || !inputFormSigninValue.password.trim()) {
-      setErrorFormSubmit("Email & Password required!");
-      return;
-    }
-
-    setErrorFormSubmit(null);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
 
     try {
-      const response = await requestBE("POST", "auth/signin", inputFormSigninValue, "", { "Content-Type": "application/json", withCredentials: true });
+      const response = await requestBE("POST", "auth/signin", formSignin, "", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        withCredentials: true,
+      });
 
-      const username = response?.data?.username;
-      const accessToken = response?.data?.accessToken;
+      if (response.code < 200 || response.code >= 300) {
+        throw new Error("Access token invalid");
+      }
 
-      if (!accessToken) return setErrorFormSubmit("No access token returned");
+      const accessToken = response.data?.accessToken;
 
       localStorage.setItem("access-token", accessToken);
 
-      navigate("/home", { state: { status: "login", username } });
+      navigate("/home", { state: { from: "login", username: response.data.accessToken } });
     } catch (err) {
-      const message = err?.response?.data || "Something went wrong!";
-      setErrorFormSubmit(message);
+      setErrorForm(err);
     }
   };
 
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
+  };
+
   return (
-    <>
-      {verifyToken === "loading" ? (
-        <LoadingPage />
-      ) : (
-        <div className="min-h-screen bg-bgPage md:flex md:justify-center md:items-center md:gap-40 md:px-10 pb-5">
-          <div className="md:w-80 lg:w-96 md:flex md:justify-center">
-            <ImageWithCaptionSigninComponents />
-          </div>
-          <FormSigninComponent
-            attributEmail={attributEmail}
-            attributPassword={attributPassword}
-            handleChangeInputForm={handleChangeInputForm}
-            showPassword={showPassword}
-            setShowPassword={setShowPassword}
-            handleSubmitFormSignin={handleSubmitFormSignin}
-            errorFormSubmit={errorFormSubmit}
-          />
-        </div>
-      )}
-    </>
+    <div className="bg-bgPage flex min-h-svh flex-col items-center justify-center p-6 md:p-10">
+      <div className="w-full max-w-sm md:max-w-96">
+        <LoginForm formSignin={formSignin} handleChangeInput={handleChangeInput} handleSubmit={handleSubmit} errorForm={errorForm} showPassword={showPassword} handleShowPassword={handleShowPassword} />
+      </div>
+    </div>
   );
 };
 

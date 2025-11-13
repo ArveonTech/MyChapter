@@ -1,4 +1,4 @@
-import { requestBE } from "../libs/requestBE-lib";
+import { requestBE } from "../lib/requestBE-lib";
 
 const generateAccessToken = async (accessToken = null) => {
   try {

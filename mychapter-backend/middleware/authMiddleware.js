@@ -15,7 +15,6 @@ export const verifyUser = (req, res, next) => {
 
   if (result.success === false) return res.status(401).json({ message: result.error });
 
-  // kondisi jika dikirim token atau dikirim payload
   if (result.status === "refresh") {
     req.refreshToken = result.refreshToken;
     req.accessToken = result.accessToken;

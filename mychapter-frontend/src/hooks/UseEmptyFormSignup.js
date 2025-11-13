@@ -10,7 +10,7 @@ const UseEmptyFormSignup = (form) => {
       const updatedErrors = { success: false, inputForm: { username: null, email: null, password: null, confirmPassword: null } };
 
       emptyForm.forEach((field) => {
-        updatedErrors.inputForm[field] = `${field === "confirmPassword" ? "confirm-password" : field} is required!`;
+        updatedErrors.inputForm[field] = `${field == "confirmPassword" ? "confirm-password" : field} is required!`;
       });
 
       setErrorInputForm(updatedErrors);

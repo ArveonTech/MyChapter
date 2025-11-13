@@ -1,114 +1,62 @@
+// components
+import { SignupForm } from "@/components/common/signup/signup-form";
+import UseAuthGuard from "@/hooks/UseAuthGuard";
+import UseEmptyFormSignup from "@/hooks/UseEmptyFormSignup";
 import { useEffect, useState } from "react";
-import FormSignupComponent from "../organisms/FormSignupComponent";
+
+// utils
 import { useNavigate } from "react-router-dom";
-import ImageComponents from "../atoms/imageComponent";
-import UseEmptyFormSignup from "../../hooks/UseEmptyFormSignup";
-import UseValidationSignup from "../../hooks/UseValidationSignup";
-import { requestBE } from "../../libs/requestBE-lib";
-import UseAuthGuard from "../../hooks/UseAuthGuard";
-import LoadingPage from "./LoadingPage";
 
 const SignupPage = () => {
   const navigate = useNavigate();
-  const [inputFormSignupValue, setinputFormSignupValue] = useState({
+  const [formSignup, setFormSignup] = useState({
     username: "",
     email: "",
     password: "",
     confirmPassword: "",
   });
+  const [errorForm, setErrorForm] = useState(null);
+
+  const [errorInputForm, setErrorInputForm] = useState({ success: null, inputForm: { username: null, email: null, password: null, confirmPassword: null } });
 
   const [showPassword, setShowPassword] = useState(false);
-  const [errorInputForm, setErrorInputForm] = useState({
-    success: true,
-    inputForm: {
-      username: null,
-      email: null,
-      password: null,
-      confirmPassword: null,
-    },
-  });
-  const [errorFormSubmit, setErrorFormSubmit] = useState(null);
 
-  const errorEmptyForm = UseEmptyFormSignup(inputFormSignupValue);
-  const errorInvalidForm = UseValidationSignup(inputFormSignupValue);
-  const verifyToken = UseAuthGuard();
+  const authGuard = UseAuthGuard();
+  const emptyForm = UseEmptyFormSignup(formSignup);
 
-  useEffect(() => {
-    if (verifyToken === "valid") {
-      navigate("/home");
-    }
-  }, [verifyToken]);
+  // useEffect(() => {
+  //   if (authGuard === "valid") {
+  //     navigate("/home");
+  //   }
+  // }, [authGuard]);
 
-  const handleChangeInputForm = (e) => {
-    const { name, value } = e.target;
-    setinputFormSignupValue((prev) => ({
-      ...prev,
+  const handleChangeInput = (event) => {
+    const { name, value } = event.target;
+
+    setFormSignup((previous) => ({
+      ...previous,
       [name]: value,
     }));
   };
 
-  const handleSubmitFormSignup = async (e) => {
-    const inputValid = {
-      success: true,
-      inputForm: {
-        username: null,
-        email: null,
-        password: null,
-        confirmPassword: null,
-      },
-    };
-    e.preventDefault();
+  const handleSubmit = (event) => {
+    event.preventDefault();
 
-    if (!errorEmptyForm.success) return setErrorInputForm(errorEmptyForm);
-    if (!errorInvalidForm.success) return setErrorInputForm(errorInvalidForm);
+    if (!emptyForm.success) return setErrorInputForm(emptyForm);
 
-    setErrorInputForm(inputValid);
+    setErrorInputForm({ success: null, inputForm: { username: null, email: null, password: null, confirmPassword: null } });
+  };
 
-    const { confirmPassword, ...restInput } = inputFormSignupValue;
-
-    try {
-      const response = await requestBE("POST", "auth/signup", restInput, "", { "Content-Type": "application/json", withCredentials: true });
-
-      const username = response?.data?.username;
-      const accessToken = response?.data?.accessToken;
-
-      if (!accessToken) return setErrorFormSubmit("No access token returned");
-
-      localStorage.setItem("access-token", accessToken);
-
-      navigate("/home", { state: { status: "login", username } });
-    } catch (err) {
-      const message = err?.response?.data.error || "Something went wrong!";
-      setErrorFormSubmit(message);
-    }
+  const handleShowPassword = () => {
+    setShowPassword(!showPassword);
   };
 
   return (
-    <>
-      {verifyToken === "loading" ? (
-        <LoadingPage />
-      ) : (
-        <div className="min-h-screen bg-bgPage md:flex md:justify-center md:items-center md:gap-40 md:px-10 pb-5">
-          <div className="md:w-80 lg:w-96 md:flex md:justify-center">
-            <div className="w-8/12 sm:w-72 mx-auto md:mx-0 md:w-80 lg:w-96">
-              <ImageComponents imageSource="/images/signup_image.png" alternativeImage="Signup-image" />
-            </div>
-          </div>
-          <FormSignupComponent
-            attributUsername={{ name: "username", type: "text", value: inputFormSignupValue.username, placeholder: "john doe" }}
-            attributEmail={{ name: "email", type: "text", value: inputFormSignupValue.email, placeholder: "johndoe@gmail.com" }}
-            attributPassword={{ name: "password", type: showPassword ? "text" : "password", value: inputFormSignupValue.password, placeholder: "create password" }}
-            attributConfirmPassword={{ name: "confirmPassword", type: "password", value: inputFormSignupValue.confirmPassword, placeholder: "confirm password" }}
-            handleChangeInputForm={handleChangeInputForm}
-            showPassword={showPassword}
-            setShowPassword={setShowPassword}
-            handleSubmitFormSignup={handleSubmitFormSignup}
-            errorInputForm={errorInputForm}
-            errorFormSubmit={errorFormSubmit}
-          />
-        </div>
-      )}
-    </>
+    <div className="bg-bgPage flex min-h-svh flex-col items-center justify-center p-6 md:p-10">
+      <div className="w-full max-w-sm md:max-w-[400px]">
+        <SignupForm formSignin={formSignup} handleChangeInput={handleChangeInput} handleSubmit={handleSubmit} errorForm={errorForm} showPassword={showPassword} handleShowPassword={handleShowPassword} errorInputForm={errorInputForm} />
+      </div>
+    </div>
   );
 };
 

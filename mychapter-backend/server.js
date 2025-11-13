@@ -12,7 +12,7 @@ import { changePasswordById } from "./utils/changePasswordById.js";
 
 // routers
 import adminRoute from "./routers/adminRoutes.js";
-import userRoute from "./routers/userRoutes..js";
+import userRoute from "./routers/userRoutes.js";
 import noteRoute from "./routers/noteRoutes.js";
 
 const app = express();
@@ -44,7 +44,9 @@ app.post("/auth/signin", async (req, res) => {
   const user = req.body;
   const foundUser = await findUser(user.email, user.password);
 
-  if (foundUser.code !== 200) return res.status(401).json(foundUser.message);
+  if (foundUser.code < 200 || foundUser.code >= 300) {
+    return res.status(401).json(foundUser.message);
+  }
 
   const { password, ...rest } = foundUser.data;
 
@@ -58,6 +60,7 @@ app.post("/auth/signin", async (req, res) => {
     maxAge: 1000 * 60 * 60 * 168,
     path: "/",
   });
+
   res.status(200).json({ username: rest.username, accessToken });
 });
 
@@ -65,7 +68,9 @@ app.post("/auth/signup", validateUserMiddleware, async (req, res) => {
   const user = req.body;
   const userNew = await addUser(user);
 
-  if (userNew.code !== 200) return res.status(409).json(userNew.message);
+  if (userNew.code < 200 || userNew.code >= 300) {
+    return res.status(401).json(userNew.message);
+  }
 
   const { password, ...rest } = user;
 
@@ -98,7 +103,9 @@ app.post("/auth/change-password", verifyUser, async (req, res) => {
 
   const dataChangePassword = await changePasswordById(idUser, newPassword);
 
-  if (dataChangePassword.code !== 200) return res.status(dataChangePassword.code).json(dataChangePassword.message);
+  if (dataChangePassword.code < 200 || dataChangePassword.code >= 300) {
+    res.status(dataChangePassword.code).json(dataChangePassword.message);
+  }
 
   res.status(dataChangePassword.code).json(dataChangePassword);
 });
