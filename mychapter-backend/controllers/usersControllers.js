@@ -49,7 +49,7 @@ export const findUser = async (email, password) => {
 // function of adding users
 export const addUser = async (dataLogin) => {
   try {
-    const dataUser = { role: "user", emailVerified: false, ...dataLogin };
+    const dataUser = { role: "user", avatar: "avatar-1", emailVerified: false, ...dataLogin };
     const dbUsers = await database();
     const result = await dbUsers.collection("users").insertOne(dataUser);
 

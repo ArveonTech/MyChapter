@@ -27,6 +27,7 @@ body {
 
   --breakpoint-xss: 10rem;
   --breakpoint-xs: 20rem;
+  --breakpoint-xm: 30rem;
 }
 
 @theme inline {
