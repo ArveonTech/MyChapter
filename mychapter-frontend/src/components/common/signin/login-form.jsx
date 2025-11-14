@@ -17,7 +17,7 @@ export function LoginForm({ className, handleChangeInput, formSignin, handleSubm
         <CardContent>
           <form onSubmit={handleSubmit}>
             <Activity mode={errorForm ? "visible" : "hidden"}>
-              <p className="text-center mb-5 text-red-500">{errorForm?.response?.data}</p>
+              <p className="text-center mb-5 text-red-500">{errorForm?.data}</p>
             </Activity>
             <FieldGroup>
               <Field>

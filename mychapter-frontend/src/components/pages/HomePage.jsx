@@ -1,7 +1,14 @@
+// components
+import IncomingUserNotification from "../common/Home/incomingUserNotification";
+
+import { ToastContainer, toast } from "react-toastify";
+
 const HomePage = () => {
   return (
     <div>
-      <p></p>
+      <IncomingUserNotification />
+      <div></div>
+      <ToastContainer />
     </div>
   );
 };

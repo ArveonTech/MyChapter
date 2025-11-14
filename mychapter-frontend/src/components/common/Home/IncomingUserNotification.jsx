@@ -1,0 +1,29 @@
+import { X } from "lucide-react";
+import { Activity, useState } from "react";
+import { useLocation } from "react-router-dom";
+
+const IncomingUserNotification = () => {
+  const [showNotification, setShowNotification] = useState(true);
+  const location = useLocation();
+
+  const handleCloseNotification = () => {
+    setShowNotification(!showNotification);
+  };
+
+  return (
+    <>
+      {location.state?.from && (
+        <Activity mode={location.state.from === "login" || location.state.from === "signup"}>
+          <section className={`w-full  ${showNotification ? "sticky top-0" : "hidden"}`}>
+            <div className="relative h-8 flex justify-center items-center bg-bgHighlight">
+              <p className="text-lg text-center">{location.state.from === "login" ? `Welcome back ${location.state.username}` : `Welcome ${location.state.username}`}</p>
+              <X className="absolute top-1/2 -translate-y-1/2 right-5 cursor-pointer" onClick={handleCloseNotification} />
+            </div>
+          </section>
+        </Activity>
+      )}
+    </>
+  );
+};
+
+export default IncomingUserNotification;

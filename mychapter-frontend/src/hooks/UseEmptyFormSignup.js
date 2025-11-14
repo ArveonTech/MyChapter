@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 
 const UseEmptyFormSignup = (form) => {
-  const [errorInputForm, setErrorInputForm] = useState({ success: null, inputForm: { username: null, email: null, password: null, confirmPassword: null } });
+  const [errorInputForm, setErrorInputForm] = useState({ success: true, inputForm: { username: null, email: null, password: null, confirmPassword: null } });
 
   useEffect(() => {
     const emptyForm = Object.keys(form).filter((key) => form[key].trim() === "");

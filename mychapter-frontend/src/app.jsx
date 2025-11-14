@@ -1,26 +1,48 @@
-import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { RouterProvider, createBrowserRouter } from "react-router-dom";
+
+// pages
+import LandingPage from "./components/pages/LandingPage";
 import SigninPage from "./components/pages/SigninPage";
 import SignupPage from "./components/pages/SignupPage";
 import HomePage from "./components/pages/HomePage";
 import NotFoundPage from "./components/pages/NotFoundPage";
-import LandingPage from "./components/pages/LandingPage";
+
+// guards
+import ProtectedRoute from "@/utils/ProtectedRoute";
+import GuestRoute from "@/utils/GuestRoute";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <LandingPage />,
+    element: (
+      <GuestRoute>
+        <LandingPage />
+      </GuestRoute>
+    ),
   },
   {
     path: "/auth/signin",
-    element: <SigninPage />,
+    element: (
+      <GuestRoute>
+        <SigninPage />
+      </GuestRoute>
+    ),
   },
   {
     path: "/auth/signup",
-    element: <SignupPage />,
+    element: (
+      <GuestRoute>
+        <SignupPage />
+      </GuestRoute>
+    ),
   },
   {
     path: "/home",
-    element: <HomePage />,
+    element: (
+      <ProtectedRoute>
+        <HomePage />
+      </ProtectedRoute>
+    ),
   },
   {
     path: "*",
@@ -29,7 +51,7 @@ const router = createBrowserRouter([
 ]);
 
 function App() {
-  return <RouterProvider router={router}></RouterProvider>;
+  return <RouterProvider router={router} />;
 }
 
 export default App;

@@ -9,7 +9,6 @@ import { Eye } from "lucide-react";
 import { Activity } from "react";
 
 export function SignupForm({ handleChangeInput, formSignin, handleSubmit, errorForm, showPassword, handleShowPassword, errorInputForm, ...props }) {
-  console.info(errorInputForm);
   return (
     <Card {...props}>
       <CardHeader>
@@ -19,7 +18,7 @@ export function SignupForm({ handleChangeInput, formSignin, handleSubmit, errorF
       <CardContent>
         <form onSubmit={handleSubmit}>
           <Activity mode={!errorForm?.success ? "visible" : "hidden"}>
-            <p className={`text-center text-red-500 mb-5 `}>{errorForm?.response?.data}</p>
+            <p className={`text-center text-red-500 mb-5 `}>{errorForm?.message}</p>
           </Activity>
           <FieldGroup>
             <Field>

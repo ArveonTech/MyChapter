@@ -1,8 +1,7 @@
 // components
 import { LoginForm } from "@/components/common/signin/login-form";
-import UseAuthGuard from "@/hooks/UseAuthGuard";
 import { requestBE } from "@/lib/requestBE-lib";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 const SigninPage = () => {
@@ -14,14 +13,6 @@ const SigninPage = () => {
   const [errorForm, setErrorForm] = useState(null);
 
   const [showPassword, setShowPassword] = useState(false);
-
-  const authGuard = UseAuthGuard();
-
-  useEffect(() => {
-    if (authGuard === "valid") {
-      navigate("/home");
-    }
-  }, [authGuard]);
 
   const handleChangeInput = (event) => {
     const { name, value } = event.target;
@@ -43,15 +34,11 @@ const SigninPage = () => {
         withCredentials: true,
       });
 
-      if (response.code < 200 || response.code >= 300) {
-        throw new Error("Access token invalid");
-      }
-
       const accessToken = response.data?.accessToken;
 
       localStorage.setItem("access-token", accessToken);
 
-      navigate("/home", { state: { from: "login", username: response.data.accessToken } });
+      navigate("/home", { state: { from: "login", username: response.data?.username } });
     } catch (err) {
       setErrorForm(err);
     }

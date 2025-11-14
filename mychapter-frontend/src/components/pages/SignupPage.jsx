@@ -1,11 +1,12 @@
 // components
 import { SignupForm } from "@/components/common/signup/signup-form";
-import UseAuthGuard from "@/hooks/UseAuthGuard";
 import UseEmptyFormSignup from "@/hooks/UseEmptyFormSignup";
-import { useEffect, useState } from "react";
+import UseValidationSignup from "@/hooks/UseValidationSignup";
+import { requestBE } from "@/lib/requestBE-lib";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 // utils
-import { useNavigate } from "react-router-dom";
 
 const SignupPage = () => {
   const navigate = useNavigate();
@@ -17,18 +18,12 @@ const SignupPage = () => {
   });
   const [errorForm, setErrorForm] = useState(null);
 
-  const [errorInputForm, setErrorInputForm] = useState({ success: null, inputForm: { username: null, email: null, password: null, confirmPassword: null } });
+  const [errorInputForm, setErrorInputForm] = useState({ success: true, inputForm: { username: null, email: null, password: null, confirmPassword: null } });
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const authGuard = UseAuthGuard();
   const emptyForm = UseEmptyFormSignup(formSignup);
-
-  // useEffect(() => {
-  //   if (authGuard === "valid") {
-  //     navigate("/home");
-  //   }
-  // }, [authGuard]);
+  const invalidForm = UseValidationSignup(formSignup);
 
   const handleChangeInput = (event) => {
     const { name, value } = event.target;
@@ -39,12 +34,28 @@ const SignupPage = () => {
     }));
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     if (!emptyForm.success) return setErrorInputForm(emptyForm);
+    if (!invalidForm.success) return setErrorInputForm(invalidForm);
 
-    setErrorInputForm({ success: null, inputForm: { username: null, email: null, password: null, confirmPassword: null } });
+    setErrorInputForm({ success: true, inputForm: { username: null, email: null, password: null, confirmPassword: null } });
+
+    try {
+      const response = await requestBE("POST", "auth/signup", formSignup, "", {
+        headers: { "Content-Type": "application/json" },
+        withCredentials: true,
+      });
+
+      const accessToken = response.data?.accessToken;
+
+      localStorage.setItem("access-token", accessToken);
+
+      navigate("/home", { state: { from: "signup", username: response.data?.username } });
+    } catch (err) {
+      setErrorForm(err);
+    }
   };
 
   const handleShowPassword = () => {

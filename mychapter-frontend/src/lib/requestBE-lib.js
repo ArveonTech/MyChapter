@@ -7,11 +7,35 @@ export const requestBE = async (method = "GET", resource, data = null, query = "
 
   const { headers = {}, withCredentials = false } = options;
 
-  return axios({
-    method,
-    url,
-    headers,
-    data,
-    withCredentials,
-  });
+  try {
+    const response = await axios({
+      method,
+      url,
+      headers,
+      data,
+      withCredentials,
+    });
+
+    if (response.status < 200 || response.status >= 300) {
+      throw response;
+    }
+
+    return response;
+  } catch (error) {
+    if (!error.response) {
+      throw {
+        success: false,
+        status: null,
+        message: "Server failed to connect",
+        data: null,
+      };
+    }
+
+    throw {
+      success: false,
+      status: error.response.status,
+      message: error.response.data?.message || "Request failed",
+      data: error.response.data,
+    };
+  }
 };
