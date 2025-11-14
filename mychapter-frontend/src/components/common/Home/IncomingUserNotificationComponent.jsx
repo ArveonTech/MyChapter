@@ -2,7 +2,7 @@ import { X } from "lucide-react";
 import { Activity, useState } from "react";
 import { useLocation } from "react-router-dom";
 
-const IncomingUserNotification = () => {
+const IncomingUserNotificationComponent = () => {
   const [showNotification, setShowNotification] = useState(true);
   const location = useLocation();
 
@@ -26,4 +26,4 @@ const IncomingUserNotification = () => {
   );
 };
 
-export default IncomingUserNotification;
+export default IncomingUserNotificationComponent;

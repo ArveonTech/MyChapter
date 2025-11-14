@@ -20,6 +20,7 @@ body {
   --color-bgSurfaceElevated: #bcecef; /* Card / komponen nge-float */
   --color-bgInteractive: #71c9ce; /* Button, elemen interaktif */
   --color-bgHighlight: #a6e3e9; /* Hover, accent, emphasis */
+  --color-bgWhite: #fff;
 
   --color-textprimary: #0f172a;
   --color-textsecondary: #64748b;

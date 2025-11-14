@@ -4,7 +4,6 @@ import UseAuthGuard from "@/hooks/UseAuthGuard";
 const ProtectedRoute = ({ children }) => {
   const auth = UseAuthGuard();
 
-  console.info(auth);
   if (auth === "loading") return null;
 
   if (auth !== "valid") return <Navigate to="/auth/signin" replace />;
