@@ -1,11 +1,22 @@
 // component
-import { Sun } from "lucide-react";
+import { Menu, Sun } from "lucide-react";
 
 // utils
 import getProfile from "@/utils/getProfile";
+import { Button } from "@/components/ui/button";
+import { useState } from "react";
+import { useLocation } from "react-router-dom";
+
+const navLinks = [
+  { label: "Home", href: "/home" },
+  { label: "Add", href: "/add" },
+  { label: "User", href: "/user" },
+];
 
 const HeaderComponent = () => {
+  const location = useLocation();
   const user = getProfile();
+  const [navigationHamburger, setNavigationHamburger] = useState(false);
 
   const profileImages = {
     "avatar-1": "/images/profile/1.png",
@@ -17,13 +28,41 @@ const HeaderComponent = () => {
   };
 
   return (
-    <header className="mt-5 px-2 xss:px-3 sm:px-10 flex items-center justify-between">
+    <header className="mt-5 px-2 xss:px-3 sm:px-10 flex items-center justify-between relative">
       <div className="flex items-center bg-bgWhite w-max p-2 rounded-full gap-2">
         <img src={profileImages[user?.avatar]} alt="avatar-image" className="w-5 xm:w-10 sm:w-12" />
         <p className="hidden xss:block xss:text-[clamp(8px,5vw,14px)] mr-1 xm:text-lg xm:mr-3">Hello, {user?.username}</p>
       </div>
-      <div className="w-15 xs:w-20 xm:w-24 xm:h-10 flex items-center bg-bgWhite p-1 rounded-full cursor-pointer">
-        <Sun className="bg-bgHighlight rounded-full p-1 xm:w-8 xm:h-8" />
+      <div className="hidden md:block">
+        {navLinks.map((link, index) => (
+          <Button asChild variant="link" className={`text-md lg:text-xl ${location.pathname === link.href && "underline"}`} key={index}>
+            <a href={link.href}>{link.label}</a>
+          </Button>
+        ))}
+      </div>
+      <div className="flex items-center gap-1 xs:gap-3">
+        <div className="w-15 xs:w-20 xm:w-24 xm:h-10 flex items-center bg-bgWhite p-1 rounded-full cursor-pointer">
+          <Sun className="bg-bgHighlight rounded-full p-1 xm:w-8 xm:h-8" />
+        </div>
+        <div
+          className="cursor-pointer hover:bg-accent p-2 rounded-md hidden xss:block md:hidden"
+          onClick={() => {
+            setNavigationHamburger(!navigationHamburger);
+          }}
+        >
+          <div>
+            <Menu />
+          </div>
+        </div>
+      </div>
+      <div className={`w-30 absolute top-20 right-5 sm:right-10 md:hidden z-50 ${navigationHamburger ? "block" : "hidden"}`}>
+        <div className="bg-bgHighlight flex flex-col rounded-lg">
+          {navLinks.map((link, index) => (
+            <Button asChild variant="link" className="text-md" key={index}>
+              <a href={link.href}>{link.label}</a>
+            </Button>
+          ))}
+        </div>
       </div>
     </header>
   );
