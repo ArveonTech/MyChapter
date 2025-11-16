@@ -18,7 +18,6 @@ const UseAuthGuard = () => {
           setStatus("refreshed");
         } catch (error) {
           setStatus("failed");
-          navigate("/auth/signin");
         }
         return;
       }
@@ -30,7 +29,6 @@ const UseAuthGuard = () => {
           setStatus("refreshed");
         } catch (error) {
           setStatus("failed");
-          navigate("/auth/signin");
         }
         return;
       }

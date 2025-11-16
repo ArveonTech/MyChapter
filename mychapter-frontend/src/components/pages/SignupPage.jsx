@@ -59,7 +59,7 @@ const SignupPage = () => {
   };
 
   const handleShowPassword = () => {
-    setShowPassword(!showPassword);
+  setShowPassword(!showPassword);
   };
 
   return (

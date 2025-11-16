@@ -22,12 +22,12 @@ export function LoginForm({ className, handleChangeInput, formSignin, handleSubm
             <FieldGroup>
               <Field>
                 <FieldLabel htmlFor="email">Email</FieldLabel>
-                <Input id="email" type="email" placeholder="m@example.com" name="email" required value={formSignin.email} onChange={handleChangeInput} />
+                <Input id="email" type="email" placeholder="m@example.com" name="email" required autoComplete="email" value={formSignin.email} onChange={handleChangeInput} />
               </Field>
               <Field>
                 <FieldLabel htmlFor="password">Password</FieldLabel>
                 <div className="relative">
-                  <Input id="password" type={showPassword ? "text" : "password"} name="password" placeholder="********" required value={formSignin.password} onChange={handleChangeInput} />
+                  <Input id="password" type={showPassword ? "text" : "password"} name="password" placeholder="********" required autoComplete="current-password" value={formSignin.password} onChange={handleChangeInput} />
                   <Eye className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer" onClick={handleShowPassword} />
                 </div>
               </Field>

@@ -23,14 +23,14 @@ export function SignupForm({ handleChangeInput, formSignin, handleSubmit, errorF
           <FieldGroup>
             <Field>
               <FieldLabel htmlFor="username">Username</FieldLabel>
-              <Input id="username" type="text" placeholder="John Doe" name="username" required value={formSignin.username} onChange={handleChangeInput} />
+              <Input id="username" type="text" placeholder="John Doe" name="username" required autoComplete="username" value={formSignin.username} onChange={handleChangeInput} />
               <Activity mode={!errorInputForm?.success && errorInputForm?.inputForm.username ? "visible" : "hidden"}>
                 <p className="text-xs text-red-500 italic">*{errorInputForm?.inputForm.username}</p>
               </Activity>
             </Field>
             <Field>
               <FieldLabel htmlFor="email">Email</FieldLabel>
-              <Input id="email" type="email" placeholder="m@example.com" name="email" required value={formSignin.email} onChange={handleChangeInput} />
+              <Input id="email" type="email" placeholder="m@example.com" name="email" required autoComplete="email" value={formSignin.email} onChange={handleChangeInput} />
               <Activity mode={!errorInputForm?.success && errorInputForm?.inputForm.email ? "visible" : "hidden"}>
                 <p className="text-xs text-red-500 italic">*{errorInputForm?.inputForm.email}</p>
               </Activity>
@@ -39,7 +39,7 @@ export function SignupForm({ handleChangeInput, formSignin, handleSubmit, errorF
             <Field>
               <FieldLabel htmlFor="password">Password</FieldLabel>
               <div className="relative">
-                <Input id="password" type={showPassword ? "text" : "password"} name="password" placeholder="********" required value={formSignin.password} onChange={handleChangeInput} />
+                <Input id="password" type={showPassword ? "text" : "password"} name="password" placeholder="********" required autoComplete="new-password" value={formSignin.password} onChange={handleChangeInput} />
                 <Eye className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer" onClick={handleShowPassword} />
               </div>
               <Activity mode={!errorInputForm?.success && errorInputForm?.inputForm.password ? "visible" : "hidden"}>
@@ -49,7 +49,7 @@ export function SignupForm({ handleChangeInput, formSignin, handleSubmit, errorF
             </Field>
             <Field>
               <FieldLabel htmlFor="confirm-password">Confirm Password</FieldLabel>
-              <Input id="confirm-password" type="password" placeholder="********" name="confirmPassword" required value={formSignin.confirmPassword} onChange={handleChangeInput} />
+              <Input id="confirm-password" type="password" placeholder="********" name="confirmPassword" required autoComplete="new-password" value={formSignin.confirmPassword} onChange={handleChangeInput} />
               <Activity mode={!errorInputForm?.success && errorInputForm?.inputForm.confirmPassword ? "visible" : "hidden"}>
                 <p className="text-xs text-red-500 italic">*{errorInputForm?.inputForm.confirmPassword}</p>
               </Activity>

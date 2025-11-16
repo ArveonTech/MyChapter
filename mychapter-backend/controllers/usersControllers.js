@@ -49,16 +49,17 @@ export const findUser = async (email, password) => {
 // function of adding users
 export const addUser = async (dataLogin) => {
   try {
-    const dataUser = { role: "user", avatar: "avatar-1", emailVerified: false, ...dataLogin };
+    const dataUser = { role: "user", avatar: "avatar-1", createAt: new Date(), updateAt: new Date(), ...dataLogin };
     const dbUsers = await database();
     const result = await dbUsers.collection("users").insertOne(dataUser);
 
     const user = await dbUsers.collection("users").findOne({ _id: result.insertedId });
+
     return {
       success: true,
       code: 200,
       message: `Successfully added user`,
-      data: user.data,
+      data: user,
       description: result,
     };
   } catch (error) {

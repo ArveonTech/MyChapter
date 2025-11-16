@@ -6,7 +6,6 @@ const GuestRoute = ({ children }) => {
 
   if (auth === "loading") return null;
 
-  // Kalau user udah login → lempar ke /home
   if (auth === "valid") return <Navigate to="/home" replace />;
 
   return children;

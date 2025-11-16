@@ -26,11 +26,32 @@ noteRoute.get("/notes", verifyUser, async (req, res) => {
 
 app.get("/records", async (req, res) => {
   try {
-    const searchQuery = parseInt(req.query.searchQuery) || 1;
-    const limit = parseInt(req.query.limit) || 10;
-    const skip = parseInt(req.params.offset);
+    const searchQuery = req.params.searchQuery || ""; // search
+    const tag = req.params.tag || ""; // tag(work&hobby,life,dl)
+    const status = req.params.status || ""; // status(all,archive,pinned)
+    const page = parseInt(req.params.page) || 1; // page
+    const limit = parseInt(req.params.limit) || 10; // limit
+    const sortBy = req.params.sortBy || "latest"; // sorting
 
-    const dataGetLimitNotes = await getLimitNotes(skip, limit, searchQuery);
+    const filter = {};
+
+    if (searchQuery) {
+      filter.search = searchQuery;
+    }
+
+    if (tag) {
+      filter.tag = tag;
+    }
+
+    if (status) {
+      filter.status = status;
+    }
+
+    const sort = {};
+    if (sortBy === "latest") sort.updatedAt = -1;
+    if (sortBy === "oldest") sort.updatedAt = 1;
+
+    const dataGetLimitNotes = await getLimitNotes(page, limit, filter, sort);
 
     if (dataGetLimitNotes.code !== 200) return res.status(dataGetLimitNotes.code).json(dataGetLimitNotes.message);
 

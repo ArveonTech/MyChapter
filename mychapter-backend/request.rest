@@ -48,27 +48,31 @@ refreshToken: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OGUyNDBlZD
 // note
 # GET  http://localhost:3000/api/note/notes
 # GET  http://localhost:3000/api/note/notes/68e7818b604b48045db6029d
-# POST http://localhost:3000/api/note/notes/add
+POST http://localhost:3000/api/note/notes/add
 # PATCH http://localhost:3000/api/note/notes/update
 # DELETE http://localhost:3000/api/note/notes/delete
-# Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OGU3NjQyZDAxMzdmZjgyZTQ5NWRmYmYiLCJyb2xlIjoidXNlciIsIm5hbWUiOiJCdWRpIiwiZW1haWwiOiJidWRpQGV4YW1wbGUuY29tIiwicGFzc3dvcmQiOiJidWRpMTIzIiwiaWF0IjoxNzYwMDAyNDA0LCJleHAiOjE3NjAwODg4MDR9.rXWxWRHXrFxgNeH4fCxMP9yOOOxqwZcJDxl5BLGq7Xk
-# refreshToken: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OGU3NjQyZDAxMzdmZjgyZTQ5NWRmYmYiLCJyb2xlIjoidXNlciIsIm5hbWUiOiJCdWRpIiwiZW1haWwiOiJidWRpQGV4YW1wbGUuY29tIiwicGFzc3dvcmQiOiJidWRpMTIzIiwiaWF0IjoxNzYwMDAyNDA0LCJleHAiOjE3NjA2MDcyMDR9.grErkTPPuY3Vct0hyoFvaKwwQ9n8J1ItD-gnL4Qx3rM
-# Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTBjMjdmYTVjMDg2YWE2MTdhYThjOGUiLCJyb2xlIjoidXNlciIsInVzZXJuYW1lIjoiYnVkaSIsImVtYWlsIjoiYnVkaUBnbWFpbC5jb20iLCJhdmF0YXIiOiJhdmF0YXItMSIsImlhdCI6MTc2MzI5NDQ4MywiZXhwIjoxNzYzMjk4MDgzfQ.0Jq7EeTtZZKkQR3OIAB5Xc3o9E2ROBh1coxgf0svuqM
+refreshToken: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2OTBjMjdmYTVjMDg2YWE2MTdhYThjOGUiLCJyb2xlIjoidXNlciIsInVzZXJuYW1lIjoiYnVkaSIsImVtYWlsIjoiYnVkaUBnbWFpbC5jb20iLCJhdmF0YXIiOiJhdmF0YXItMSIsImlhdCI6MTc2MzI4OTU5NCwiZXhwIjoxNzYzODk0Mzk0fQ.MJv4-GDt1H6_Mc25WkSgVtfzIKgU1W9-yyXG5fKMpJM
+Content-Type: application/json
 
-# {
-#     "judul": "Deadline Project",
-#     "isi": "Frontend selesai hari Jumat, Backend Minggu.",
-#     "archive": false,
-#     "favorite": true,
-#     "pinned": true,
-#     "tags": [
-#       "kerja",
-#       "project"
-#     ],
-#     "color": "#FFA500",
-#     "createdAt": "2025-10-08T15:30:00.000Z",
-#     "updatedAt": "2025-10-08T15:30:00.000Z"
-#   }
+{
+  "judul": "Reflection Night",
+  "isi": "Think about what went well and what can be improved.",
+  "archive": false,
+  "favorite": false,
+  "pinned": true,
+  "tag": "Thoughts & Mood",
+  "color": "#F5DEB3",
+  "createdAt": "2025-10-01T21:00:00.000Z",
+  "updatedAt": "2025-10-01T21:00:00.000Z"
+}
+
+
+
+
+
+
+
 
 
 

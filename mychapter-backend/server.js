@@ -72,7 +72,7 @@ app.post("/auth/signup", validateUserMiddleware, async (req, res) => {
     return res.status(401).json(userNew.message);
   }
 
-  const { password, ...rest } = user;
+  const { password, ...rest } = userNew.data;
 
   const accessToken = createAccessToken(rest);
   const refreshToken = createRefreshToken(rest);
