@@ -15,7 +15,7 @@ import ContactComponent from "../common/Landing/ContactComponent";
 
 const LandingPage = () => {
   return (
-    <div className="mb-20">
+    <div>
       <NavigationComponent />
       <HeroComponent />
       <AboutComponent />

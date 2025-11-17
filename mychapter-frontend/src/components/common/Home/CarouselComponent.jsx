@@ -64,9 +64,9 @@ const CarouselComponent = () => {
       <CarouselContent>
         {carouselData.map((item, index) => (
           <CarouselItem key={index} className="h-full">
-            <div className={`bg-bgHighlight p-4 rounded-2xl flex ${item.styleClass} items-center gap-4 relative  lg:min-h-[200px]`}>
+            <div className={`bg-secondary p-4 rounded-2xl flex ${item.styleClass} items-center gap-4 relative  lg:min-h-[200px]`}>
               <div className="w-full lg:w-1/2 text-center lg:text-left flex flex-col lg:h-full justify-center">
-                <h1 className={`text-[clamp(10px,10vw,28px)] xm:text-xl sm:text-2xl font-medium ${item.textPosition}`}>{item.title}</h1>
+                <h1 className={`text-[clamp(10px,10vw,28px)] xm:text-xl sm:text-2xl font-medium font-serif ${item.textPosition}`}>{item.title}</h1>
                 <p className="italic mt-2 hidden lg:block">" {item.description} "</p>
               </div>
               <div className="w-full lg:w-1/2 flex justify-center">
@@ -82,7 +82,7 @@ const CarouselComponent = () => {
             key={index}
             onClick={() => api && api.scrollTo(index)}
             className={`h-2 w-2 rounded-full transition-all
-              ${current === index ? "bg-bgInteractive" : "bg-gray-400"}`}
+              ${current === index ? "bg-accent-foreground" : "bg-muted"}`}
           ></button>
         ))}
       </div>
