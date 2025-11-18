@@ -7,7 +7,7 @@ import NotesCardComponent from "@/components/common/Home/NotesCardComponent";
 
 const HomePage = () => {
   return (
-    <div>
+    <div className="mb-10">
       <IncomingUserNotificationComponent />
       <HeaderComponent />
       <HeroComponent />

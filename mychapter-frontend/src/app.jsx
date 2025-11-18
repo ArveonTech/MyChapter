@@ -10,6 +10,7 @@ import NotFoundPage from "./components/pages/NotFoundPage";
 // guards
 import ProtectedRoute from "@/utils/ProtectedRoute";
 import GuestRoute from "@/utils/GuestRoute";
+import SearchPage from "./components/pages/SearchPage";
 
 const router = createBrowserRouter([
   {
@@ -41,6 +42,14 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <HomePage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/search",
+    element: (
+      <ProtectedRoute>
+        <SearchPage />
       </ProtectedRoute>
     ),
   },

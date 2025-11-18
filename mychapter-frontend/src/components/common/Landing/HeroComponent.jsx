@@ -12,7 +12,7 @@ import { Button } from "../../ui/button";
 
 const HeroComponent = () => {
   return (
-    <section className="bg-primary/40 relative flex flex-col md:flex-row items-center px-10 py-10 overflow-hidden" id="home">
+    <section className="bg-secondary/40 relative flex flex-col md:flex-row items-center px-10 py-10 overflow-hidden" id="home">
       <div className="flex-1 text-center md:text-left space-y-5" data-aos="fade-right" data-aos-duration="1300">
         <h1 className="text-[clamp(3px,100vw,18px)] xs:text-3xl font-semibold text-primary">MyChapter</h1>
         <p className="text-sm sm:text-lg md:text-xl italic text-foreground">"A place where every thought has its own space. Write, save, and rediscover your inspiration whenever you want."🍃</p>

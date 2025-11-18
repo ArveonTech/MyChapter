@@ -50,10 +50,13 @@ export const loadNote = async (id) => {
 };
 
 // function to retrieve 20 data notes
-export const getLimitNotes = async (pageNotes, limitNotes, querySearch, sorting) => {
+export const getLimitNotes = async (startIndexPage, limitPage, querySearch, sorting) => {
   try {
     const dbNotes = await database();
-    const dbNotesFilter = dbNotes.collection("notes").find({ title: querySearch }).sort(sorting).skip(pageNotes).limit(limitNotes);
+
+    const dbNotesFilter = await dbNotes.collection("notes").find(querySearch).sort(sorting).skip(startIndexPage).limit(limitPage).toArray();
+
+    console.info(dbNotesFilter);
 
     if (!dbNotesFilter || dbNotesFilter.length === 0) return { success: false, code: 404, message: "Note not found" };
 

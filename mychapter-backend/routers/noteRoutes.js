@@ -24,34 +24,68 @@ noteRoute.get("/notes", verifyUser, async (req, res) => {
   }
 });
 
-app.get("/records", async (req, res) => {
+noteRoute.get("/records", verifyUser, async (req, res) => {
   try {
-    const searchQuery = req.params.searchQuery || ""; // search
-    const tag = req.params.tag || ""; // tag(work&hobby,life,dl)
-    const status = req.params.status || ""; // status(all,archive,pinned)
-    const page = parseInt(req.params.page) || 1; // page
-    const limit = parseInt(req.params.limit) || 10; // limit
-    const sortBy = req.params.sortBy || "latest"; // sorting
+    const page = parseInt(req.query.page) || 1; // page
+    const limit = parseInt(req.query.limit) || 10; // limit
+    const searchQuery = req.query.searchQuery || ""; // search
+    const tag = req.query.tag || ""; // tag(work&hobby,life,dl)
+    const pinned = req.query.pinned === "true" || false;
+    const favorite = req.query.favorite === "true" || false;
+    const archive = req.query.archive === "true" || false;
+    const sortBy = req.query.sortBy || "latest"; // sorting by time
+    const filterBy = req.query.filterBy || "updateAt"; // sorting by create or update
+    const userId = req.user._id;
+
+    console.info(req.query);
+
+    const startIndexPage = (page - 1) * limit;
+    const limitPage = limit;
 
     const filter = {};
 
     if (searchQuery) {
-      filter.search = searchQuery;
+      filter.title = /searchQuery/i;
     }
 
     if (tag) {
-      filter.tag = tag;
+      filter.tag = /tag/i;
     }
 
-    if (status) {
-      filter.status = status;
+    if (favorite) {
+      filter.favorite = favorite;
+    }
+
+    if (archive) {
+      filter.archive = archive;
+    }
+
+    if (pinned) {
+      filter.pinned = pinned;
     }
 
     const sort = {};
-    if (sortBy === "latest") sort.updatedAt = -1;
-    if (sortBy === "oldest") sort.updatedAt = 1;
 
-    const dataGetLimitNotes = await getLimitNotes(page, limit, filter, sort);
+    if (filterBy === "createdAt") {
+      if (sortBy === "oldest") {
+        sort.createAt = 1;
+      } else {
+        sort.createAt = -1;
+      }
+    }
+    if (filterBy === "updatedAt") {
+      if (sortBy === "oldest") {
+        sort.updateAt = 1;
+      } else {
+        sort.updateAt = -1;
+      }
+    }
+
+    filter.userId = userId;
+
+    console.info(filter);
+
+    const dataGetLimitNotes = await getLimitNotes(startIndexPage, limitPage, filter, sort);
 
     if (dataGetLimitNotes.code !== 200) return res.status(dataGetLimitNotes.code).json(dataGetLimitNotes.message);
 

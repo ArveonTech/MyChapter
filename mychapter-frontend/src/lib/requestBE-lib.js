@@ -4,7 +4,6 @@ export const requestBE = async (method = "GET", resource, data = null, query = "
   const baseUrl = import.meta.env.VITE_BACKEND_URL;
 
   const url = query ? `${baseUrl}/${resource}?${query}` : `${baseUrl}/${resource}`;
-
   const { headers = {}, withCredentials = false } = options;
 
   try {
@@ -15,7 +14,6 @@ export const requestBE = async (method = "GET", resource, data = null, query = "
       data,
       withCredentials,
     });
-
     if (response.status < 200 || response.status >= 300) {
       throw response;
     }

@@ -1,73 +1,60 @@
+import ErrorComponent from "@/components/Status/ErrorComponent";
+import LoadingComponent from "@/components/Status/LoadingComponent";
+import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import useGetDataNotes from "@/hooks/home/UseGetDataNotes";
+import formatDate from "@/utils/formateDate";
+import { Archive, Heart, History, Pin } from "lucide-react";
+import { Activity } from "react";
 import { useSelector } from "react-redux";
 
 const NotesCardComponent = () => {
-  // const [dataNotes,setDataNotes] =
   const filter = useSelector((state) => state.filterHome);
+  const { dataNotes, loading, errorNotes } = useGetDataNotes();
+
+  const handleHeader = (note) => {
+    if (filter === "") return formatDate(note?.createdAt);
+    if (filter === "pinned") return <Pin />;
+    if (filter === "favorite") return <Heart />;
+    if (filter === "latest") return <History />;
+    if (filter === "archive") return <Archive />;
+  };
 
   return (
-    <div className="w-8/12 sm:w-10/12 mx-auto mt-10">
-      <div className="grid justify-items-center justify-center gap-4 md:gap-7 lg:gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-        <Card className="bg-secondary p-4 my-auto rounded-3xl shadow-md w-full lg:max-w-60 min-h-52">
-          <CardHeader className="p-0">
-            <div className="flex items-center justify-between">
-              <h1 className="text-xl font-semibold line-clamp-1">Note A</h1>
-              <p className="text-sm font-medium text-textprimary/70 line-clamp-1">2025-03-12</p>
-            </div>
-            <div className="w-full h-0.5 bg-foreground mt-3"></div>
-          </CardHeader>
+    <div className="w-9/12 sm:w-10/12 mx-auto mt-10">
+      {errorNotes ? (
+        errorNotes.status === 404 ? (
+          <p className="text-center text-xl mt-10 text-destructive">Note not found</p>
+        ) : (
+          <Activity mode="visible">
+            <ErrorComponent />
+          </Activity>
+        )
+      ) : loading ? (
+        <LoadingComponent />
+      ) : (
+        <div className="grid justify-items-center justify-center gap-10 sm:gap-4 md:gap-7 lg:gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          <Activity mode={dataNotes ? "visible" : "hidden"}>
+            {dataNotes.map((note) => (
+              <Card className="bg-secondary p-4 my-auto rounded-3xl shadow-md w-full lg:max-w-60 min-h-52" key={note._id}>
+                <CardHeader className="p-0 line-clamp-1">
+                  <div className="flex items-center justify-between">
+                    <h1 className="text-xl font-semibold line-clamp-1">{note.title}</h1>
+                    <p className="text-sm font-medium text-textprimary/70 line-clamp-1">{handleHeader(note)}</p>
+                  </div>
+                  <div className="w-full h-0.5 bg-foreground mt-3"></div>
+                </CardHeader>
 
-          <CardContent className="p-0 text-textprimary/80 leading-relaxed line-clamp-4">Catatan pertama berisi ringkasan singkat tentang progres harian dan checklist kecil yang harus diselesaikan.</CardContent>
-        </Card>
+                <CardContent className="p-0 text-textprimary/80 leading-relaxed line-clamp-4">Catatan pertama berisi ringkasan singkat tentang progres harian dan checklist kecil yang harus diselesaikan.</CardContent>
+              </Card>
+            ))}
+          </Activity>
+        </div>
+      )}
 
-        <Card className="bg-secondary p-4 my-auto rounded-3xl shadow-md w-full lg:max-w-60 min-h-52">
-          <CardHeader className="p-0">
-            <div className="flex items-center justify-between">
-              <h1 className="text-xl font-semibold line-clamp-1">Note B</h1>
-              <p className="text-sm font-medium text-textprimary/70 line-clamp-1">2025-01-28</p>
-            </div>
-            <div className="w-full h-0.5 bg-foreground mt-3"></div>
-          </CardHeader>
-
-          <CardContent className="p-0 text-textprimary/80 leading-relaxed line-clamp-4">Ini tentang ide fitur baru yang muncul mendadak, termasuk beberapa poin penting untuk update berikutnya.</CardContent>
-        </Card>
-
-        <Card className="bg-secondary p-4 my-auto rounded-3xl shadow-md w-full lg:max-w-60 min-h-52">
-          <CardHeader className="p-0">
-            <div className="flex items-center justify-between">
-              <h1 className="text-xl font-semibold line-clamp-1">Note C</h1>
-              <p className="text-sm font-medium text-textprimary/70 line-clamp-1">2025-05-02</p>
-            </div>
-            <div className="w-full h-0.5 bg-foreground mt-3"></div>
-          </CardHeader>
-
-          <CardContent className="p-0 text-textprimary/80 leading-relaxed line-clamp-4">Sebuah draft konsep untuk halaman UI, termasuk flow dasar dan vibe warna yang mungkin dipakai.</CardContent>
-        </Card>
-
-        <Card className="bg-secondary p-4 my-auto rounded-3xl shadow-md w-full lg:max-w-60 min-h-52">
-          <CardHeader className="p-0">
-            <div className="flex items-center justify-between">
-              <h1 className="text-xl font-semibold line-clamp-1">Note D</h1>
-              <p className="text-sm font-medium text-textprimary/70 line-clamp-1">2025-02-17</p>
-            </div>
-            <div className="w-full h-0.5 bg-foreground mt-3"></div>
-          </CardHeader>
-
-          <CardContent className="p-0 text-textprimary/80 leading-relaxed line-clamp-4">Reminder kecil mengenai bug yang sempat muncul waktu testing dan harus di-track lagi besok.</CardContent>
-        </Card>
-
-        <Card className="bg-secondary p-4 my-auto rounded-3xl shadow-md w-full lg:max-w-60 min-h-52">
-          <CardHeader className="p-0">
-            <div className="flex items-center justify-between">
-              <h1 className="text-xl font-semibold line-clamp-1">Note E</h1>
-              <p className="text-sm font-medium text-textprimary/70 line-clamp-1">2025-06-21</p>
-            </div>
-            <div className="w-full h-0.5 bg-foreground mt-3"></div>
-          </CardHeader>
-
-          <CardContent className="p-0 text-textprimary/80 leading-relaxed line-clamp-4">Catatan berisi inspirasi desain yang didapat dari lihat apps lain dan mau dicoba adaptasi.</CardContent>
-        </Card>
-      </div>
+      <Button asChild className="block max-w-fit mt-10 mx-auto">
+        <a href="/search">See more...</a>
+      </Button>
     </div>
   );
 };
