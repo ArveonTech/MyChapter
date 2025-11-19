@@ -1,3 +1,4 @@
+// components
 import { Search } from "lucide-react";
 
 const SearchButtonComponent = () => {

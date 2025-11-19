@@ -1,5 +1,5 @@
-import SearchButtonComponent from "../SearchButton";
-import TagNotesComponent from "../TagNotesComponent";
+import SearchButtonComponent from "@/components/common/Home/SearchButton";
+import TagNotesComponent from "@/components/common/Home/TagNotesComponent";
 
 const RightHeroComponent = () => {
   return (

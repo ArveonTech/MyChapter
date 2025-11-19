@@ -1,7 +1,10 @@
-import { Button } from "@/components/ui/button";
-import { filterHome } from "@/features/filterNoteHomeSlice";
+// utils
 import { useState } from "react";
 import { useDispatch } from "react-redux";
+
+// components
+import { Button } from "@/components/ui/button";
+import { filterStatusNoteHome } from "@/features/filterStatusNoteHomeSlice";
 
 const FilterNoteComponent = () => {
   const [activeTab, setActiveTab] = useState("All Notes");
@@ -17,11 +20,11 @@ const FilterNoteComponent = () => {
 
   const handleFilter = (event) => {
     setActiveTab(event.target.innerText);
-    dispatch(filterHome(event.target.value));
+    dispatch(filterStatusNoteHome(event.target.value));
   };
 
   return (
-    <div className="mt-10 w-10/12 mx-auto flex flex-col items-center justify-center p-4">
+    <section className="mt-10 w-10/12 mx-auto flex flex-col items-center justify-center p-4">
       <div className={`flex overflow-x-auto scrollbar-hide p-4 max-w-full lg:max-w-6xl gap-5 `}>
         {tabs.map((tab) => (
           <Button key={tab.value} onClick={handleFilter} value={tab.value} className={`${activeTab === tab.title ? "bg-primary text-primary-foreground" : "bg-secondary text-foreground"} `}>
@@ -29,7 +32,7 @@ const FilterNoteComponent = () => {
           </Button>
         ))}
       </div>
-    </div>
+    </section>
   );
 };
 

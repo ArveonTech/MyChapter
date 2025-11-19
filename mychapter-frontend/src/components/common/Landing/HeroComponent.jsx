@@ -7,8 +7,8 @@ AOS.init({
   once: true,
 });
 
-// import components
-import { Button } from "../../ui/button";
+// components
+import { Button } from "@/components/ui/button";
 
 const HeroComponent = () => {
   return (

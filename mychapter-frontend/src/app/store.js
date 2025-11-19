@@ -1,11 +1,10 @@
-import tagHomeSlice from "@/features/tagHomeSlice";
 import { configureStore } from "@reduxjs/toolkit";
-import filterHomeSlice from "@/features/filterNoteHomeSlice"
-
+import filterStatusNoteHomeSlice from "@/features/filterStatusNoteHomeSlice";
+import filterNotesSlice from "@/features/filterNotesSlice";
 
 export const store = configureStore({
   reducer: {
-    tagHome: tagHomeSlice,
-    filterHome: filterHomeSlice,
+    filterStatusHome: filterStatusNoteHomeSlice,
+    filterNotes: filterNotesSlice,
   },
 });

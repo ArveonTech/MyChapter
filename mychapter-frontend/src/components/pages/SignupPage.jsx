@@ -1,12 +1,12 @@
-// components
-import { SignupForm } from "@/components/common/signup/signup-form";
+// utils
 import UseEmptyFormSignup from "@/hooks/UseEmptyFormSignup";
 import UseValidationSignup from "@/hooks/UseValidationSignup";
 import { requestBE } from "@/lib/requestBE-lib";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-// utils
+// components
+import { SignupForm } from "@/components/common/signup/signup-form";
 
 const SignupPage = () => {
   const navigate = useNavigate();
@@ -59,7 +59,7 @@ const SignupPage = () => {
   };
 
   const handleShowPassword = () => {
-  setShowPassword(!showPassword);
+    setShowPassword(!showPassword);
   };
 
   return (

@@ -1,8 +1,10 @@
-// components
-import { Button } from "@/components/ui/button";
+// utils
 import { Menu } from "lucide-react";
 import { useState } from "react";
 import { Link } from "react-router-dom";
+
+// components
+import { Button } from "@/components/ui/button";
 
 const navLinks = [
   { label: "Home", href: "#home" },

@@ -37,8 +37,6 @@ noteRoute.get("/records", verifyUser, async (req, res) => {
     const filterBy = req.query.filterBy || "updateAt"; // sorting by create or update
     const userId = req.user._id;
 
-    console.info(req.query);
-
     const startIndexPage = (page - 1) * limit;
     const limitPage = limit;
 
@@ -82,8 +80,6 @@ noteRoute.get("/records", verifyUser, async (req, res) => {
     }
 
     filter.userId = userId;
-
-    console.info(filter);
 
     const dataGetLimitNotes = await getLimitNotes(startIndexPage, limitPage, filter, sort);
 

@@ -1,6 +1,9 @@
-import { X } from "lucide-react";
+// utils
 import { Activity, useState } from "react";
 import { useLocation } from "react-router-dom";
+
+// components
+import { X } from "lucide-react";
 
 const IncomingUserNotificationComponent = () => {
   const [showNotification, setShowNotification] = useState(true);

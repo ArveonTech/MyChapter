@@ -1,16 +1,17 @@
-// component
-import { Menu, Moon, Sun } from "lucide-react";
-
 // utils
 import getProfile from "@/utils/getProfile";
-import { Button } from "@/components/ui/button";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useTheme } from "@/features/ThemeProvider";
+
+// component
+import { Menu, Moon, Sun } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 const navLinks = [
   { label: "Home", href: "/home" },
+  { label: "Notes", href: "/notes" },
   { label: "Add", href: "/add" },
   { label: "User", href: "/user" },
 ];

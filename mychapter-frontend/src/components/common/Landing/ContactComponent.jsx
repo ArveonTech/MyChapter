@@ -1,4 +1,5 @@
 import { useTheme } from "@/features/ThemeProvider";
+// components
 import { Contact } from "lucide-react";
 
 const ContactComponent = () => {

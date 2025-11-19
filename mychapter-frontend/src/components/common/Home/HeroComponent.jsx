@@ -1,3 +1,4 @@
+// components
 import LeftHeroComponent from "./hero/LeftHeroComponent";
 import RightHeroComponent from "./hero/RightHeroComponent";
 

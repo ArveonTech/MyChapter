@@ -56,8 +56,6 @@ export const getLimitNotes = async (startIndexPage, limitPage, querySearch, sort
 
     const dbNotesFilter = await dbNotes.collection("notes").find(querySearch).sort(sorting).skip(startIndexPage).limit(limitPage).toArray();
 
-    console.info(dbNotesFilter);
-
     if (!dbNotesFilter || dbNotesFilter.length === 0) return { success: false, code: 404, message: "Note not found" };
 
     return {

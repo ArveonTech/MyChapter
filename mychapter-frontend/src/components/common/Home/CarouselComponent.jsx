@@ -1,6 +1,8 @@
-import AutoPlay from "embla-carousel-autoplay";
-
+// components
 import { Carousel, CarouselContent, CarouselItem } from "@/components/ui/carousel";
+
+// utils
+import AutoPlay from "embla-carousel-autoplay";
 import { useEffect, useState } from "react";
 import { useIsWide } from "@/utils/isWide";
 
