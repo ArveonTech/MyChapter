@@ -67,7 +67,11 @@ const HeaderComponent = () => {
       <div className="flex items-center gap-1 xs:gap-3">
         <div className="hidden xs:block">
           <div className="xss:w-15 xs:w-20 xm:w-24 xm:h-10 flex items-center bg-secondary p-1 rounded-full cursor-pointer transition-all duration-500" onClick={toggleTheme}>
-            <div className={`bg-primary text-primary-foreground rounded-full p-1 xm:w-8 xm:h-8 transform transition-transform duration-500 ease-in-out ${theme === "dark" ? "translate-x-14" : "translate-x-0"}`}>
+            <div
+              className={`bg-primary text-primary-foreground rounded-full p-1 xm:w-8 xm:h-8 transform transition-transform duration-500 ease-in-out ${
+                theme === "dark" ? "translate-x-10 xm:translate-x-14" : "translate-x-10 xm:translate-x-0"
+              }`}
+            >
               {theme === "dark" ? <Moon /> : <Sun />}
             </div>
           </div>

@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
 import { requestBE } from "@/lib/requestBE-lib";
-import { useSelector } from "react-redux";
 
-const useGetDataNotes = () => {
-  const filter = useSelector((state) => state.filterHome);
+const useGetDataNotes = (page, limit, filterNotes = []) => {
   const accessToken = localStorage.getItem("access-token");
   const [loading, setLoading] = useState(false);
   const [dataNotes, setDataNotes] = useState([]);
+  const [infoNotes, setInfoNotes] = useState({});
   const [errorNotes, setErrorNotes] = useState(null);
+  const pageNotes = page;
+  const limitNotes = limit;
 
   useEffect(() => {
     setDataNotes(null);
@@ -16,26 +17,28 @@ const useGetDataNotes = () => {
 
     let params = "";
 
-    if (filter === "pinned") {
-      params += "&pinned=true";
-    }
+    filterNotes.forEach((filter) => {
+      if (filter === "pinned") {
+        params += "&status=pinned";
+      }
 
-    if (filter === "favorite") {
-      params += "&favorite=true";
-    }
+      if (filter === "favorite") {
+        params += "&status=favorite";
+      }
 
-    if (filter === "latest") {
-      params += "&latest=true";
-    }
+      if (filter === "archive") {
+        params += "&incArchive=true";
+      }
 
-    if (filter === "archive") {
-      params += "&archive=true";
-    }
+      if (filter === "latest") {
+        params += "&latest=true";
+      }
+    });
 
     setLoading(true);
     const fetchData = async () => {
       try {
-        const response = await requestBE("GET", "api/note/records", null, `page=1&limit=10${params}`, {
+        const response = await requestBE("GET", "api/note/records", null, `page=${pageNotes}&limit=${limitNotes}${params}`, {
           headers: {
             Bearer: accessToken,
             "Content-Type": "application/json",
@@ -43,19 +46,21 @@ const useGetDataNotes = () => {
           withCredentials: true,
         });
 
-        setDataNotes(response?.data?.data);
+        setDataNotes(response?.data?.data.item);
+        const { total, page, limit } = response?.data?.data;
+        setInfoNotes({ total, page, limit });
       } catch (err) {
         setErrorNotes(err);
-        console.info(err);
+        setErrorNotes(err);
       } finally {
         setLoading(false);
       }
     };
 
     fetchData();
-  }, [filter]);
+  }, [page, limit, filterNotes]);
 
-  return { dataNotes, loading, errorNotes };
+  return { dataNotes, loading, errorNotes, infoNotes };
 };
 
 export default useGetDataNotes;

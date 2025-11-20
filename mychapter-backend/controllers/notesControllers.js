@@ -50,11 +50,12 @@ export const loadNote = async (id) => {
 };
 
 // function to retrieve 20 data notes
-export const getLimitNotes = async (startIndexPage, limitPage, querySearch, sorting) => {
+export const getLimitNotes = async (startIndexPage, limitPage, querySearch, sorting, page) => {
   try {
     const dbNotes = await database();
 
     const dbNotesFilter = await dbNotes.collection("notes").find(querySearch).sort(sorting).skip(startIndexPage).limit(limitPage).toArray();
+    const countNotes = await dbNotes.collection("notes").countDocuments(querySearch);
 
     if (!dbNotesFilter || dbNotesFilter.length === 0) return { success: false, code: 404, message: "Note not found" };
 
@@ -62,7 +63,12 @@ export const getLimitNotes = async (startIndexPage, limitPage, querySearch, sort
       success: true,
       code: 200,
       message: "note successfully found",
-      data: dbNotesFilter,
+      data: {
+        total: countNotes,
+        page,
+        limit: limitPage,
+        item: dbNotesFilter,
+      },
     };
   } catch (error) {
     const err = new Error(`An error occurred while searching for notes: ${error.message}`);

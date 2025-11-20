@@ -30,36 +30,39 @@ noteRoute.get("/records", verifyUser, async (req, res) => {
     const limit = parseInt(req.query.limit) || 10; // limit
     const searchQuery = req.query.searchQuery || ""; // search
     const tag = req.query.tag || ""; // tag(work&hobby,life,dl)
-    const pinned = req.query.pinned === "true" || false;
-    const favorite = req.query.favorite === "true" || false;
-    const archive = req.query.archive === "true" || false;
+    const status = req.query.status || ""; // status(arhice,pinned,favorite)
     const sortBy = req.query.sortBy || "latest"; // sorting by time
     const filterBy = req.query.filterBy || "updateAt"; // sorting by create or update
+    const incArchive = req.query.incArchive || false;
     const userId = req.user._id;
 
     const startIndexPage = (page - 1) * limit;
-    const limitPage = limit;
+    let limitPage = 0;
+
+    if (isNaN(limit) || limit > 10 || limit < 1) {
+      limitPage = 10;
+    } else {
+      limitPage = limit;
+    }
 
     const filter = {};
 
     if (searchQuery) {
-      filter.title = /searchQuery/i;
+      filter.title = new RegExp(searchQuery, "i");
     }
 
     if (tag) {
-      filter.tag = /tag/i;
+      filter.tag = new RegExp(tag, "i");
     }
 
-    if (favorite) {
-      filter.favorite = favorite;
+    if (status) {
+      filter.status = new RegExp(status, "i");
     }
 
-    if (archive) {
-      filter.archive = archive;
-    }
-
-    if (pinned) {
-      filter.pinned = pinned;
+    if (incArchive) {
+      filter.incArchive = true;
+    } else {
+      filter.incArchive = false;
     }
 
     const sort = {};
@@ -81,7 +84,7 @@ noteRoute.get("/records", verifyUser, async (req, res) => {
 
     filter.userId = userId;
 
-    const dataGetLimitNotes = await getLimitNotes(startIndexPage, limitPage, filter, sort);
+    const dataGetLimitNotes = await getLimitNotes(startIndexPage, limitPage, filter, sort, page);
 
     if (dataGetLimitNotes.code !== 200) return res.status(dataGetLimitNotes.code).json(dataGetLimitNotes.message);
 

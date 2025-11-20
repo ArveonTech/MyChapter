@@ -17,7 +17,7 @@ const TagNotesComponent = () => {
 
   const handleClickTag = (event) => {
     const valueTag = event.target.value;
-    navigate(`/notes?page=1&limit=10&tag=${encodeURIComponent(valueTag)}`);
+    navigate(`/notes?tag=${encodeURIComponent(valueTag)}`);
   };
 
   return (

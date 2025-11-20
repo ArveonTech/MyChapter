@@ -1,3 +1,6 @@
+// utils
+import { useEffect } from "react";
+
 // components
 import HeaderComponent from "@/components/common/Home/HeaderComponent";
 import IncomingUserNotificationComponent from "@/components/common/Home/IncomingUserNotificationComponent";
@@ -6,6 +9,10 @@ import FilterNoteComponent from "@/components/common/Home/FilterNoteComponent";
 import NotesCardComponent from "@/components/common/Home/NotesCardComponent";
 
 const HomePage = () => {
+  useEffect(() => {
+    document.title = "Home";
+  }, []);
+
   return (
     <div className="mb-10">
       <IncomingUserNotificationComponent />

@@ -1,6 +1,6 @@
 // utils
 import formatDate from "@/utils/formateDate";
-import { Activity } from "react";
+import { Activity, useMemo } from "react";
 import { useSelector } from "react-redux";
 import useGetDataNotes from "@/hooks/home/UseGetDataNotes";
 
@@ -12,15 +12,16 @@ import { Archive, Heart, History, Pin } from "lucide-react";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 
 const NotesCardComponent = () => {
-  const filter = useSelector((state) => state.filterStatusHome);
-  const { dataNotes, loading, errorNotes } = useGetDataNotes();
+  const filterStore = useSelector((state) => state.filterStatusHome);
+  const filterNotes = useMemo(() => [filterStore], [filterStore]);
+  const { dataNotes, loading, errorNotes, infoNotes } = useGetDataNotes(1, 10, filterNotes);
 
   const handleHeader = (note) => {
-    if (filter === "") return formatDate(note?.createdAt);
-    if (filter === "pinned") return <Pin />;
-    if (filter === "favorite") return <Heart />;
-    if (filter === "latest") return <History />;
-    if (filter === "archive") return <Archive />;
+    if (filterStore === "") return formatDate(note?.createdAt);
+    if (filterStore === "pinned") return <Pin />;
+    if (filterStore === "favorite") return <Heart />;
+    if (filterStore === "latest") return <History />;
+    if (filterStore === "archive") return <Archive />;
   };
 
   return (
@@ -39,7 +40,7 @@ const NotesCardComponent = () => {
         <>
           <div className="grid justify-items-center justify-center gap-10 sm:gap-4 md:gap-7 lg:gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
             <Activity mode={dataNotes ? "visible" : "hidden"}>
-              {dataNotes.map((note) => (
+              {dataNotes?.map((note) => (
                 <Card className="bg-secondary p-4 my-auto rounded-3xl shadow-md w-full lg:max-w-60 min-h-52" key={note._id}>
                   <CardHeader className="p-0 line-clamp-1">
                     <div className="flex items-center justify-between">
@@ -56,7 +57,7 @@ const NotesCardComponent = () => {
           </div>
           <div className="w-full flex justify-center">
             <Button asChild className="block max-w-fit mt-10">
-              <a href={(filter && filter === "pinned") || filter === "favorite" ? `/notes?page=1&limit=10&${filter}=true` : `/notes`}>See more...</a>
+              <a href={(filterStore && filterStore === "pinned") || filterStore === "favorite" ? `/notes?status=${filterStore}` : `/notes`}>See more...</a>
             </Button>
           </div>
         </>

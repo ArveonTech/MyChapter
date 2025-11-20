@@ -19,7 +19,27 @@ const useParamsController = () => {
     return searchParams.get(key);
   };
 
-  return { getParam, setParam };
+  const getAllParam = () => {
+    return searchParams;
+  };
+
+  const setManyParam = (obj) => {
+    const newParams = new URLSearchParams(searchParams);
+
+    for (const key in obj) {
+      const value = obj[key];
+
+      if (value === null || value === "") {
+        newParams.delete(key);
+      } else {
+        newParams.set(key, value);
+      }
+    }
+
+    setSearchParams(newParams);
+  };
+
+  return { getParam, setParam, getAllParam, setManyParam };
 };
 
 export default useParamsController;

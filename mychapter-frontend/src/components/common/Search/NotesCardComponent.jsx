@@ -1,67 +1,134 @@
 // utils
 import formatDate from "@/utils/formateDate";
-import { Activity } from "react";
-import { useSelector } from "react-redux";
+import { Activity, useEffect, useMemo, useState } from "react";
 import useGetDataNotes from "@/hooks/home/UseGetDataNotes";
+import useParamsController from "@/hooks/UseParamsController";
 
 // components
 import ErrorComponent from "@/components/Status/ErrorComponent";
 import LoadingComponent from "@/components/Status/LoadingComponent";
-import { Button } from "@/components/ui/button";
-import { Archive, Heart, History, Pin } from "lucide-react";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
+import { Link } from "react-router-dom";
 
 const NotesCardComponent = () => {
-  const filter = useSelector((state) => state.filterStatusHome);
-  const { dataNotes, loading, errorNotes } = useGetDataNotes();
+  const { getParam, setParam, getAllParam, setManyParam } = useParamsController();
 
-  const handleHeader = (note) => {
-    if (filter === "") return formatDate(note?.createdAt);
-    if (filter === "pinned") return <Pin />;
-    if (filter === "favorite") return <Heart />;
-    if (filter === "latest") return <History />;
-    if (filter === "archive") return <Archive />;
+  const pageFromQuery = parseInt(getParam("page")) || 1;
+  const limitPageFromQuery = parseInt(getParam("limit")) || 10;
+
+  const tagFromQuery = getParam("tag") || "";
+  const statusFromQuery = getParam("status") || "";
+
+  const filterNotes = useMemo(() => [tagFromQuery, statusFromQuery], [tagFromQuery, statusFromQuery]);
+  const { dataNotes, loading, errorNotes, infoNotes } = useGetDataNotes(pageFromQuery, limitPageFromQuery, filterNotes);
+
+  const totalPage = Math.ceil(parseInt(infoNotes?.total) / 10);
+
+  useEffect(() => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [pageFromQuery]);
+
+  const handlePrevPage = () => {
+    if (!pageFromQuery || pageFromQuery <= 1) return;
+
+    const current = getAllParam();
+    setManyParam({
+      ...current,
+      page: pageFromQuery - 1,
+      limit: 10,
+    });
+  };
+
+  const handleNextPage = (pageNext) => {
+    if (!pageFromQuery || pageFromQuery >= totalPage) return;
+
+    const current = getAllParam();
+    setManyParam({
+      ...current,
+      page: pageFromQuery + pageNext,
+      limit: 10,
+    });
   };
 
   return (
-    <section className="w-9/12 sm:w-10/12 mx-auto mt-10">
-      {errorNotes ? (
-        errorNotes.status === 404 ? (
-          <p className="text-center text-xl mt-10 text-destructive">Note not found</p>
-        ) : (
-          <Activity mode="visible">
-            <ErrorComponent />
-          </Activity>
-        )
-      ) : loading ? (
-        <LoadingComponent />
-      ) : (
-        <>
-          <div className="grid justify-items-center justify-center gap-10 sm:gap-4 md:gap-7 lg:gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
-            <Activity mode={dataNotes ? "visible" : "hidden"}>
-              {dataNotes.map((note) => (
-                <Card className="bg-secondary p-4 my-auto rounded-3xl shadow-md w-full lg:max-w-60 min-h-52" key={note._id}>
-                  <CardHeader className="p-0 line-clamp-1">
-                    <div className="flex items-center justify-between">
-                      <h1 className="text-xl font-semibold line-clamp-1">{note.title}</h1>
-                      <p className="text-sm font-medium text-textprimary/70 line-clamp-1">{handleHeader(note)}</p>
-                    </div>
-                    <div className="w-full h-0.5 bg-foreground mt-3"></div>
-                  </CardHeader>
-
-                  <CardContent className="p-0 text-textprimary/80 leading-relaxed line-clamp-4">Catatan pertama berisi ringkasan singkat tentang progres harian dan checklist kecil yang harus diselesaikan.</CardContent>
-                </Card>
-              ))}
+    <>
+      <section className="w-9/12 sm:w-10/12 mx-auto mt-10">
+        {errorNotes ? (
+          errorNotes.status === 404 ? (
+            <p className="text-center text-xl mt-10 text-destructive">Note not found</p>
+          ) : (
+            <Activity mode="visible">
+              <ErrorComponent />
             </Activity>
-          </div>
-          <div className="w-full flex justify-center">
-            <Button asChild className="block max-w-fit mt-10">
-              <a href={(filter && filter === "pinned") || filter === "favorite" ? `/notes?page=1&limit=10&${filter}=true` : `/notes`}>See more...</a>
-            </Button>
-          </div>
-        </>
+          )
+        ) : loading ? (
+          <LoadingComponent />
+        ) : (
+          <>
+            <div className="grid justify-items-center justify-center gap-10 sm:gap-4 md:gap-7 lg:gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+              <Activity mode={dataNotes ? "visible" : "hidden"}>
+                {dataNotes?.map((note) => (
+                  <Link to={`/note/${note.title.split(" ")}`}>
+                    <Card className="bg-secondary p-4 my-auto rounded-3xl shadow-md w-full lg:max-w-60 min-h-52" key={note?._id}>
+                      <CardHeader className="p-0 line-clamp-1">
+                        <div className="flex items-center justify-between">
+                          <h1 className="text-xl font-semibold line-clamp-1">{note?.title}</h1>
+                          <p className="text-sm font-medium text-textprimary/70 line-clamp-1">{formatDate(note?.createdAt)}</p>
+                        </div>
+                        <div className="w-full h-0.5 bg-foreground mt-3"></div>
+                      </CardHeader>
+
+                      <CardContent className="p-0 text-textprimary/80 leading-relaxed line-clamp-4">{note?.content}</CardContent>
+                    </Card>
+                  </Link>
+                ))}
+              </Activity>
+            </div>
+          </>
+        )}
+      </section>
+      {errorNotes ? (
+        ""
+      ) : (
+        <Pagination className={`mt-14`}>
+          <PaginationContent>
+            {pageFromQuery <= 1 ? (
+              ""
+            ) : (
+              <PaginationItem>
+                <PaginationPrevious className={`cursor-pointer`} onClick={handlePrevPage} />
+              </PaginationItem>
+            )}
+            {pageFromQuery - 1 !== 0 && pageFromQuery - 1 <= totalPage ? (
+              <PaginationItem>
+                <PaginationLink onClick={handlePrevPage} className={`cursor-pointer`}>
+                  {pageFromQuery - 1}
+                </PaginationLink>
+              </PaginationItem>
+            ) : (
+              ""
+            )}
+            <PaginationItem>
+              <PaginationLink isActive={true}>{pageFromQuery}</PaginationLink>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationEllipsis />
+            </PaginationItem>
+            {pageFromQuery + 2 <= totalPage ? (
+              <PaginationItem>
+                <PaginationLink onClick={() => handleNextPage(2)} className={`cursor-pointer`}>
+                  {pageFromQuery + 2}
+                </PaginationLink>
+              </PaginationItem>
+            ) : (
+              ""
+            )}
+            <PaginationItem>{pageFromQuery >= totalPage ? "" : <PaginationNext className={`cursor-pointer`} onClick={() => handleNextPage(1)} />}</PaginationItem>
+          </PaginationContent>
+        </Pagination>
       )}
-    </section>
+    </>
   );
 };
 

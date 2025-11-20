@@ -7,7 +7,6 @@ import useParamsController from "@/hooks/UseParamsController";
 import { Menu, X } from "lucide-react";
 import { Label } from "@/components/ui/label";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
-import { Checkbox } from "@/components/ui/checkbox";
 import { Button } from "@/components/ui/button";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
@@ -29,29 +28,18 @@ const statusNotes = [
 const FilteringComponent = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [navigationHamburger, setNavigationHamburger] = useState(false);
-  const [startPage, setStartPage] = useState(1);
-  const [limitPage, setLimitPage] = useState(10);
 
   const sidebarRef = useRef();
   const menuButtonRef = useRef();
 
-  const newParams = new URLSearchParams(searchParams);
-
-  useEffect(() => {
-    newParams.set("page", startPage);
-    newParams.set("limit", limitPage);
-    setSearchParams(newParams);
-  }, []);
-
   const { setParam, getParam } = useParamsController();
 
   const tagParam = decodeURIComponent(getParam("tag"));
-  const pinned = decodeURIComponent(getParam("pinned"));
-  const favorite = decodeURIComponent(getParam("favorite"));
+  const status = decodeURIComponent(getParam("status"));
 
   const [filter, setFilter] = useState({
     tag: tagParam && tagParam !== "null" ? tagParam : "",
-    status: pinned && pinned !== "null" ? "pinned" : favorite && favorite !== "null" ? "favorite" : "",
+    status: status && status !== "null" ? status : "",
   });
 
   useEffect(() => {
@@ -92,11 +80,10 @@ const FilteringComponent = () => {
 
     const newParams = new URLSearchParams(searchParams);
 
-    newParams.delete("pinned");
-    newParams.delete("favorite");
-
-    if (value !== "" && value !== "all") {
-      newParams.set(value, "true");
+    if (value.trim() === "" || value === "all") {
+      newParams.delete("status");
+    } else {
+      newParams.set("status", value);
     }
 
     setSearchParams(newParams);
@@ -118,7 +105,7 @@ const FilteringComponent = () => {
           </div>
         </div>
         <div
-          className={`min-h-screen px-5 xs:px-10 w-[70%] fixed top-0 bg-sidebar/95 transition-all duration-500 md:hidden ${
+          className={`min-h-screen px-5 xs:px-10 w-[70%] fixed top-0 bg-sidebar/95 transition-transform duration-500 md:hidden ${
             navigationHamburger ? "translate-0 opacity-100 pointer-events-auto" : "-translate-x-96 opacity-0 pointer-events-none"
           }`}
           ref={sidebarRef}
@@ -147,12 +134,9 @@ const FilteringComponent = () => {
               }
 
               if (filter.status === "all") {
-                newParams.delete("pinned");
-                newParams.delete("favorite");
-              } else if (filter.status === "pinned") {
-                newParams.set("pinned", "true");
-              } else if (filter.status === "favorite") {
-                newParams.set("favorite", "true");
+                newParams.delete("status");
+              } else if (filter.status) {
+                newParams.set("status", filter.status);
               }
 
               setSearchParams(newParams);
@@ -172,16 +156,7 @@ const FilteringComponent = () => {
             </RadioGroup>
 
             {/* STATUS */}
-            <RadioGroup
-              className={`mt-10`}
-              value={filter.status === "pinned" ? "pinned" : filter.status === "favorite" ? "favorite" : "all"}
-              onValueChange={(value) => {
-                setFilter((prev) => ({
-                  ...prev,
-                  status: value === "pinned" ? "pinned" : value === "favorite" ? "favorite" : "all",
-                }));
-              }}
-            >
+            <RadioGroup className={`mt-10`} value={filter.status ? filter.status : "all"} onValueChange={(value) => setFilter((prev) => ({ ...prev, status: value }))}>
               <h1 className="mb-5 font-bold text-xl">Status</h1>
               {statusNotes.map((status) => (
                 <div key={status.value} className="flex items-center space-x-2">
@@ -197,7 +172,7 @@ const FilteringComponent = () => {
       </section>
       <section className="hidden md:block">
         <div className="px-10 mt-10 flex gap-10">
-          <Select defaultValue={filter.tag} onValueChange={(valueTag) => handleSelectTag(valueTag)}>
+          <Select value={filter.tag} onValueChange={(valueTag) => handleSelectTag(valueTag)}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Tag" />
             </SelectTrigger>
@@ -210,7 +185,7 @@ const FilteringComponent = () => {
             </SelectContent>
           </Select>
 
-          <Select value={filter.status === "pinned" ? "pinned" : filter.status === "favorite" ? "favorite" : ""} onValueChange={(valueStatus) => handleSelectStatus(valueStatus)}>
+          <Select value={filter.status} onValueChange={(valueStatus) => handleSelectStatus(valueStatus)}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
