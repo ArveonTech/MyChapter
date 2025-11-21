@@ -1,7 +1,16 @@
 import { useState, useEffect } from "react";
 import { requestBE } from "@/lib/requestBE-lib";
 
-const useGetDataNotes = (page, limit, filterNotes = []) => {
+const tagNotes = [
+  { title: "All", value: "all" },
+  { title: "Life", value: "life" },
+  { title: "Hobby & Fun", value: "hobby & fun" },
+  { title: "Tips & Ideas", value: "tips & ideas" },
+  { title: "Work & Study", value: "work & study" },
+  { title: "Thoughts & Mood", value: "thoughts & mood" },
+];
+
+const useGetDataNotes = (page, limit, filterNotes = [], searchFromQuery) => {
   const accessToken = localStorage.getItem("access-token");
   const [loading, setLoading] = useState(false);
   const [dataNotes, setDataNotes] = useState([]);
@@ -18,6 +27,12 @@ const useGetDataNotes = (page, limit, filterNotes = []) => {
     let params = "";
 
     filterNotes.forEach((filter) => {
+      tagNotes.forEach((tag) => {
+        if (tag.value !== "all" && filter === tag.value) {
+          params += `&tag=${tag.value}`;
+        }
+      });
+
       if (filter === "pinned") {
         params += "&status=pinned";
       }
@@ -34,6 +49,10 @@ const useGetDataNotes = (page, limit, filterNotes = []) => {
         params += "&latest=true";
       }
     });
+
+    if (searchFromQuery) {
+      params += `&searchQuery=${searchFromQuery}`;
+    }
 
     setLoading(true);
     const fetchData = async () => {
@@ -58,7 +77,7 @@ const useGetDataNotes = (page, limit, filterNotes = []) => {
     };
 
     fetchData();
-  }, [page, limit, filterNotes]);
+  }, [page, limit, filterNotes, searchFromQuery]);
 
   return { dataNotes, loading, errorNotes, infoNotes };
 };

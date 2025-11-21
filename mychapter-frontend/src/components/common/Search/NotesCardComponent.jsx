@@ -10,18 +10,21 @@ import LoadingComponent from "@/components/Status/LoadingComponent";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { Link } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const NotesCardComponent = () => {
   const { getParam, setParam, getAllParam, setManyParam } = useParamsController();
+  const loadingSearch = useSelector((state) => state.loadingSearch);
 
   const pageFromQuery = parseInt(getParam("page")) || 1;
   const limitPageFromQuery = parseInt(getParam("limit")) || 10;
 
+  const searchFromQuery = getParam("search") || "";
   const tagFromQuery = getParam("tag") || "";
   const statusFromQuery = getParam("status") || "";
 
   const filterNotes = useMemo(() => [tagFromQuery, statusFromQuery], [tagFromQuery, statusFromQuery]);
-  const { dataNotes, loading, errorNotes, infoNotes } = useGetDataNotes(pageFromQuery, limitPageFromQuery, filterNotes);
+  const { dataNotes, loading, errorNotes, infoNotes } = useGetDataNotes(pageFromQuery, limitPageFromQuery, filterNotes, searchFromQuery);
 
   const totalPage = Math.ceil(parseInt(infoNotes?.total) / 10);
 
@@ -62,15 +65,15 @@ const NotesCardComponent = () => {
               <ErrorComponent />
             </Activity>
           )
-        ) : loading ? (
+        ) : loading || loadingSearch ? (
           <LoadingComponent />
         ) : (
           <>
             <div className="grid justify-items-center justify-center gap-10 sm:gap-4 md:gap-7 lg:gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
               <Activity mode={dataNotes ? "visible" : "hidden"}>
                 {dataNotes?.map((note) => (
-                  <Link to={`/note/${note.title.split(" ")}`}>
-                    <Card className="bg-secondary p-4 my-auto rounded-3xl shadow-md w-full lg:max-w-60 min-h-52" key={note?._id}>
+                  <Link to={`/note/${note.title.split(" ")}`} key={note?._id}>
+                    <Card className="bg-secondary p-4 my-auto rounded-3xl shadow-md w-full lg:max-w-60 min-h-52">
                       <CardHeader className="p-0 line-clamp-1">
                         <div className="flex items-center justify-between">
                           <h1 className="text-xl font-semibold line-clamp-1">{note?.title}</h1>

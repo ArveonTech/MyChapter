@@ -105,9 +105,9 @@ const FilteringComponent = () => {
           </div>
         </div>
         <div
-          className={`min-h-screen px-5 xs:px-10 w-[70%] fixed top-0 bg-sidebar/95 transition-transform duration-500 md:hidden ${
-            navigationHamburger ? "translate-0 opacity-100 pointer-events-auto" : "-translate-x-96 opacity-0 pointer-events-none"
-          }`}
+          className={`min-h-screen px-5 xs:px-10 w-[70%] fixed top-0 bg-sidebar/95 transition-transform duration-500 md:hidden
+    overflow-y-auto max-h-screen
+    ${navigationHamburger ? "translate-0 opacity-100 pointer-events-auto" : "-translate-x-96 opacity-0 pointer-events-none"}`}
           ref={sidebarRef}
         >
           <div
