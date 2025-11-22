@@ -11,7 +11,7 @@ import { loading } from "@/features/loadingSlice";
 const SearchButtonComponent = () => {
   const dispatch = useDispatch();
   const { getParam, setParam, getAllParam, setManyParam } = useParamsController();
-  const searchFromQuery = getParam("search");
+  const searchFromQuery = getParam("search") || "";
   const [searchInput, setSearchInput] = useState(searchFromQuery);
   const debounceValue = useDebounce(searchInput, 2000);
 

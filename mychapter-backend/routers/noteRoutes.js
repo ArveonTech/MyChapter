@@ -5,7 +5,7 @@ app.use(express.json());
 
 // utils
 import { verifyUser } from "../middleware/authMiddleware.js";
-import { addNote, deleteNote, getLimitNotes, loadNote, loadNotes, updateNote } from "../controllers/notesControllers.js";
+import { addNote, deleteNote, getIncArhiveNotes, getLimitNotes, loadNote, loadNotes, updateNote } from "../controllers/notesControllers.js";
 
 const noteRoute = express.Router();
 
@@ -32,8 +32,7 @@ noteRoute.get("/records", verifyUser, async (req, res) => {
     const tag = req.query.tag || ""; // tag(work&hobby,life,dl)
     const status = req.query.status || ""; // status(arhice,pinned,favorite)
     const sortBy = req.query.sortBy || "latest"; // sorting by time
-    const filterBy = req.query.filterBy || "updateAt"; // sorting by create or update
-    const incArchive = req.query.incArchive || false;
+    const orderBy = req.query.orderBy || "updatedAt"; // sorting by create or update
     const userId = req.user._id;
 
     const startIndexPage = (page - 1) * limit;
@@ -59,28 +58,24 @@ noteRoute.get("/records", verifyUser, async (req, res) => {
       filter.status = new RegExp(status, "i");
     }
 
-    if (incArchive) {
-      filter.incArchive = true;
-    } else {
-      filter.incArchive = false;
-    }
-
     const sort = {};
 
-    if (filterBy === "createdAt") {
+    if (orderBy === "createdAt") {
       if (sortBy === "oldest") {
-        sort.createAt = 1;
-      } else {
-        sort.createAt = -1;
+        sort.createdAt = 1;
+      } else if (sortBy === "latest") {
+        sort.createdAt = -1;
       }
     }
-    if (filterBy === "updatedAt") {
+    if (orderBy === "updatedAt") {
       if (sortBy === "oldest") {
-        sort.updateAt = 1;
-      } else {
-        sort.updateAt = -1;
+        sort.updatedAt = 1;
+      } else if (sortBy === "latest") {
+        sort.updatedAt = -1;
       }
     }
+
+    filter.incArchive = false;
 
     filter.userId = userId;
 
@@ -94,6 +89,28 @@ noteRoute.get("/records", verifyUser, async (req, res) => {
       success: false,
       code: 500,
       message: `An error occurred while searching for notes: ${error.message}`,
+    };
+    res.status(errorObject.code).json({ message: errorObject.message });
+  }
+});
+
+noteRoute.get("/incArhive", verifyUser, async (req, res) => {
+  try {
+    const filter = {};
+
+    filter.userId = userId;
+    filter.incArchive = false;
+
+    const dataArchiveNotes = await getIncArhiveNotes(filter);
+
+    if (dataArchiveNotes.code < 200 || dataArchiveNotes.code >= 300) return res.status(dataArchiveNotes.code).json(dataArchiveNotes.message);
+
+    res.status(dataArchiveNotes.code).json(dataArchiveNotes);
+  } catch (error) {
+    const errorObject = {
+      success: false,
+      code: 500,
+      message: `An error occurred while searching for archive  notes: ${error.message}`,
     };
     res.status(errorObject.code).json({ message: errorObject.message });
   }

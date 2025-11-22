@@ -3,10 +3,11 @@ import { useEffect } from "react";
 
 // component
 import HeaderComponent from "../common/Home/HeaderComponent";
-import ArchiveComponent from "../common/Search/ArchiveComponent";
-import FilteringComponent from "../common/Search/FilteringComponent";
-import NotesCardComponent from "../common/Search/NotesCardComponent";
-import SearchButtonComponent from "../common/Search/SearchButtonComponent";
+import ArchiveComponent from "../common/Notes/ArchiveComponent";
+import FilteringComponent from "../common/Notes/FilteringComponent";
+import NotesCardComponent from "../common/Notes/NotesCardComponent";
+import SearchButtonComponent from "../common/Notes/SearchButtonComponent";
+import OrderComponent from "../common/Notes/SortComponent";
 
 const NotesPage = () => {
   useEffect(() => {
@@ -18,7 +19,10 @@ const NotesPage = () => {
       <HeaderComponent />
       <SearchButtonComponent />
       <ArchiveComponent />
-      <FilteringComponent />
+      <div className="flex justify-between items-center mt-10">
+        <FilteringComponent />
+        <OrderComponent />
+      </div>
       <NotesCardComponent />
     </div>
   );

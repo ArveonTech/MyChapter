@@ -1,7 +1,7 @@
 // utils
 import formatDate from "@/utils/formateDate";
-import { Activity, useEffect, useMemo, useState } from "react";
-import useGetDataNotes from "@/hooks/home/UseGetDataNotes";
+import { Activity, useEffect, useMemo } from "react";
+import useGetDataNotes from "@/hooks/Endpoint/useGetDataNotes";
 import useParamsController from "@/hooks/UseParamsController";
 
 // components
@@ -22,8 +22,10 @@ const NotesCardComponent = () => {
   const searchFromQuery = getParam("search") || "";
   const tagFromQuery = getParam("tag") || "";
   const statusFromQuery = getParam("status") || "";
+  const sortByFromQuery = getParam("sortBy") || "";
+  const orderByFromQuery = getParam("orderBy") || "";
 
-  const filterNotes = useMemo(() => [tagFromQuery, statusFromQuery], [tagFromQuery, statusFromQuery]);
+  const filterNotes = useMemo(() => [tagFromQuery, statusFromQuery, sortByFromQuery, orderByFromQuery], [tagFromQuery, statusFromQuery, sortByFromQuery, orderByFromQuery]);
   const { dataNotes, loading, errorNotes, infoNotes } = useGetDataNotes(pageFromQuery, limitPageFromQuery, filterNotes, searchFromQuery);
 
   const totalPage = Math.ceil(parseInt(infoNotes?.total) / 10);
@@ -77,7 +79,7 @@ const NotesCardComponent = () => {
                       <CardHeader className="p-0 line-clamp-1">
                         <div className="flex items-center justify-between">
                           <h1 className="text-xl font-semibold line-clamp-1">{note?.title}</h1>
-                          <p className="text-sm font-medium text-textprimary/70 line-clamp-1">{formatDate(note?.createdAt)}</p>
+                          <p className="text-sm font-medium text-textprimary/70 line-clamp-1">{formatDate(note?.updatedAt)}</p>
                         </div>
                         <div className="w-full h-0.5 bg-foreground mt-3"></div>
                       </CardHeader>

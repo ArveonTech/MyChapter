@@ -1,27 +1,12 @@
 // utils
-import formatDate from "@/utils/formateDate";
-import { Activity, useMemo } from "react";
-import { useSelector } from "react-redux";
-import useGetDataNotes from "@/hooks/Endpoint/useGetDataNotes";
-
-// components
-import ErrorComponent from "@/components/Status/ErrorComponent";
-import LoadingComponent from "@/components/Status/LoadingComponent";
-import { Button } from "@/components/ui/button";
-import { Archive, Heart, History, Pin } from "lucide-react";
-import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import useGetArchiveNotes from "@/hooks/Endpoint/useGetArchiveNotes";
 
 const NotesCardComponent = () => {
-  const filterStore = useSelector((state) => state.filterStatusHome);
-  const filterNotes = useMemo(() => [filterStore], [filterStore]);
-  const { dataNotes, loading, errorNotes, infoNotes } = useGetDataNotes(1, 10, filterNotes);
+  const { dataNotes, loading, errorNotes } = useGetArchiveNotes();
 
   const handleHeader = (note) => {
-    if (filterStore === "") return formatDate(note?.createdAt);
-    if (filterStore === "pinned") return <Pin />;
-    if (filterStore === "favorite") return <Heart />;
-    if (filterStore === "latest") return <History />;
-    if (filterStore === "archive") return <Archive />;
+    if (note.status === "pinned") return <Pin />;
+    if (note.status === "favorite") return <Heart />;
   };
 
   return (

@@ -33,20 +33,20 @@ const useGetDataNotes = (page, limit, filterNotes = [], searchFromQuery) => {
         }
       });
 
-      if (filter === "pinned") {
-        params += "&status=pinned";
-      }
-
-      if (filter === "favorite") {
-        params += "&status=favorite";
+      if (filter === "pinned" || filter === "favorite") {
+        params += `&status=${filter}`;
       }
 
       if (filter === "archive") {
         params += "&incArchive=true";
       }
 
-      if (filter === "latest") {
-        params += "&latest=true";
+      if (filter === "createdAt" || filter === "updatedAt") {
+        params += `&orderBy=${filter}`;
+      }
+
+      if (filter === "latest" || filter === "oldest") {
+        params += `&sortBy=${filter}`;
       }
     });
 
@@ -54,7 +54,6 @@ const useGetDataNotes = (page, limit, filterNotes = [], searchFromQuery) => {
       params += `&searchQuery=${searchFromQuery}`;
     }
 
-    setLoading(true);
     const fetchData = async () => {
       try {
         const response = await requestBE("GET", "api/note/records", null, `page=${pageNotes}&limit=${limitNotes}${params}`, {
@@ -65,11 +64,11 @@ const useGetDataNotes = (page, limit, filterNotes = [], searchFromQuery) => {
           withCredentials: true,
         });
 
-        setDataNotes(response?.data?.data.item);
         const { total, page, limit } = response?.data?.data;
+
+        setDataNotes(response?.data?.data.item);
         setInfoNotes({ total, page, limit });
       } catch (err) {
-        setErrorNotes(err);
         setErrorNotes(err);
       } finally {
         setLoading(false);

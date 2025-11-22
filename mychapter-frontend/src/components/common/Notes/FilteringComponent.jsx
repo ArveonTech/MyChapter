@@ -25,6 +25,12 @@ const statusNotes = [
   { title: "Pinned", value: "pinned" },
 ];
 
+const orderByNotes = [
+  { title: "All", value: "all" },
+  { title: "Created", value: "createdAt" },
+  { title: "updated", value: "updatedAt" },
+];
+
 const FilteringComponent = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const [navigationHamburger, setNavigationHamburger] = useState(false);
@@ -36,10 +42,12 @@ const FilteringComponent = () => {
 
   const tagParam = decodeURIComponent(getParam("tag"));
   const status = decodeURIComponent(getParam("status"));
+  const orderBy = decodeURIComponent(getParam("orderBy"));
 
   const [filter, setFilter] = useState({
     tag: tagParam && tagParam !== "null" ? tagParam : "",
     status: status && status !== "null" ? status : "",
+    orderBy: orderBy && orderBy !== "null" ? orderBy : "",
   });
 
   useEffect(() => {
@@ -89,10 +97,27 @@ const FilteringComponent = () => {
     setSearchParams(newParams);
   };
 
+  const handleSelectOrderBy = (value) => {
+    setFilter((prev) => ({
+      ...prev,
+      orderBy: value,
+    }));
+
+    const newParams = new URLSearchParams(searchParams);
+
+    if (value.trim() === "" || value === "all") {
+      newParams.delete("orderBy");
+    } else {
+      newParams.set("orderBy", value);
+    }
+
+    setSearchParams(newParams);
+  };
+
   return (
     <>
       <section className="md:hidden">
-        <div className="max-w-fit mt-10 pl-10">
+        <div className="max-w-fit pl-10">
           <div
             className="cursor-pointer hover:bg-accent p-2 rounded-md hidden xss:block md:hidden"
             onClick={() => {
@@ -139,6 +164,12 @@ const FilteringComponent = () => {
                 newParams.set("status", filter.status);
               }
 
+              if (filter.orderBy === "all") {
+                newParams.delete("orderBy");
+              } else if (filter.orderBy) {
+                newParams.set("orderBy", filter.orderBy);
+              }
+
               setSearchParams(newParams);
 
               setNavigationHamburger(false);
@@ -162,6 +193,17 @@ const FilteringComponent = () => {
                 <div key={status.value} className="flex items-center space-x-2">
                   <RadioGroupItem value={status.value} id={status.title} />
                   <Label htmlFor={status.title}>{status.title}</Label>
+                </div>
+              ))}
+            </RadioGroup>
+
+            {/* orderBy */}
+            <RadioGroup className={`mt-10`} value={filter.orderBy ? filter.orderBy : "all"} onValueChange={(value) => setFilter((prev) => ({ ...prev, orderBy: value }))}>
+              <h1 className="mb-5 font-bold text-xl">Sort By</h1>
+              {orderByNotes.map((sort) => (
+                <div key={sort.value} className="flex items-center space-x-2">
+                  <RadioGroupItem value={sort.value} id={sort.title} />
+                  <Label htmlFor={sort.title}>{sort.title}</Label>
                 </div>
               ))}
             </RadioGroup>
@@ -193,6 +235,19 @@ const FilteringComponent = () => {
               {statusNotes.map((status) => (
                 <SelectItem value={status.value} key={status.value}>
                   {status.title}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
+
+          <Select value={filter.orderBy} onValueChange={(valueorderBy) => handleSelectOrderBy(valueorderBy)}>
+            <SelectTrigger className="w-[180px]">
+              <SelectValue placeholder="orderBy" />
+            </SelectTrigger>
+            <SelectContent>
+              {orderByNotes.map((sort) => (
+                <SelectItem value={sort.value} key={sort.value}>
+                  {sort.title}
                 </SelectItem>
               ))}
             </SelectContent>
