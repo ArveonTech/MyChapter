@@ -7,7 +7,7 @@ import ArchiveComponent from "../common/Notes/ArchiveComponent";
 import FilteringComponent from "../common/Notes/FilteringComponent";
 import NotesCardComponent from "../common/Notes/NotesCardComponent";
 import SearchButtonComponent from "../common/Notes/SearchButtonComponent";
-import OrderComponent from "../common/Notes/SortComponent";
+import SortComponent from "../common/Notes/SortComponent";
 
 const NotesPage = () => {
   useEffect(() => {
@@ -21,7 +21,7 @@ const NotesPage = () => {
       <ArchiveComponent />
       <div className="flex justify-between items-center mt-10">
         <FilteringComponent />
-        <OrderComponent />
+        <SortComponent />
       </div>
       <NotesCardComponent />
     </div>

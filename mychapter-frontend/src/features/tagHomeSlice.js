@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = "";
 
 const tagHomeSlice = createSlice({
-  name: "createStatus",
+  name: "tag",
   initialState,
   reducers: {
     tagHome: (state, action) => {

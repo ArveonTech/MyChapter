@@ -82,7 +82,7 @@ export const getIncArhiveNotes = async (filter) => {
   try {
     const dbNotes = await database();
 
-    const dbNotesFilter = dbNotes.collection("notes").find(filter);
+    const dbNotesFilter = await dbNotes.collection("notes").find(filter).toArray();
 
     if (!dbNotesFilter || dbNotesFilter.length === 0) return { success: false, code: 404, message: "Note not found" };
 

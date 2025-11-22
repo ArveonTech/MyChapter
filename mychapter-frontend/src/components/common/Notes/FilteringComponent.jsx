@@ -116,10 +116,10 @@ const FilteringComponent = () => {
 
   return (
     <>
-      <section className="md:hidden">
+      <section className="sd:hidden">
         <div className="max-w-fit pl-10">
           <div
-            className="cursor-pointer hover:bg-accent p-2 rounded-md hidden xss:block md:hidden"
+            className="cursor-pointer hover:bg-accent p-2 rounded-md hidden xss:block sd:hidden"
             onClick={() => {
               setNavigationHamburger(!navigationHamburger);
             }}
@@ -212,8 +212,8 @@ const FilteringComponent = () => {
           </form>
         </div>
       </section>
-      <section className="hidden md:block">
-        <div className="px-10 mt-10 flex gap-10">
+      <section className="hidden sd:block">
+        <div className="px-10 flex gap-10">
           <Select value={filter.tag} onValueChange={(valueTag) => handleSelectTag(valueTag)}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Tag" />

@@ -1,12 +1,12 @@
 import { configureStore } from "@reduxjs/toolkit";
 import filterStatusNoteHomeSlice from "@/features/filterStatusNoteHomeSlice";
-import filterNotesSlice from "@/features/filterNotesSlice";
 import loadingSlice from "@/features/loadingSlice";
+import gridSlice from "@/features/gridSlice";
 
 export const store = configureStore({
   reducer: {
     filterStatusHome: filterStatusNoteHomeSlice,
-    filterNotes: filterNotesSlice,
+    setLayoutRow: gridSlice,
     loadingSearch: loadingSlice,
   },
 });

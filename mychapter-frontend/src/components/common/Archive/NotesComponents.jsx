@@ -1,5 +1,13 @@
 // utils
+import { Activity } from "react";
 import useGetArchiveNotes from "@/hooks/Endpoint/useGetArchiveNotes";
+
+// components
+import ErrorComponent from "@/components/Status/ErrorComponent";
+import LoadingComponent from "@/components/Status/LoadingComponent";
+import { Card, CardHeader, CardContent } from "@/components/ui/card";
+import { Heart, Pin } from "lucide-react";
+import formatDate from "@/utils/formateDate";
 
 const NotesCardComponent = () => {
   const { dataNotes, loading, errorNotes } = useGetArchiveNotes();
@@ -7,6 +15,8 @@ const NotesCardComponent = () => {
   const handleHeader = (note) => {
     if (note.status === "pinned") return <Pin />;
     if (note.status === "favorite") return <Heart />;
+    const date = formatDate(note.updatedAt);
+    return date;
   };
 
   return (
@@ -29,7 +39,7 @@ const NotesCardComponent = () => {
                 <Card className="bg-secondary p-4 my-auto rounded-3xl shadow-md w-full lg:max-w-60 min-h-52" key={note._id}>
                   <CardHeader className="p-0 line-clamp-1">
                     <div className="flex items-center justify-between">
-                      <h1 className="text-xl font-semibold line-clamp-1">{note.title}</h1>
+                      <h1 className="text-xl font-semibold line-clamp-1 w-1/2">{note.title}</h1>
                       <p className="text-sm font-medium text-textprimary/70 line-clamp-1">{handleHeader(note)}</p>
                     </div>
                     <div className="w-full h-0.5 bg-foreground mt-3"></div>
@@ -39,11 +49,6 @@ const NotesCardComponent = () => {
                 </Card>
               ))}
             </Activity>
-          </div>
-          <div className="w-full flex justify-center">
-            <Button asChild className="block max-w-fit mt-10">
-              <a href={(filterStore && filterStore === "pinned") || filterStore === "favorite" ? `/notes?status=${filterStore}` : `/notes`}>See more...</a>
-            </Button>
           </div>
         </>
       )}

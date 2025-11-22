@@ -94,12 +94,13 @@ noteRoute.get("/records", verifyUser, async (req, res) => {
   }
 });
 
-noteRoute.get("/incArhive", verifyUser, async (req, res) => {
+noteRoute.get("/incArchive", verifyUser, async (req, res) => {
   try {
+    const userId = req.user._id;
     const filter = {};
 
     filter.userId = userId;
-    filter.incArchive = false;
+    filter.incArchive = true;
 
     const dataArchiveNotes = await getIncArhiveNotes(filter);
 

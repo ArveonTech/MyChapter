@@ -14,10 +14,10 @@ import { Card, CardHeader, CardContent } from "@/components/ui/card";
 const NotesCardComponent = () => {
   const filterStore = useSelector((state) => state.filterStatusHome);
   const filterNotes = useMemo(() => [filterStore], [filterStore]);
-  const { dataNotes, loading, errorNotes, infoNotes } = useGetDataNotes(1, 10, filterNotes);
+  const { dataNotes, loading, errorNotes } = useGetDataNotes(1, 10, filterNotes);
 
   const handleHeader = (note) => {
-    if (filterStore === "") return formatDate(note?.createdAt);
+    if (filterStore === "") return formatDate(note?.updatedAt);
     if (filterStore === "pinned") return <Pin />;
     if (filterStore === "favorite") return <Heart />;
     if (filterStore === "latest") return <History />;
@@ -44,7 +44,7 @@ const NotesCardComponent = () => {
                 <Card className="bg-secondary p-4 my-auto rounded-3xl shadow-md w-full lg:max-w-60 min-h-52" key={note._id}>
                   <CardHeader className="p-0 line-clamp-1">
                     <div className="flex items-center justify-between">
-                      <h1 className="text-xl font-semibold line-clamp-1">{note.title}</h1>
+                      <h1 className="text-xl font-semibold line-clamp-1 w-1/2">{note.title}</h1>
                       <p className="text-sm font-medium text-textprimary/70 line-clamp-1">{handleHeader(note)}</p>
                     </div>
                     <div className="w-full h-0.5 bg-foreground mt-3"></div>
@@ -57,7 +57,7 @@ const NotesCardComponent = () => {
           </div>
           <div className="w-full flex justify-center">
             <Button asChild className="block max-w-fit mt-10">
-              <a href={(filterStore && filterStore === "pinned") || filterStore === "favorite" ? `/notes?status=${filterStore}` : `/notes`}>See more...</a>
+              <a href={(filterStore && filterStore === "pinned") || filterStore === "favorite" ? `/notes?status=${filterStore}` : filterStore === "archive" ? `/archive` : "/notes"}>See more...</a>
             </Button>
           </div>
         </>

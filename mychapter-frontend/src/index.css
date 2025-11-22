@@ -13,6 +13,11 @@
   --breakpoint-xss: 10rem;
   --breakpoint-xs: 20rem;
   --breakpoint-xm: 30rem;
+  --breakpoint-sd: 55rem;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 :root {

@@ -25,6 +25,7 @@ const useGetArchiveNotes = () => {
         setDataNotes(response?.data?.data.item);
       } catch (err) {
         setErrorNotes(err);
+        console.info(err);
       } finally {
         setLoading(false);
       }

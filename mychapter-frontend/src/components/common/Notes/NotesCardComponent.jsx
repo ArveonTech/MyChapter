@@ -15,6 +15,7 @@ import { useSelector } from "react-redux";
 const NotesCardComponent = () => {
   const { getParam, setParam, getAllParam, setManyParam } = useParamsController();
   const loadingSearch = useSelector((state) => state.loadingSearch);
+  const valueLayoutRow = useSelector((state) => state.setLayoutRow);
 
   const pageFromQuery = parseInt(getParam("page")) || 1;
   const limitPageFromQuery = parseInt(getParam("limit")) || 10;
@@ -32,7 +33,7 @@ const NotesCardComponent = () => {
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
-  }, [pageFromQuery]);
+  }, [pageFromQuery, searchFromQuery, tagFromQuery, statusFromQuery, sortByFromQuery, orderByFromQuery]);
 
   const handlePrevPage = () => {
     if (!pageFromQuery || pageFromQuery <= 1) return;
@@ -71,11 +72,11 @@ const NotesCardComponent = () => {
           <LoadingComponent />
         ) : (
           <>
-            <div className="grid justify-items-center justify-center gap-10 sm:gap-4 md:gap-7 lg:gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+            <div className={`grid justify-items-center justify-center gap-10 sm:gap-4 md:gap-7 lg:gap-10  ${valueLayoutRow ? "lg:grid-cols-2" : "sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"}`}>
               <Activity mode={dataNotes ? "visible" : "hidden"}>
                 {dataNotes?.map((note) => (
-                  <Link to={`/note/${note.title.split(" ")}`} key={note?._id}>
-                    <Card className="bg-secondary p-4 my-auto rounded-3xl shadow-md w-full lg:max-w-60 min-h-52">
+                  <Card className={`bg-secondary p-4 my-auto rounded-3xl shadow-md w-full min-h-52 flex justify-between ${valueLayoutRow ? "lg:max-w-[600px]" : "lg:max-w-60"}`} key={note._id}>
+                    <div>
                       <CardHeader className="p-0 line-clamp-1">
                         <div className="flex items-center justify-between">
                           <h1 className="text-xl font-semibold line-clamp-1">{note?.title}</h1>
@@ -84,9 +85,9 @@ const NotesCardComponent = () => {
                         <div className="w-full h-0.5 bg-foreground mt-3"></div>
                       </CardHeader>
 
-                      <CardContent className="p-0 text-textprimary/80 leading-relaxed line-clamp-4">{note?.content}</CardContent>
-                    </Card>
-                  </Link>
+                      <CardContent className="p-0 text-textprimary/80 leading-relaxed line-clamp-4 mt-2">{note?.content}</CardContent>
+                    </div>
+                  </Card>
                 ))}
               </Activity>
             </div>
