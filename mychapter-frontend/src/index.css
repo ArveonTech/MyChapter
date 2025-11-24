@@ -20,6 +20,46 @@ html {
   scroll-behavior: smooth;
 }
 
+#title .ql-editor.ql-blank::before {
+  font-size: 24px; /* ukuran placeholder */
+  color: var(--foreground); /* optional, ganti warna */
+  left: 0; /* posisi mulai kiri */
+  right: 0; /* biar full width */
+  opacity: 0.5;
+}
+
+#content .ql-editor.ql-blank::before {
+  font-size: 16px; /* ukuran placeholder */
+  color: var(--foreground); /* optional, ganti warna */
+  left: 0; /* posisi mulai kiri */
+  right: 0; /* biar full width */
+  opacity: 0.5;
+}
+
+#title .ql-editor {
+  border-bottom: 2px solid var(--foreground);
+  box-sizing: border-box;
+  font-size: 24px; /* teks normal */
+  margin-top: 3rem;
+}
+
+#content {
+  font-size: 16px; /* teks normal */
+  margin-top: 3rem;
+}
+
+.ql-font-serif {
+  font-family: Georgia, "Times New Roman", serif;
+}
+
+.ql-font-monospace {
+  font-family: "Courier New", monospace;
+}
+
+.ql-font-sansserif {
+  font-family: Arial, Helvetica, sans-serif;
+}
+
 :root {
   --background: oklch(0.9912 0.0124 164.8126);
   --foreground: oklch(0.3 0.0358 30.2042);

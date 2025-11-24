@@ -62,36 +62,35 @@ const FilteringComponent = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // md++
-  const handleSelectTag = (value) => {
-    setFilter((prev) => ({
-      ...prev,
-      tag: value,
-    }));
+  const typeValue = (value) => {
+    let type = "";
 
-    const newParams = new URLSearchParams(searchParams);
+    tagNotes.map((tag) => {
+      if (tag.value === value) return (type = "tag");
+    });
 
-    if (value.trim() === "" || value === "all") {
-      newParams.delete("tag");
-    } else {
-      newParams.set("tag", value);
-    }
+    statusNotes.map((notes) => {
+      if (notes.value === value) return (type = "status");
+    });
 
-    setSearchParams(newParams);
+    return type;
   };
 
-  const handleSelectStatus = (value) => {
+  // md++
+  const handleSelect = (value) => {
+    const filterType = typeValue(value);
+
     setFilter((prev) => ({
       ...prev,
-      status: value,
+      [filterType]: value,
     }));
 
     const newParams = new URLSearchParams(searchParams);
 
     if (value.trim() === "" || value === "all") {
-      newParams.delete("status");
+      newParams.delete(filterType);
     } else {
-      newParams.set("status", value);
+      newParams.set(filterType, value);
     }
 
     setSearchParams(newParams);
@@ -214,7 +213,7 @@ const FilteringComponent = () => {
       </section>
       <section className="hidden sd:block">
         <div className="px-10 flex gap-10">
-          <Select value={filter.tag} onValueChange={(valueTag) => handleSelectTag(valueTag)}>
+          <Select value={filter.tag} onValueChange={(valueTag) => handleSelect(valueTag)}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Tag" />
             </SelectTrigger>
@@ -227,7 +226,7 @@ const FilteringComponent = () => {
             </SelectContent>
           </Select>
 
-          <Select value={filter.status} onValueChange={(valueStatus) => handleSelectStatus(valueStatus)}>
+          <Select value={filter.status} onValueChange={(valueStatus) => handleSelect(valueStatus)}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Status" />
             </SelectTrigger>

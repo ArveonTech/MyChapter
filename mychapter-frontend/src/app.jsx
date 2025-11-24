@@ -12,6 +12,8 @@ import ProtectedRoute from "@/utils/ProtectedRoute";
 import GuestRoute from "@/utils/GuestRoute";
 import NotesPage from "./components/pages/NotesPage";
 import ArchivePage from "./components/pages/ArchivePage";
+import AddPage from "./components/pages/AddPage";
+import DetailPage from "./components/pages/DetailPage";
 
 const router = createBrowserRouter([
   {
@@ -59,6 +61,22 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <ArchivePage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/detail/:slug",
+    element: (
+      <ProtectedRoute>
+        <DetailPage />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/add",
+    element: (
+      <ProtectedRoute>
+        <AddPage />
       </ProtectedRoute>
     ),
   },

@@ -10,7 +10,7 @@ const tagNotes = [
   { title: "Thoughts & Mood", value: "thoughts & mood" },
 ];
 
-const useGetDataNotes = (page, limit, filterNotes = [], searchFromQuery) => {
+const useGetDataNotes = ({ page, limit, filterNotes = [], searchFromQuery }) => {
   const accessToken = localStorage.getItem("access-token");
   const [loading, setLoading] = useState(false);
   const [dataNotes, setDataNotes] = useState([]);

@@ -9,9 +9,9 @@ import { ThemeProvider } from "./features/ThemeProvider";
 createRoot(document.getElementById("root")).render(
   <StrictMode>
     <ThemeProvider>
-    <Provider store={store}>
-      <App />
-    </Provider>
+      <Provider store={store}>
+        <App />
+      </Provider>
     </ThemeProvider>
   </StrictMode>
 );

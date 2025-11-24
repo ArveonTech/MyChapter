@@ -119,7 +119,8 @@ noteRoute.get("/incArchive", verifyUser, async (req, res) => {
 
 noteRoute.get("/notes/:id", verifyUser, async (req, res) => {
   try {
-    const note = await loadNote(req.params.id);
+    const userId = req.user._id;
+    const note = await loadNote(req.params.id, userId);
     if (!note.success) return res.status(note.code).json(note.message);
     res.status(note.code).json(note);
   } catch (error) {

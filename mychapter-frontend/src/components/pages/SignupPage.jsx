@@ -22,8 +22,8 @@ const SignupPage = () => {
 
   const [showPassword, setShowPassword] = useState(false);
 
-  const emptyForm = UseEmptyFormSignup(formSignup);
-  const invalidForm = UseValidationSignup(formSignup);
+  const emptyForm = UseEmptyFormSignup({ form: formSignup });
+  const invalidForm = UseValidationSignup({ form: formSignup });
 
   const handleChangeInput = (event) => {
     const { name, value } = event.target;

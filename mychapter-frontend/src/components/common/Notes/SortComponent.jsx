@@ -1,10 +1,10 @@
 // utils
 import { layoutRow } from "@/features/gridSlice";
 import useParamsController from "@/hooks/UseParamsController";
+import { useDispatch, useSelector } from "react-redux";
 
 // components
 import { ArrowDown, ArrowUp, LayoutGrid, Rows2 } from "lucide-react";
-import { useDispatch, useSelector } from "react-redux";
 
 const OrderComponent = () => {
   const valueLayoutRow = useSelector((state) => state.setLayoutRow);
@@ -24,17 +24,19 @@ const OrderComponent = () => {
   };
 
   return (
-    <div className="pr-10 flex items-center gap-5">
-      <div className="flex gap-1 bg-secondary p-1 rounded items-center">
-        <div className={` p-1 ${valueLayoutRow && "bg-muted  rounded"}`} onClick={() => dispatch(layoutRow(!valueLayoutRow))}>
-          <Rows2 />
+    <div className="hidden xss:block">
+      <div className="pr-10 flex items-center gap-5">
+        <div className="flex gap-1 bg-secondary p-1 rounded items-center">
+          <div className={` p-1 cursor-pointer ${!valueLayoutRow && "bg-muted rounded"}`} onClick={() => dispatch(layoutRow(!valueLayoutRow))}>
+            <LayoutGrid />
+          </div>
+          <div className={` p-1 cursor-pointer ${valueLayoutRow && "bg-muted  rounded"}`} onClick={() => dispatch(layoutRow(!valueLayoutRow))}>
+            <Rows2 />
+          </div>
         </div>
-        <div className={` p-1 ${!valueLayoutRow && "bg-muted rounded"}`} onClick={() => dispatch(layoutRow(!valueLayoutRow))}>
-          <LayoutGrid />
+        <div className="bg-secondary p-2 rounded cursor-pointer" onClick={handleClickOrder}>
+          {sortBy === "oldest" ? <ArrowUp /> : <ArrowDown />}
         </div>
-      </div>
-      <div className="bg-secondary p-2 rounded cursor-pointer" onClick={handleClickOrder}>
-        {sortBy === "oldest" ? <ArrowUp /> : <ArrowDown />}
       </div>
     </div>
   );

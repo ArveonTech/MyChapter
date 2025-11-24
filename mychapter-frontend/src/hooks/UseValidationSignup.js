@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import validator from "validator";
 
-const UseValidationSignup = (form) => {
+const UseValidationSignup = ({ form }) => {
   const [errorInputForm, setErrorInputForm] = useState({
     success: true,
     inputForm: {

@@ -28,10 +28,10 @@ export const loadNotes = async (userId) => {
 };
 
 // note display function by id
-export const loadNote = async (id) => {
+export const loadNote = async (id, userId) => {
   try {
     const allNotes = await loadDatabase("notes");
-    const noteUser = allNotes.find((note) => note._id.toString() === id);
+    const noteUser = allNotes.find((note) => note._id.toString() === id && note.userId === userId);
 
     if (!noteUser || noteUser.length === 0) return { success: false, code: 404, message: "No notes" };
 
@@ -39,7 +39,9 @@ export const loadNote = async (id) => {
       success: true,
       code: 200,
       message: "Managed to take notes",
-      data: noteUser,
+      data: {
+        item: noteUser,
+      },
     };
   } catch (error) {
     const err = new Error(`An error occurred while taking notes: ${error.message}`);

@@ -2,7 +2,7 @@ import { loading } from "@/features/loadingSlice";
 import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 
-const useDebounce = (value, delay) => {
+const useDebounce = ({ value, delay }) => {
   const dispatch = useDispatch(loading(false));
   const [debunceValue, setDebounceValue] = useState(value);
 

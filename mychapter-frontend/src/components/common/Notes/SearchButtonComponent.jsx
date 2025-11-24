@@ -13,7 +13,7 @@ const SearchButtonComponent = () => {
   const { getParam, setParam, getAllParam, setManyParam } = useParamsController();
   const searchFromQuery = getParam("search") || "";
   const [searchInput, setSearchInput] = useState(searchFromQuery);
-  const debounceValue = useDebounce(searchInput, 2000);
+  const debounceValue = useDebounce({ value: searchInput, delay: 2000 });
 
   const handleSearch = (e) => {
     dispatch(loading(true));
