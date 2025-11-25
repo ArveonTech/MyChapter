@@ -16,7 +16,7 @@ const useGetArchiveNotes = () => {
       try {
         const response = await requestBE("GET", "api/note/incArchive", null, ``, {
           headers: {
-            Bearer: accessToken,
+            Authorization: `Bearer ${accessToken}`,
             "Content-Type": "application/json",
           },
           withCredentials: true,

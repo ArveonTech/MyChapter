@@ -12,7 +12,7 @@ import ProtectedRoute from "@/utils/ProtectedRoute";
 import GuestRoute from "@/utils/GuestRoute";
 import NotesPage from "./components/pages/NotesPage";
 import ArchivePage from "./components/pages/ArchivePage";
-import AddPage from "./components/pages/AddPage";
+import FormPage from "./components/pages/FormPage";
 import DetailPage from "./components/pages/DetailPage";
 
 const router = createBrowserRouter([
@@ -76,7 +76,15 @@ const router = createBrowserRouter([
     path: "/add",
     element: (
       <ProtectedRoute>
-        <AddPage />
+        <FormPage mode="add" />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/edit/:id",
+    element: (
+      <ProtectedRoute>
+        <FormPage mode="edit" />
       </ProtectedRoute>
     ),
   },

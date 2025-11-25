@@ -17,7 +17,7 @@ const DetailPage = () => {
 
   return (
     <div className="mt-10">
-      <NavigationComponent />
+      <NavigationComponent dataNotes={dataNotes} />
       <DetailComponent dataNotes={dataNotes} loading={loading} errorNotes={errorNotes} />
       <AttributesComponent dataNotes={dataNotes} loading={loading} errorNotes={errorNotes} />
     </div>

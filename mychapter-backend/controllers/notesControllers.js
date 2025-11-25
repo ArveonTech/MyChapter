@@ -107,7 +107,7 @@ export const getIncArhiveNotes = async (filter) => {
 // function of adding notes by id
 export const addNote = async (userId, data) => {
   try {
-    const noteData = { userId: userId, ...data };
+    const noteData = { userId: userId, ...data, createdAt: new Date(), updatedAt: new Date() };
     const dbNotes = await database();
     const result = await dbNotes.collection("notes").insertOne(noteData);
     return { success: true, code: 200, message: "Successfully added note", desciption: result };

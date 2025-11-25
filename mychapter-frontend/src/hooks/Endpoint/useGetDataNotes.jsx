@@ -58,7 +58,7 @@ const useGetDataNotes = ({ page, limit, filterNotes = [], searchFromQuery }) => 
       try {
         const response = await requestBE("GET", "api/note/records", null, `page=${pageNotes}&limit=${limitNotes}${params}`, {
           headers: {
-            Bearer: accessToken,
+            Authorization: `Bearer ${accessToken}`,
             "Content-Type": "application/json",
           },
           withCredentials: true,

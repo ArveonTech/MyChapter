@@ -1,6 +1,7 @@
 // utils
 import { Activity } from "react";
 import useGetArchiveNotes from "@/hooks/Endpoint/useGetArchiveNotes";
+import DOMPurify from "dompurify";
 
 // components
 import ErrorComponent from "@/components/Status/ErrorComponent";
@@ -16,6 +17,7 @@ const NotesCardComponent = () => {
   const handleHeader = (note) => {
     if (note.status === "pinned") return <Pin />;
     if (note.status === "favorite") return <Heart />;
+
     const date = formatDate(note.updatedAt);
     return date;
   };
@@ -34,23 +36,22 @@ const NotesCardComponent = () => {
         <LoadingComponent />
       ) : (
         <>
-          <div className="grid justify-items-center justify-center gap-10 sm:gap-4 md:gap-7 lg:gap-10 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
+          <div className="grid justify-items-center justify-center gap-10 sm:gap-4 md:gap-7 lg:gap-10 sm:grid-cols-2 sd:grid-cols-3 xl:grid-cols-5">
             <Activity mode={dataNotes ? "visible" : "hidden"}>
               {dataNotes?.map((note) => {
-                const slug = note.title.split(" ").join("-");
-
+                const slug = note?.titlePlain.split(" ").join("-");
                 return (
-                  <Link to={`/detail/${slug}-${note._id}`} key={note._id}>
-                    <Card className="bg-secondary p-4 my-auto rounded-3xl shadow-md w-full lg:max-w-60 min-h-52">
+                  <Link to={`/detail/${slug}-${note?._id}`} key={note?._id}>
+                    <Card className="bg-secondary p-4 rounded-3xl shadow-md w-60 min-h-52 flex flex-col">
                       <CardHeader className="p-0 line-clamp-1">
                         <div className="flex items-center justify-between">
-                          <h1 className="text-xl font-semibold line-clamp-1 w-1/2">{note.title}</h1>
-                          <p className="text-sm font-medium text-textprimary/70 line-clamp-1">{handleHeader(note)}</p>
+                          <h1 className="text-xl font-semibold line-clamp-1 w-1/2">{DOMPurify.sanitize(note?.titlePlain)}</h1>
+                          <p className="text-sm font-medium text-textprimary/70 line-clamp-1">{typeof handleHeader(note) === "object" ? handleHeader(note) : DOMPurify.sanitize(handleHeader(note))}</p>
                         </div>
                         <div className="w-full h-0.5 bg-foreground mt-3"></div>
                       </CardHeader>
 
-                      <CardContent className="p-0 text-textprimary/80 leading-relaxed line-clamp-4">Catatan pertama berisi ringkasan singkat tentang progres harian dan checklist kecil yang harus diselesaikan.</CardContent>
+                      <CardContent className="p-0 text-textprimary/80 leading-relaxed line-clamp-4">{DOMPurify.sanitize(note?.contentPlain)}</CardContent>
                     </Card>
                   </Link>
                 );

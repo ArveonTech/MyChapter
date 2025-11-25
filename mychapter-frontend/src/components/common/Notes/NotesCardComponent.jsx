@@ -3,6 +3,7 @@ import formatDate from "@/utils/formateDate";
 import { Activity, useEffect, useMemo } from "react";
 import useGetDataNotes from "@/hooks/Endpoint/useGetDataNotes";
 import useParamsController from "@/hooks/UseParamsController";
+import DOMPurify from "dompurify";
 
 // components
 import ErrorComponent from "@/components/Status/ErrorComponent";
@@ -72,24 +73,24 @@ const NotesCardComponent = () => {
           <LoadingComponent />
         ) : (
           <>
-            <div className={`grid justify-items-center justify-center gap-10 sm:gap-4 md:gap-7 lg:gap-10  ${valueLayoutRow ? "lg:grid-cols-2" : "sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5"}`}>
+            <div className={`grid justify-items-center justify-center gap-10 sm:gap-4 md:gap-7 lg:gap-10  ${valueLayoutRow ? "lg:grid-cols-2" : "sm:grid-cols-2 sd:grid-cols-3 xl:grid-cols-4"}`}>
               <Activity mode={dataNotes ? "visible" : "hidden"}>
                 {dataNotes?.map((note) => {
-                  const slug = note.title.split(" ").join("-");
+                  const slug = note?.titlePlain.split(" ").join("-");
 
                   return (
                     <Link to={`/detail/${slug}-${note._id}`} key={note._id}>
-                      <Card className={`bg-secondary p-4 my-auto rounded-3xl shadow-md w-full min-h-52 flex justify-between ${valueLayoutRow ? "lg:max-w-[600px]" : "lg:max-w-60"}`}>
+                      <Card className={`bg-secondary p-4 rounded-3xl shadow-md w-60 min-h-52 flex flex-col ${valueLayoutRow && "sm:w-[400px] xl:min-w-[600px] xl:max-w-[700px]"}`}>
                         <div>
                           <CardHeader className="p-0 line-clamp-1">
                             <div className="flex items-center justify-between">
-                              <h1 className="text-xl font-semibold line-clamp-1">{note?.title}</h1>
-                              <p className="text-sm font-medium text-textprimary/70 line-clamp-1">{formatDate(note?.updatedAt)}</p>
+                              <h1 className="text-xl font-semibold line-clamp-1">{DOMPurify.sanitize(note?.titlePlain)}</h1>
+                              <p className="text-sm font-medium text-textprimary/70 line-clamp-1">{DOMPurify.sanitize(formatDate(note?.updatedAt))}</p>
                             </div>
                             <div className="w-full h-0.5 bg-foreground mt-3"></div>
                           </CardHeader>
 
-                          <CardContent className="p-0 text-textprimary/80 leading-relaxed line-clamp-4 mt-2">{note?.content}</CardContent>
+                          <CardContent className="p-0 text-textprimary/80 leading-relaxed line-clamp-4 mt-2">{DOMPurify.sanitize(note?.contentPlain)}</CardContent>
                         </div>
                       </Card>
                     </Link>

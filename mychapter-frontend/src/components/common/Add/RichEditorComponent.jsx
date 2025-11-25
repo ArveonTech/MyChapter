@@ -4,11 +4,13 @@ import Quill from "quill";
 import "quill/dist/quill.snow.css"; // theme default
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Button } from "@/components/ui/button";
-import { ArrowRight } from "lucide-react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { titleQuill } from "@/features/titleQuillNoteSlice";
 import { attributeNote } from "@/features/attributeNoteAddSlice";
-import { contentQuill } from "@/features/ContentQuillNoteSlice";
+import { contentQuill } from "@/features/contentQuillNoteSlice";
+import { titlePlain } from "@/features/titlePlainTextNoteSlice";
+import { contentPlain } from "@/features/contentPlainTextNoteSlice";
+import { Bounce, ToastContainer, toast } from "react-toastify";
 
 const fonts = ["serif", "monospace", "sansserif"];
 const Font = Quill.import("formats/font");
@@ -31,17 +33,43 @@ const statusNotes = [
   { title: "Pinned", value: "pinned" },
 ];
 
-const RichEditorComponent = () => {
+const RichEditorComponent = ({ mode, dataNotes }) => {
   const dispatch = useDispatch();
-  const [navActive, setNavActive] = useState(false);
+  const theme = localStorage.getItem("app-theme");
+  const [successAdd, setSuccessAdd] = useState(false);
+  const statusAdd = useSelector((state) => state.statusAddNotes);
+  const notify = (status, message) =>
+    toast[status](message, {
+      position: "top-center",
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: false,
+      pauseOnHover: true,
+      draggable: true,
+      progress: undefined,
+      theme: theme === "dark" ? "dark" : "light",
+      transition: Bounce,
+    });
+
+  useEffect(() => {
+    if (!statusAdd) return;
+
+    if (statusAdd.status === 200) {
+      notify("success", statusAdd.message);
+      setSuccessAdd(!successAdd);
+    } else {
+      notify("error", statusAdd.message);
+    }
+
+    dispatch(statusAdd(""));
+  }, [statusAdd]);
 
   const editorRefTitle = useRef();
   const editorRefContent = useRef();
-  const [activeEditor, setActiveEditor] = useState(null);
+  const quillTitleRef = useRef(null);
+  const quillContentRef = useRef(null);
 
-  // plain text
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+  const [activeEditor, setActiveEditor] = useState(null);
 
   // bold
   const [isBoldTitle, setIsBoldTitle] = useState(false);
@@ -66,6 +94,10 @@ const RichEditorComponent = () => {
   });
 
   useEffect(() => {
+    dispatch(attributeNote(filter));
+  }, [filter]);
+
+  useEffect(() => {
     if (document.querySelector(".ql-toolbar")) return;
 
     if (editorRefTitle.current) {
@@ -77,14 +109,23 @@ const RichEditorComponent = () => {
         },
       });
 
-      qTitle.on("text-change", () => {
-        setTitle(qTitle.root.innerHTML);
+      quillTitleRef.current = qTitle;
 
+      if (mode === "edit" && dataNotes) {
+        qTitle.setContents(dataNotes?.titleQuill);
+        dispatch(titleQuill(dataNotes?.titleQuill));
+        dispatch(titlePlain(qTitle.root.innerText));
+      }
+
+      qTitle.on("text-change", () => {
         const text = qTitle.getText();
 
         if (text.length > 100) {
           qTitle.deleteText(100, text.length);
         }
+
+        dispatch(titleQuill(qTitle.getContents().ops));
+        dispatch(titlePlain(qTitle.root.innerText));
       });
 
       qTitle.on("selection-change", (range) => {
@@ -100,8 +141,6 @@ const RichEditorComponent = () => {
           return;
         }
       });
-
-      dispatch(titleQuill(qTitle.getContents().ops));
     }
 
     if (editorRefContent.current) {
@@ -113,18 +152,21 @@ const RichEditorComponent = () => {
         },
       });
 
+      quillContentRef.current = qContent;
+
+      if (mode === "edit" && dataNotes) {
+        qContent.setContents(dataNotes?.contentQuill);
+        dispatch(contentQuill(dataNotes?.contentQuill));
+        dispatch(contentPlain(qContent.root.innerText));
+      }
+
       qContent.on("text-change", () => {
-        setContent(qContent.root.innerHTML);
-
-        const text = qContent.getText();
-
-        if (text.length > 100) {
-          qContent.deleteText(100, text.length);
-        }
+        dispatch(contentQuill(qContent.getContents().ops));
+        dispatch(contentPlain(qContent.root.innerText));
       });
 
       qContent.on("selection-change", (range) => {
-        if (range !== null) {
+        if (range !== nnull) {
           setActiveEditor({ quill: qContent, range, value: "content" });
 
           const format = qContent.getFormat(range);
@@ -137,10 +179,26 @@ const RichEditorComponent = () => {
           return;
         }
       });
-
-      dispatch(contentQuill(qContent.getContents().ops));
     }
-  }, []);
+  }, [dataNotes, mode]);
+
+  useEffect(() => {
+    if (!successAdd) return;
+
+    if (quillTitleRef.current) {
+      quillTitleRef.current.setContents([]);
+    }
+
+    if (quillContentRef.current) {
+      quillContentRef.current.setContents([]);
+    }
+
+    setFilter({
+      tag: "",
+      status: "",
+      incArchive: false,
+    });
+  }, [successAdd]);
 
   const typeValue = (value) => {
     let type = "";
@@ -153,6 +211,8 @@ const RichEditorComponent = () => {
       if (notes.value === value) return (type = "status");
     });
 
+    if (value === "archive") return (type = "incArchive");
+
     return type;
   };
 
@@ -161,18 +221,15 @@ const RichEditorComponent = () => {
 
     setFilter((prev) => ({
       ...prev,
-      [filterType]: value,
+      [filterType]: value === "archive" ? true : value,
     }));
-
-    dispatch(attributeNote(filter));
   };
 
   return (
     <div className="mt-20 px-10">
       <div ref={editorRefTitle} id="title" style={{ border: "none" }}></div>
       <div ref={editorRefContent} id="content" style={{ border: "none" }}></div>
-
-      <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-11/12 md:w-10/12 flex flex-wrap md:flex-nowrap justify-between items-center gap-4 pb-10 shadow-lg rounded-xl z-50">
+      <div className="fixed bottom-0 left-1/2 -translate-x-1/2 w-11/12 md:w-10/12 flex flex-wrap md:flex-nowrap justify-between items-center gap-4 mb-10 rounded-xl z-50">
         {/* Left controls */}
         <div className="flex flex-wrap md:flex-row gap-3 items-center">
           {/* Tag Select */}
@@ -204,13 +261,7 @@ const RichEditorComponent = () => {
           </Select>
 
           {/* Archive Select */}
-          <Select
-            onValueChange={(value) => {
-              setFilter((prev) => ({ ...prev, incArchive: value === "archive" }));
-
-              dispatch(attributeNote(filter));
-            }}
-          >
+          <Select onValueChange={handleSelect}>
             <SelectTrigger className="w-[140px]">
               <SelectValue placeholder="Archive" />
             </SelectTrigger>
@@ -287,6 +338,19 @@ const RichEditorComponent = () => {
           </Select>
         </div>
       </div>
+      <ToastContainer
+        position="top-center"
+        autoClose={5000}
+        hideProgressBar={false}
+        newestOnTop={false}
+        closeOnClick={false}
+        rtl={false}
+        pauseOnFocusLoss
+        draggable
+        pauseOnHover
+        theme={theme === "dark" ? "dark" : "light"}
+        transition={Bounce}
+      />
     </div>
   );
 };

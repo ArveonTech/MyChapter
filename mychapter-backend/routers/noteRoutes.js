@@ -47,7 +47,7 @@ noteRoute.get("/records", verifyUser, async (req, res) => {
     const filter = {};
 
     if (searchQuery) {
-      filter.title = new RegExp(searchQuery, "i");
+      filter.titlePlain = new RegExp(searchQuery, "i");
     }
 
     if (tag) {

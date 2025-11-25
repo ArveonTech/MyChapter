@@ -3,6 +3,7 @@ import getProfile from "@/utils/getProfile";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useTheme } from "@/features/ThemeProvider";
+import DOMPurify from "dompurify";
 
 // component
 import { Menu, Moon, Sun } from "lucide-react";
@@ -44,7 +45,7 @@ const HeaderComponent = () => {
           <AvatarImage src={profileImages[user?.avatar]} alt="avatar-images" />
           <AvatarFallback>{profileImages["avatar-1"]}</AvatarFallback>
         </Avatar>
-        <p className="hidden xss:block xss:text-[clamp(8px,5vw,14px)] mr-1 xm:text-lg xm:mr-3 line-clamp-1">Hello, {user?.username}</p>
+        <p className="hidden xss:block xss:text-[clamp(8px,5vw,14px)] mr-1 xm:text-lg xm:mr-3 line-clamp-1">Hello, {DOMPurify.sanitize(user?.username)}</p>
       </div>
       <div className="hidden md:block">
         {navLinks.map((link, index) => (

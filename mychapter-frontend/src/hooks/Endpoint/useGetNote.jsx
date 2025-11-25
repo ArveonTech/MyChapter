@@ -17,7 +17,7 @@ const useGetNote = ({ id }) => {
       try {
         const response = await requestBE("GET", `api/note/notes/${id}`, null, ``, {
           headers: {
-            Bearer: accessToken,
+            Authorization: `Bearer ${accessToken}`,
             "Content-Type": "application/json",
           },
           withCredentials: true,
