@@ -1,20 +1,27 @@
 import { useState, useEffect } from "react";
 import { requestBE } from "@/lib/requestBE-lib";
 
-const useGetArchiveNotes = () => {
+const useGetArchiveNotes = ({ page, limit }) => {
   const accessToken = localStorage.getItem("access-token");
   const [loading, setLoading] = useState(false);
   const [dataNotes, setDataNotes] = useState([]);
   const [errorNotes, setErrorNotes] = useState(null);
 
   useEffect(() => {
-    setDataNotes(null);
+    setDataNotes([]);
     setErrorNotes(null);
     setLoading(true);
 
+    let params = "";
+
+    if (page && limit) {
+      params += `page=${page}`;
+      params += `&limit=${limit}`;
+    }
+
     const fetchData = async () => {
       try {
-        const response = await requestBE("GET", "api/note/incArchive", null, ``, {
+        const response = await requestBE("GET", "api/note/incArchive", null, `${params}`, {
           headers: {
             Authorization: `Bearer ${accessToken}`,
             "Content-Type": "application/json",
@@ -31,7 +38,7 @@ const useGetArchiveNotes = () => {
     };
 
     fetchData();
-  }, []);
+  }, [page, limit]);
 
   return { dataNotes, loading, errorNotes };
 };

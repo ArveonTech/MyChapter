@@ -37,10 +37,6 @@ const useGetDataNotes = ({ page, limit, filterNotes = [], searchFromQuery }) => 
         params += `&status=${filter}`;
       }
 
-      if (filter === "archive") {
-        params += "&incArchive=true";
-      }
-
       if (filter === "createdAt" || filter === "updatedAt") {
         params += `&orderBy=${filter}`;
       }

@@ -14,7 +14,7 @@ import { useDispatch } from "react-redux";
 import { from } from "@/features/backPageSlice";
 
 const NotesCardComponent = () => {
-  const { dataNotes, loading, errorNotes } = useGetArchiveNotes();
+  const { dataNotes, loading, errorNotes } = useGetArchiveNotes({ page: null, limit: null });
   const dispatch = useDispatch();
 
   const handleHeader = (note) => {

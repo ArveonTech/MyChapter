@@ -97,12 +97,23 @@ noteRoute.get("/records", verifyUser, async (req, res) => {
 noteRoute.get("/incArchive", verifyUser, async (req, res) => {
   try {
     const userId = req.user._id;
+    const page = parseInt(req.query.page) || null;
+    const limit = parseInt(req.query.limit) || null; // limit
+
+    const startIndexPage = (page - 1) * limit;
+    let limitPage = 0;
+
+    if (isNaN(limit) || limit > 10 || limit < 1) {
+      limitPage = 10;
+    } else {
+      limitPage = limit;
+    }
     const filter = {};
 
     filter.userId = userId;
     filter.incArchive = "archive";
 
-    const dataArchiveNotes = await getIncArhiveNotes(filter);
+    const dataArchiveNotes = await getIncArhiveNotes(filter, startIndexPage, limitPage);
 
     if (dataArchiveNotes.code < 200 || dataArchiveNotes.code >= 300) return res.status(dataArchiveNotes.code).json(dataArchiveNotes.message);
 
@@ -180,7 +191,6 @@ noteRoute.delete("/notes/delete", verifyUser, async (req, res) => {
   try {
     const dataUser = req.user;
     const dataNoteDelete = req.body;
-    console.info(dataNoteDelete);
 
     const foundNote = await loadNote(dataNoteDelete._id, dataUser._id);
 

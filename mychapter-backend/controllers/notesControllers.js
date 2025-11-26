@@ -80,11 +80,11 @@ export const getLimitNotes = async (startIndexPage, limitPage, querySearch, sort
   }
 };
 
-export const getIncArhiveNotes = async (filter) => {
+export const getIncArhiveNotes = async (filter, page, limit) => {
   try {
     const dbNotes = await database();
 
-    const dbNotesFilter = await dbNotes.collection("notes").find(filter).toArray();
+    const dbNotesFilter = await dbNotes.collection("notes").find(filter).skip(page).limit(limit).toArray();
 
     if (!dbNotesFilter || dbNotesFilter.length === 0) return { success: false, code: 404, message: "Note not found" };
 

@@ -72,9 +72,9 @@ const FilteringComponent = () => {
     const newParams = new URLSearchParams(searchParams);
 
     if (value.trim() === "" || value === "all") {
-      newParams.delete(filterType);
+      newParams.delete(attributeNote);
     } else {
-      newParams.set(filterType, value);
+      newParams.set(attributeNote, value);
     }
 
     setSearchParams(newParams);

@@ -13,12 +13,18 @@ import { Archive, Heart, History, Pin } from "lucide-react";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
 import { from } from "@/features/backPageSlice";
+import useGetArchiveNotes from "@/hooks/Endpoint/useGetArchiveNotes";
 
 const NotesCardComponent = () => {
   const filterStore = useSelector((state) => state.filterStatusHome);
   const filterNotes = useMemo(() => [filterStore], [filterStore]);
+
   const { dataNotes, loading, errorNotes } = useGetDataNotes({ page: 1, limit: 10, filterNotes: filterNotes });
-  const dispatch = useDispatch();
+  const { dataNotes: dataArchive, loading: loadingArchive, errorNotes: errorArchive } = useGetArchiveNotes({ page: 1, limit: 10 });
+
+  const dataToRender = filterStore === "archive" ? dataArchive : dataNotes;
+  const loadingToRender = filterStore === "archive" ? loadingArchive : loading;
+  const errorToRender = filterStore === "archive" ? errorArchive : errorNotes;
 
   const handleHeader = (note) => {
     if (filterStore === "") return formatDate(note?.updatedAt);
@@ -30,21 +36,21 @@ const NotesCardComponent = () => {
 
   return (
     <section className="w-9/12 sm:w-10/12 mx-auto mt-10">
-      {errorNotes ? (
-        errorNotes.status === 404 ? (
+      {errorToRender ? (
+        errorToRender.status === 404 ? (
           <p className="text-center text-xl mt-10 text-destructive">Note not found</p>
         ) : (
           <Activity mode="visible">
             <ErrorComponent />
           </Activity>
         )
-      ) : loading ? (
+      ) : loadingToRender ? (
         <LoadingComponent />
       ) : (
         <>
           <div className="grid justify-items-center justify-center gap-7 lg:gap-10 sm:grid-cols-2 sd:grid-cols-3 xl:grid-cols-5">
-            <Activity mode={dataNotes ? "visible" : "hidden"}>
-              {dataNotes?.map((note) => {
+            <Activity mode={dataToRender ? "visible" : "hidden"}>
+              {dataToRender?.map((note) => {
                 const slug = note?.titlePlain.split(" ").join("-");
 
                 return (
@@ -58,9 +64,7 @@ const NotesCardComponent = () => {
                         <div className="w-full h-0.5 bg-foreground mt-3"></div>
                       </CardHeader>
 
-                      <CardContent className="p-0 text-textprimary/80 leading-relaxed line-clamp-4 min-h-24">
-                        {DOMPurify.sanitize(note?.contentPlain) || " "} {/* fallback spasi biar nggak collapse */}
-                      </CardContent>
+                      <CardContent className="p-0 text-textprimary/80 leading-relaxed line-clamp-4 min-h-24">{DOMPurify.sanitize(note?.contentPlain) || " "}</CardContent>
                     </Card>
                   </Link>
                 );
