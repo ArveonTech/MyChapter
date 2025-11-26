@@ -11,6 +11,7 @@ import { contentQuill } from "@/features/contentQuillNoteSlice";
 import { titlePlain } from "@/features/titlePlainTextNoteSlice";
 import { contentPlain } from "@/features/contentPlainTextNoteSlice";
 import { Bounce, ToastContainer, toast } from "react-toastify";
+import { statusAction } from "@/features/statusActionFormSlice";
 
 const fonts = ["serif", "monospace", "sansserif"];
 const Font = Quill.import("formats/font");
@@ -35,9 +36,11 @@ const statusNotes = [
 
 const RichEditorComponent = ({ mode, dataNotes }) => {
   const dispatch = useDispatch();
+
   const theme = localStorage.getItem("app-theme");
-  const [successAdd, setSuccessAdd] = useState(false);
-  const statusAdd = useSelector((state) => state.statusAddNotes);
+  const statusActionForm = useSelector((state) => state.statusActionForm);
+
+  const [successAction, setSuccessAction] = useState(false);
   const notify = (status, message) =>
     toast[status](message, {
       position: "top-center",
@@ -52,17 +55,17 @@ const RichEditorComponent = ({ mode, dataNotes }) => {
     });
 
   useEffect(() => {
-    if (!statusAdd) return;
+    if (!statusActionForm) return;
 
-    if (statusAdd.status === 200) {
-      notify("success", statusAdd.message);
-      setSuccessAdd(!successAdd);
+    if (statusActionForm.status === 200) {
+      notify("success", statusActionForm.message);
+      setSuccessAction(!successAction);
     } else {
-      notify("error", statusAdd.message);
+      notify("error", statusActionForm.message);
     }
 
-    dispatch(statusAdd(""));
-  }, [statusAdd]);
+    dispatch(statusAction(""));
+  }, [statusActionForm]);
 
   const editorRefTitle = useRef();
   const editorRefContent = useRef();
@@ -90,8 +93,20 @@ const RichEditorComponent = ({ mode, dataNotes }) => {
   const [filter, setFilter] = useState({
     tag: "",
     status: "",
-    incArchive: false,
+    incArchive: "all",
   });
+
+  useEffect(() => {
+    if (mode === "edit" && dataNotes) {
+      const { tag, status, incArchive } = dataNotes;
+
+      setFilter({
+        tag: tag || "all",
+        status: status || "all",
+        incArchive: incArchive || "all",
+      });
+    }
+  }, [dataNotes]);
 
   useEffect(() => {
     dispatch(attributeNote(filter));
@@ -166,7 +181,7 @@ const RichEditorComponent = ({ mode, dataNotes }) => {
       });
 
       qContent.on("selection-change", (range) => {
-        if (range !== nnull) {
+        if (range !== null) {
           setActiveEditor({ quill: qContent, range, value: "content" });
 
           const format = qContent.getFormat(range);
@@ -183,46 +198,37 @@ const RichEditorComponent = ({ mode, dataNotes }) => {
   }, [dataNotes, mode]);
 
   useEffect(() => {
-    if (!successAdd) return;
+    if (!successAction) return;
 
-    if (quillTitleRef.current) {
-      quillTitleRef.current.setContents([]);
+    if (mode === "add") {
+      if (quillTitleRef.current) {
+        quillTitleRef.current.setContents([]);
+      }
+
+      if (quillContentRef.current) {
+        quillContentRef.current.setContents([]);
+      }
+
+      setFilter({
+        tag: "",
+        status: "",
+        incArchive: "all",
+      });
     }
+  }, [successAction]);
 
-    if (quillContentRef.current) {
-      quillContentRef.current.setContents([]);
+  const handleSelect = (attributeNote, value) => {
+    if (attributeNote !== "incArchive") {
+      setFilter((prev) => ({
+        ...prev,
+        [attributeNote]: value === "all" ? "" : value,
+      }));
+    } else {
+      setFilter((prev) => ({
+        ...prev,
+        [attributeNote]: value,
+      }));
     }
-
-    setFilter({
-      tag: "",
-      status: "",
-      incArchive: false,
-    });
-  }, [successAdd]);
-
-  const typeValue = (value) => {
-    let type = "";
-
-    tagNotes.map((tag) => {
-      if (tag.value === value) return (type = "tag");
-    });
-
-    statusNotes.map((notes) => {
-      if (notes.value === value) return (type = "status");
-    });
-
-    if (value === "archive") return (type = "incArchive");
-
-    return type;
-  };
-
-  const handleSelect = (value) => {
-    const filterType = typeValue(value);
-
-    setFilter((prev) => ({
-      ...prev,
-      [filterType]: value === "archive" ? true : value,
-    }));
   };
 
   return (
@@ -233,7 +239,7 @@ const RichEditorComponent = ({ mode, dataNotes }) => {
         {/* Left controls */}
         <div className="flex flex-wrap md:flex-row gap-3 items-center">
           {/* Tag Select */}
-          <Select value={filter.tag} onValueChange={handleSelect}>
+          <Select value={filter.tag} onValueChange={(value) => handleSelect("tag", value)}>
             <SelectTrigger className="w-[140px]">
               <SelectValue placeholder="Tag" />
             </SelectTrigger>
@@ -247,7 +253,7 @@ const RichEditorComponent = ({ mode, dataNotes }) => {
           </Select>
 
           {/* Status Select */}
-          <Select value={filter.status} onValueChange={handleSelect}>
+          <Select value={filter.status} onValueChange={(value) => handleSelect("status", value)}>
             <SelectTrigger className="w-[140px]">
               <SelectValue placeholder="Status" />
             </SelectTrigger>
@@ -261,7 +267,7 @@ const RichEditorComponent = ({ mode, dataNotes }) => {
           </Select>
 
           {/* Archive Select */}
-          <Select onValueChange={handleSelect}>
+          <Select value={filter.incArchive || "all"} onValueChange={(value) => handleSelect("incArchive", value)}>
             <SelectTrigger className="w-[140px]">
               <SelectValue placeholder="Archive" />
             </SelectTrigger>

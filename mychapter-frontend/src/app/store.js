@@ -7,7 +7,9 @@ import contentQuillNoteSlice from "@/features/contentQuillNoteSlice";
 import attributeNoteAddSlice from "@/features/attributeNoteAddSlice";
 import titlePlainTextNoteSlice from "@/features/titlePlainTextNoteSlice";
 import contentPlainTextNoteSlice from "@/features/contentPlainTextNoteSlice";
-import statusAddSlice from "@/features/statusAddSlice";
+import statusActionFormSlice from "@/features/statusActionFormSlice";
+import backPageSlice from "@/features/backPageSlice";
+import deleteStatusSlice from "@/features/deleteStatusSlice";
 
 export const store = configureStore({
   reducer: {
@@ -19,6 +21,8 @@ export const store = configureStore({
     contentQuillNote: contentQuillNoteSlice,
     contentPlainTextNote: contentPlainTextNoteSlice,
     attributeNote: attributeNoteAddSlice,
-    statusAddNotes: statusAddSlice,
+    statusActionForm: statusActionFormSlice,
+    backPage: backPageSlice,
+    deleteStatus: deleteStatusSlice,
   },
 });

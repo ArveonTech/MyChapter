@@ -1,7 +1,7 @@
 // utils
 import formatDate from "@/utils/formateDate";
 import { Activity, useMemo } from "react";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import useGetDataNotes from "@/hooks/Endpoint/useGetDataNotes";
 import DOMPurify from "dompurify";
 
@@ -12,11 +12,13 @@ import { Button } from "@/components/ui/button";
 import { Archive, Heart, History, Pin } from "lucide-react";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Link } from "react-router-dom";
+import { from } from "@/features/backPageSlice";
 
 const NotesCardComponent = () => {
   const filterStore = useSelector((state) => state.filterStatusHome);
   const filterNotes = useMemo(() => [filterStore], [filterStore]);
   const { dataNotes, loading, errorNotes } = useGetDataNotes({ page: 1, limit: 10, filterNotes: filterNotes });
+  const dispatch = useDispatch();
 
   const handleHeader = (note) => {
     if (filterStore === "") return formatDate(note?.updatedAt);
@@ -46,7 +48,7 @@ const NotesCardComponent = () => {
                 const slug = note?.titlePlain.split(" ").join("-");
 
                 return (
-                  <Link to={`/detail/${slug}-${note?._id}`} key={note?._id}>
+                  <Link to={`/detail/${slug}-${note?._id}`} key={note?._id} onClick={() => dispatch(from("home"))}>
                     <Card className="bg-secondary p-4 rounded-3xl shadow-md w-60 min-h-52 flex flex-col">
                       <CardHeader className="p-0 line-clamp-1">
                         <div className="flex items-center justify-between gap-2">

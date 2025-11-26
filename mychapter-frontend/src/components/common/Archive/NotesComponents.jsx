@@ -10,9 +10,12 @@ import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Heart, Pin } from "lucide-react";
 import formatDate from "@/utils/formateDate";
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { from } from "@/features/backPageSlice";
 
 const NotesCardComponent = () => {
   const { dataNotes, loading, errorNotes } = useGetArchiveNotes();
+  const dispatch = useDispatch();
 
   const handleHeader = (note) => {
     if (note.status === "pinned") return <Pin />;
@@ -41,7 +44,7 @@ const NotesCardComponent = () => {
               {dataNotes?.map((note) => {
                 const slug = note?.titlePlain.split(" ").join("-");
                 return (
-                  <Link to={`/detail/${slug}-${note?._id}`} key={note?._id}>
+                  <Link to={`/detail/${slug}-${note?._id}`} key={note?._id} onClick={() => dispatch(from("archive"))}>
                     <Card className="bg-secondary p-4 rounded-3xl shadow-md w-60 min-h-52 flex flex-col">
                       <CardHeader className="p-0 line-clamp-1">
                         <div className="flex items-center justify-between">

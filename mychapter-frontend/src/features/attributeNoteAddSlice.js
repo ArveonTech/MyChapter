@@ -3,7 +3,7 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
   tag: "",
   status: "",
-  incArchive: false,
+  incArchive: "all",
 };
 
 const attributeNoteAddSlice = createSlice({

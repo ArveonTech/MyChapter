@@ -11,12 +11,14 @@ import LoadingComponent from "@/components/Status/LoadingComponent";
 import { Card, CardHeader, CardContent } from "@/components/ui/card";
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { from } from "@/features/backPageSlice";
 
 const NotesCardComponent = () => {
   const { getParam, setParam, getAllParam, setManyParam } = useParamsController();
   const loadingSearch = useSelector((state) => state.loadingSearch);
   const valueLayoutRow = useSelector((state) => state.setLayoutRow);
+  const dispatch = useDispatch();
 
   const pageFromQuery = parseInt(getParam("page")) || 1;
   const limitPageFromQuery = parseInt(getParam("limit")) || 10;
@@ -79,7 +81,7 @@ const NotesCardComponent = () => {
                   const slug = note?.titlePlain.split(" ").join("-");
 
                   return (
-                    <Link to={`/detail/${slug}-${note._id}`} key={note._id}>
+                    <Link to={`/detail/${slug}-${note._id}`} key={note._id} onClick={() => dispatch(from("notes"))}>
                       <Card className={`bg-secondary p-4 rounded-3xl shadow-md w-60 min-h-52 flex flex-col ${valueLayoutRow && "sm:w-[400px] xl:min-w-[600px] xl:max-w-[700px]"}`}>
                         <div>
                           <CardHeader className="p-0 line-clamp-1">

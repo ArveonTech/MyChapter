@@ -75,7 +75,7 @@ noteRoute.get("/records", verifyUser, async (req, res) => {
       }
     }
 
-    filter.incArchive = false;
+    filter.incArchive = "all";
 
     filter.userId = userId;
 
@@ -100,7 +100,7 @@ noteRoute.get("/incArchive", verifyUser, async (req, res) => {
     const filter = {};
 
     filter.userId = userId;
-    filter.incArchive = true;
+    filter.incArchive = "archive";
 
     const dataArchiveNotes = await getIncArhiveNotes(filter);
 
@@ -154,17 +154,18 @@ noteRoute.patch("/notes/update", verifyUser, async (req, res) => {
   try {
     const idUser = req.user._id;
     const userIdNotes = req.body.userId;
-    const dataNote = req.body;
+    const idNotes = req.body._id;
+    const { updatedAt, ...dataNote } = req.body;
 
-    const foundNote = await loadNote(req.body._id);
+    const foundNote = await loadNote(idNotes, idUser);
 
     if (foundNote.code !== 200) return res.status(foundNote.code).json({ message: foundNote.message });
 
     if (idUser !== userIdNotes) return res.status(403).json({ message: "You don't have access!" });
 
-    const resultUpdateNote = await updateNote(req.body._id, dataNote);
+    const resultUpdateNote = await updateNote(idNotes, dataNote);
 
-    res.status(resultUpdateNote.code).json({ message: resultUpdateNote.message });
+    res.status(resultUpdateNote.code).json({ message: "successfully updated note" });
   } catch (error) {
     const errorObject = {
       success: false,
@@ -175,12 +176,13 @@ noteRoute.patch("/notes/update", verifyUser, async (req, res) => {
   }
 });
 
-noteRoute.delete("/notes/:delete", verifyUser, async (req, res) => {
+noteRoute.delete("/notes/delete", verifyUser, async (req, res) => {
   try {
     const dataUser = req.user;
     const dataNoteDelete = req.body;
+    console.info(dataNoteDelete);
 
-    const foundNote = await loadNote(dataNoteDelete._id);
+    const foundNote = await loadNote(dataNoteDelete._id, dataUser._id);
 
     if (foundNote.code !== 200) return res.status(foundNote.code).json({ message: foundNote.message });
     if (dataUser._id !== dataNoteDelete.userId && dataUser.role !== "admin" && dataUser.role !== "super admin") return res.status(403).json({ message: "You don't have access!" });

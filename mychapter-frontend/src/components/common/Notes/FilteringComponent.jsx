@@ -62,27 +62,11 @@ const FilteringComponent = () => {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const typeValue = (value) => {
-    let type = "";
-
-    tagNotes.map((tag) => {
-      if (tag.value === value) return (type = "tag");
-    });
-
-    statusNotes.map((notes) => {
-      if (notes.value === value) return (type = "status");
-    });
-
-    return type;
-  };
-
   // md++
-  const handleSelect = (value) => {
-    const filterType = typeValue(value);
-
+  const handleSelect = (attributeNote, value) => {
     setFilter((prev) => ({
       ...prev,
-      [filterType]: value,
+      [attributeNote]: value,
     }));
 
     const newParams = new URLSearchParams(searchParams);
@@ -213,7 +197,7 @@ const FilteringComponent = () => {
       </section>
       <section className="hidden sd:block">
         <div className="px-10 flex gap-10">
-          <Select value={filter.tag} onValueChange={(valueTag) => handleSelect(valueTag)}>
+          <Select value={filter.tag} onValueChange={(valueTag) => handleSelect("tag", valueTag)}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Tag" />
             </SelectTrigger>
@@ -226,7 +210,7 @@ const FilteringComponent = () => {
             </SelectContent>
           </Select>
 
-          <Select value={filter.status} onValueChange={(valueStatus) => handleSelect(valueStatus)}>
+          <Select value={filter.status} onValueChange={(valueStatus) => handleSelect("status", valueStatus)}>
             <SelectTrigger className="w-[180px]">
               <SelectValue placeholder="Status" />
             </SelectTrigger>

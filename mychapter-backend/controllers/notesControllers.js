@@ -122,11 +122,10 @@ export const addNote = async (userId, data) => {
 // note editing function by id
 export const updateNote = async (idNote, dataNote) => {
   try {
-    const dataNoteNew = { ...dataNote };
-    delete dataNoteNew._id;
+    const dataNoteNew = { ...dataNote, updatedAt: new Date() };
     const dbNotes = await database();
-    const result = await dbNotes.collection("notes").updateOne({ _id: new ObjectId(idNote) }, { $set: dataNoteNew });
-
+    const { _id, ...updateData } = dataNoteNew;
+    const result = await dbNotes.collection("notes").updateOne({ _id: new ObjectId(idNote) }, { $set: updateData });
     return {
       success: true,
       code: 200,
