@@ -7,8 +7,6 @@ export const changePasswordById = async (idUser, newPassword) => {
 
     if (foundUser.code !== 200) return { success: foundUser.success, code: foundUser.code, message: foundUser.message };
 
-    if (dataValidateChangePassword.code !== 200) return { success: dataValidateChangePassword.success, code: dataValidateChangePassword.code, message: dataValidateChangePassword.message };
-
     const resultChangePassword = await changePassword(foundUser.data._id, newPassword);
 
     if (resultChangePassword.code !== 200) return { success: resultChangePassword.success, code: resultChangePassword.code, message: resultChangePassword.message };

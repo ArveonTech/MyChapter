@@ -1,7 +1,6 @@
 import { database } from "../config/db.js";
 import { ObjectId } from "mongodb";
 import { loadAllUsers } from "./controllers.js";
-import { isSuperAdmin } from "../helper/isSuperAdmin.js";
 import { findUserByEmail } from "../helper/findUserByEmail.js";
 
 // function fetch user by id
@@ -70,45 +69,27 @@ export const addUser = async (dataLogin) => {
   }
 };
 
-// role changing function
-export const updateUserRole = async (admin, idUpdate, roleUpdate) => {
+// change Username
+export const changeProfile = async (idUser, dataUser, idUserNote) => {
   try {
-    const dbUsers = await database();
-    if (!(await isSuperAdmin(admin))) {
-      return { success: false, code: 403, message: "You don't have access!" };
-    }
+    if (idUser !== idUserNote) return { success: false, code: 401, message: "You don't have access!" };
 
-    const result = await dbUsers.collection("users").updateOne({ _id: new ObjectId(idUpdate) }, { $set: { role: roleUpdate.role } });
-
-    return { success: true, code: 200, message: `Role successfully updated`, description: result };
-  } catch (error) {
-    const err = new Error(`An error occurred while updating the role: ${error.message}`);
-    err.success = false;
-    err.code = 500;
-    throw err;
-  }
-};
-
-// user delete function
-export const deleteUser = async (idDelete, dataUser) => {
-  try {
-    const foundUser = await loadUser(idDelete);
-
-    if (foundUser.code !== 200) return { success: foundUser.success, code: foundUser.code, message: foundUser.message };
-
-    if (dataUser.role !== "super admin" && idDelete !== dataUser._id) return { success: false, code: 403, message: "You don't have access!" };
+    const dataUserDB = await loadUser(idUser);
+    const { password, ...rest } = dataUserDB.data;
 
     const dbUsers = await database();
+    const { _id, ...dataNew } = dataUser;
+    const updateData = { ...dataNew, password };
 
-    const result = await dbUsers.collection("users").deleteOne({ _id: new ObjectId(idDelete) });
+    const result = await dbUsers.collection("users").updateOne({ _id: new ObjectId(idUser) }, { $set: updateData });
     return {
       success: true,
       code: 200,
-      message: `User with id-${idDelete} successfully deleted`,
+      message: `User successfully updated`,
       description: result,
     };
   } catch (error) {
-    const err = new Error(`An error occurred while deleting the user: ${error.message}`);
+    const err = new Error(`An error occurred while updating user: ${error.message}`);
     err.success = false;
     err.code = 500;
     throw err;

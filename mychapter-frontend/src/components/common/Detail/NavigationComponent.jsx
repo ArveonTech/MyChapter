@@ -53,9 +53,9 @@ const NavigationComponent = ({ dataNotes }) => {
               <DialogHeader>
                 <DialogTitle className={`text-center`}>Are you sure?</DialogTitle>
                 <DialogDescription>This action cannot be undone. This will permanently delete your note.</DialogDescription>
-                <Button variant={"destructive"} onClick={handleDelete}>
+                <div className={"bg-destructive text-primary-foreground rounded text-center py-1 text-lg"} onClick={handleDelete}>
                   Yes
-                </Button>
+                </div>
               </DialogHeader>
             </DialogContent>
           </Dialog>

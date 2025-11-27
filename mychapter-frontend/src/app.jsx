@@ -14,6 +14,7 @@ import NotesPage from "./components/pages/NotesPage";
 import ArchivePage from "./components/pages/ArchivePage";
 import FormPage from "./components/pages/FormPage";
 import DetailPage from "./components/pages/DetailPage";
+import UserPage from "./components/pages/UserPage";
 
 const router = createBrowserRouter([
   {
@@ -85,6 +86,14 @@ const router = createBrowserRouter([
     element: (
       <ProtectedRoute>
         <FormPage mode="edit" />
+      </ProtectedRoute>
+    ),
+  },
+  {
+    path: "/user",
+    element: (
+      <ProtectedRoute>
+        <UserPage />
       </ProtectedRoute>
     ),
   },

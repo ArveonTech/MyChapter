@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { requestBE } from "../../lib/requestBE-lib";
 
-const UseGetProfile = () => {
+const UseGetProfile = ({ valueRender }) => {
   const [dataProfile, setDataProfile] = useState(null);
   const [errorDataProfile, setErrorDataProfile] = useState(false);
 
@@ -24,7 +24,7 @@ const UseGetProfile = () => {
     };
 
     fetchDataProfile();
-  }, []);
+  }, [valueRender]);
 
   return { dataProfile, errorDataProfile };
 };

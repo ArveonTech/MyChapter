@@ -195,7 +195,7 @@ noteRoute.delete("/notes/delete", verifyUser, async (req, res) => {
     const foundNote = await loadNote(dataNoteDelete._id, dataUser._id);
 
     if (foundNote.code !== 200) return res.status(foundNote.code).json({ message: foundNote.message });
-    if (dataUser._id !== dataNoteDelete.userId && dataUser.role !== "admin" && dataUser.role !== "super admin") return res.status(403).json({ message: "You don't have access!" });
+    if (dataUser._id !== dataNoteDelete.userId) return res.status(403).json({ message: "You don't have access!" });
 
     const resultUpdateNote = await deleteNote(dataNoteDelete._id);
 

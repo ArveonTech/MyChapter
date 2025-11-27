@@ -10,6 +10,8 @@ import contentPlainTextNoteSlice from "@/features/contentPlainTextNoteSlice";
 import statusActionFormSlice from "@/features/statusActionFormSlice";
 import backPageSlice from "@/features/backPageSlice";
 import deleteStatusSlice from "@/features/deleteStatusSlice";
+import updateProfileStatusSlice from "@/features/updateProfileStatusSlice";
+import setRenderProfileSlice from "@/features/setRenderProfileSlice";
 
 export const store = configureStore({
   reducer: {
@@ -24,5 +26,7 @@ export const store = configureStore({
     statusActionForm: statusActionFormSlice,
     backPage: backPageSlice,
     deleteStatus: deleteStatusSlice,
+    updateProfileStatus: updateProfileStatusSlice,
+    setRenderProfile: setRenderProfileSlice,
   },
 });

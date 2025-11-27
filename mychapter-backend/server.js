@@ -6,14 +6,14 @@ import cors from "cors";
 // utils / middleware
 import { createAccessToken, createRefreshToken } from "./utils/authToken.js";
 import { validateUserMiddleware } from "./middleware/validateUserMiddleware.js";
-import { findUser, addUser } from "./controllers/usersControllers.js";
+import { findUser, addUser, loadUser } from "./controllers/usersControllers.js";
 import { verifyUser } from "./middleware/authMiddleware.js";
 import { changePasswordById } from "./utils/changePasswordById.js";
 
 // routers
-import adminRoute from "./routers/adminRoutes.js";
 import userRoute from "./routers/userRoutes.js";
 import noteRoute from "./routers/noteRoutes.js";
+import validatePassword from "./helper/validatePassword.js";
 
 const app = express();
 app.use(express.json());
@@ -22,14 +22,13 @@ app.use(cookieParser());
 app.use(
   cors({
     origin: `http://localhost:5173`,
-    methods: ["GET", "POST", "PUT", "DELETE","PATCH"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true,
   })
 );
 
 dotenv.config({ path: "./env/.env" });
 
-app.use("/api/admin", adminRoute);
 app.use("/api/user", userRoute);
 app.use("/api/note", noteRoute);
 
@@ -49,9 +48,6 @@ app.post("/auth/signin", async (req, res) => {
   }
 
   const { password, ...rest } = foundUser.data;
-
-  const accessToken = createAccessToken(rest);
-  const refreshToken = createRefreshToken(rest);
 
   res.cookie("refresh-token", refreshToken, {
     httpOnly: true,
@@ -99,15 +95,39 @@ app.get("/auth/signout", (req, res) => {
 });
 
 app.post("/auth/change-password", verifyUser, async (req, res) => {
+  const idUserCookie = req.user._id;
   const { idUser, newPassword } = req.body;
 
-  const dataChangePassword = await changePasswordById(idUser, newPassword);
+  if (idUser !== idUserCookie) return res.status(401).json({ error: "You don't have access" });
 
-  if (dataChangePassword.code < 200 || dataChangePassword.code >= 300) {
-    res.status(dataChangePassword.code).json(dataChangePassword.message);
+  const validate = validatePassword(newPassword);
+
+  if (validate) return res.status(400).json({ error: validate });
+
+  const result = await changePasswordById(idUser, newPassword);
+
+  if (result.code < 200 || result.code >= 300) {
+    return res.status(result.code).json(result.message);
+  }
+  const user = await loadUser(req.user._id);
+  const { password, ...rest } = user.data;
+
+  if (user.code < 200 || user.code >= 300) {
+    return res.status(user.code).json(user.message);
   }
 
-  res.status(dataChangePassword.code).json(dataChangePassword);
+  const accessToken = createAccessToken(rest);
+  const refreshToken = createRefreshToken(rest);
+
+  res.cookie("refresh-token", refreshToken, {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
+    maxAge: 1000 * 60 * 60 * 168,
+    path: "/",
+  });
+
+  res.status(result.code).json({ accessToken, result });
 });
 
 app.listen(PORT, () => {

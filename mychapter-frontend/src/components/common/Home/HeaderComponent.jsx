@@ -1,5 +1,4 @@
 // utils
-import getProfile from "@/utils/getProfile";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
 import { useTheme } from "@/features/ThemeProvider";
@@ -9,6 +8,7 @@ import DOMPurify from "dompurify";
 import { Menu, Moon, Sun } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import UseGetProfile from "@/hooks/Endpoint/UseGetProfile";
 
 const navLinks = [
   { label: "Home", href: "/home" },
@@ -28,7 +28,7 @@ const profileImages = {
 
 const HeaderComponent = () => {
   const location = useLocation();
-  const user = getProfile();
+  const { dataProfile, errorDataProfile } = UseGetProfile({ valueRender: "" });
   const [navigationHamburger, setNavigationHamburger] = useState(false);
   const { theme, setTheme } = useTheme();
 
@@ -42,10 +42,10 @@ const HeaderComponent = () => {
     <header className="mt-5 px-2 xss:px-3 sm:px-10 flex items-center justify-between relative">
       <div className="flex items-center bg-accent w-max p-2 rounded-full gap-2">
         <Avatar className="md:w-12 md:h-12">
-          <AvatarImage src={profileImages[user?.avatar]} alt="avatar-images" />
+          <AvatarImage src={profileImages[dataProfile?.avatar]} alt="avatar-images" />
           <AvatarFallback>{profileImages["avatar-1"]}</AvatarFallback>
         </Avatar>
-        <p className="hidden xss:block xss:text-[clamp(8px,5vw,14px)] mr-1 xm:text-lg xm:mr-3 line-clamp-1">Hello, {DOMPurify.sanitize(user?.username)}</p>
+        <p className="hidden xss:block xss:text-[clamp(8px,5vw,14px)] mr-1 xm:text-lg xm:mr-3 line-clamp-1">Hello, {DOMPurify.sanitize(dataProfile?.username)}</p>
       </div>
       <div className="hidden md:block">
         {navLinks.map((link, index) => (

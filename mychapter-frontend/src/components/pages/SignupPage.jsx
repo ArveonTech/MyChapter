@@ -42,8 +42,10 @@ const SignupPage = () => {
 
     setErrorInputForm({ success: true, inputForm: { username: null, email: null, password: null, confirmPassword: null } });
 
+    const { confirmPassword, ...form } = formSignup;
+
     try {
-      const response = await requestBE("POST", "auth/signup", formSignup, "", {
+      const response = await requestBE("POST", "auth/signup", form, "", {
         headers: { "Content-Type": "application/json" },
         withCredentials: true,
       });

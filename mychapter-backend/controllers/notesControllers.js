@@ -133,7 +133,7 @@ export const updateNote = async (idNote, dataNote) => {
       description: result,
     };
   } catch (error) {
-    const err = new Error(`an error occurred while updating user notes: ${error.message}`);
+    const err = new Error(`An error occurred while updating user notes: ${error.message}`);
     err.success = false;
     err.code = 500;
     throw err;
