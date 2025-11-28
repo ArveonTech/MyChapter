@@ -7,6 +7,8 @@ import AccountComponent from "../common/User/AccountComponent";
 import HeaderComponent from "../common/User/HeaderComponent";
 import { useEffect } from "react";
 import { statusUpdateProfile } from "@/features/updateProfileStatusSlice";
+import { Home } from "lucide-react";
+import { Link } from "react-router-dom";
 
 const UserPage = () => {
   const dispatch = useDispatch();
@@ -54,6 +56,11 @@ const UserPage = () => {
         theme={theme === "dark" ? "dark" : "light"}
         transition={Bounce}
       />
+      <div className="fixed bottom-16 ml-10 bg-secondary p-3 rounded-full hover:bg-accent cursor-pointer">
+        <Link to={`/home`}>
+          <Home size={28} />
+        </Link>
+      </div>
     </div>
   );
 };

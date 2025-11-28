@@ -2,6 +2,16 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import cors from "cors";
+import { rateLimit } from "express-rate-limit";
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
+  standardHeaders: "draft-8", // draft-6: `RateLimit-*` headers; draft-7 & draft-8: combined `RateLimit` header
+  legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
+  ipv6Subnet: 56, // Set to 60 or 64 to be less aggressive, or 52 or 48 to be more aggressive
+  // store: ... , // Redis, Memcached, etc. See below.
+});
 
 // utils / middleware
 import { createAccessToken, createRefreshToken } from "./utils/authToken.js";
@@ -18,6 +28,7 @@ import validatePassword from "./helper/validatePassword.js";
 const app = express();
 app.use(express.json());
 app.use(cookieParser());
+app.use(limiter);
 
 app.use(
   cors({
@@ -48,6 +59,9 @@ app.post("/auth/signin", async (req, res) => {
   }
 
   const { password, ...rest } = foundUser.data;
+
+  const accessToken = createAccessToken(rest);
+  const refreshToken = createRefreshToken(rest);
 
   res.cookie("refresh-token", refreshToken, {
     httpOnly: true,
@@ -91,14 +105,18 @@ app.get("/auth/signout", (req, res) => {
     maxAge: 1000 * 60 * 60 * 168,
     path: "/",
   });
-  res.json({ message: "Signed out" });
+  res.status(200).json({ message: "Signed out" });
 });
 
 app.post("/auth/change-password", verifyUser, async (req, res) => {
   const idUserCookie = req.user._id;
   const { idUser, newPassword } = req.body;
+  const user = await loadUser(req.user._id);
+  const { password, ...rest } = user.data;
 
   if (idUser !== idUserCookie) return res.status(401).json({ error: "You don't have access" });
+
+  if (password === newPassword) return res.status(400).json({ error: "Passwords cannot be the same" });
 
   const validate = validatePassword(newPassword);
 
@@ -109,8 +127,6 @@ app.post("/auth/change-password", verifyUser, async (req, res) => {
   if (result.code < 200 || result.code >= 300) {
     return res.status(result.code).json(result.message);
   }
-  const user = await loadUser(req.user._id);
-  const { password, ...rest } = user.data;
 
   if (user.code < 200 || user.code >= 300) {
     return res.status(user.code).json(user.message);

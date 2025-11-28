@@ -1,10 +1,12 @@
 import { MongoClient } from "mongodb";
+import dotenv from "dotenv";
+dotenv.config({ path: "./env/.env" });
 
 // uri
-const uri = "mongodb://127.0.0.1:27017";
+const uri = process.env.MONGO_URL;
 
 // db name
-const dbName = "NotesApp";
+const dbName = "myChapter";
 
 const client = new MongoClient(uri);
 

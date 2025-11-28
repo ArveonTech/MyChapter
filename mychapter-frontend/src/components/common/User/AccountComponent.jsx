@@ -2,24 +2,30 @@
 import { useEffect, useState } from "react";
 
 // components
-import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { RectangleEllipsis, User } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { LogOut, RectangleEllipsis, User } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import UseGetProfile from "@/hooks/Endpoint/UseGetProfile";
 import { useDispatch, useSelector } from "react-redux";
 import { statusUpdateProfile } from "@/features/updateProfileStatusSlice";
 import { requestBE } from "@/lib/requestBE-lib";
 import { setrender } from "@/features/setRenderProfileSlice";
+import { DialogClose } from "@radix-ui/react-dialog";
+import { useNavigate } from "react-router-dom";
 
 const AccountComponent = () => {
   const accessToken = localStorage.getItem("access-token");
-  const valueRender = useSelector((state) => state.setRenderProfile);
-  const [size, setSize] = useState(20);
+
+  const navigate = useNavigate();
   const dispatch = useDispatch();
-  const [usernameNew, setUsernameNew] = useState("");
+  const valueRender = useSelector((state) => state.setRenderProfile);
   const { dataProfile, errorDataProfile } = UseGetProfile({ valueRender });
+
+  const [usernameNew, setUsernameNew] = useState("");
   const [passwordNew, setNewPassword] = useState("");
   const [errorFormatPassword, setErrorFormatPassword] = useState("");
+  const [openPassword, setOpenPassword] = useState(false);
+  const [errorSavePassword, setErrorSavePassword] = useState(false);
 
   const formatUpdateUsername = {
     _id: dataProfile?._id,
@@ -33,21 +39,6 @@ const AccountComponent = () => {
     idUser: dataProfile?._id,
     newPassword: passwordNew,
   };
-
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth >= 768) {
-        setSize(32);
-      } else {
-        setSize(24);
-      }
-    };
-
-    handleResize();
-    window.addEventListener("resize", handleResize);
-
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
 
   const handleSave = async (from) => {
     if (from === "username") {
@@ -77,10 +68,33 @@ const AccountComponent = () => {
         });
         const accessTokenNew = response.data?.accessToken;
         localStorage.setItem("access-token", accessTokenNew);
+
+        setErrorSavePassword("");
+        setErrorFormatPassword("");
+        setOpenPassword(false);
+
         dispatch(setrender(!valueRender));
         dispatch(statusUpdateProfile({ status: response.status, message: response.data.result.message }));
       } catch (err) {
+        if (err) setErrorSavePassword(false);
         setErrorFormatPassword(err.data.error);
+        dispatch(statusUpdateProfile({ status: err.status, message: "there is an error" }));
+      }
+    } else if ("signout") {
+      try {
+        const response = await requestBE("GET", "auth/signout", null, ``, {
+          headers: {
+            Bearer: accessToken,
+            "Content-Type": "application/json",
+          },
+          withCredentials: true,
+        });
+        localStorage.removeItem("access-token");
+        navigate("/");
+      } catch (err) {
+        if (err) setErrorSavePassword(false);
+        setErrorFormatPassword(err.data.error);
+        dispatch(statusUpdateProfile({ status: err.status, message: "there is an error" }));
       }
     }
   };
@@ -89,14 +103,16 @@ const AccountComponent = () => {
     dispatch(statusUpdateProfile({ status: 400, message: "there is an error" }));
   }
 
+  if (errorSavePassword) {
+    setOpenPassword(false);
+  }
+
   return (
     <div className="flex flex-col items-center justify-center w-8/12 mt-20 mx-auto">
       <div className="w-full">
         <h1 className="text-2xl border-b-2">Account</h1>
         <div className="mt-3 bg-secondary p-2 rounded flex justify-between cursor-pointer">
-          <h1 color="#000" size={size}>
-            Change Username
-          </h1>
+          <h1>Change Username</h1>
           <Dialog>
             <DialogTrigger>
               <User />
@@ -104,7 +120,6 @@ const AccountComponent = () => {
             <DialogContent>
               <DialogHeader>
                 <DialogTitle className={`text-lg sm:text-2xl text-center`}>Change New Username</DialogTitle>
-                <div className="grid grid-cols-2 sm:grid-cols-3 items-center justify-items-center gap-5"></div>
                 <DialogDescription>
                   <Input
                     className={`mt-5 text-foreground`}
@@ -129,9 +144,9 @@ const AccountComponent = () => {
         </div>
         <div className="mt-3 bg-secondary p-2 rounded flex justify-between cursor-pointer">
           <h1>Change Password</h1>
-          <Dialog>
+          <Dialog openPassword={openPassword} onOpenPasswordChange={setOpenPassword}>
             <DialogTrigger>
-              <RectangleEllipsis />
+              <RectangleEllipsis onClick={() => setOpenPassword(true)} />
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
@@ -150,11 +165,26 @@ const AccountComponent = () => {
                     onChange={(event) => setNewPassword(event.target.value)}
                   />
                 </DialogDescription>
-                <DialogClose>
-                  <div className={"bg-primary mt-5 text-primary-foreground rounded text-center py-1 text-lg"} onClick={() => handleSave("password")}>
-                    Save
-                  </div>
-                </DialogClose>
+                <div className={"bg-primary mt-5 text-primary-foreground rounded text-center py-1 text-lg"} onClick={() => handleSave("password")}>
+                  Save
+                </div>
+              </DialogHeader>
+            </DialogContent>
+          </Dialog>
+        </div>
+        <div className="mt-3 bg-destructive p-2 rounded flex justify-between cursor-pointer">
+          <h1>Sign out</h1>
+          <Dialog>
+            <DialogTrigger>
+              <LogOut />
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle className={`text-lg sm:text-2xl text-center`}>Sign out</DialogTitle>
+                <DialogDescription className={`text-md text-foreground`}>Are you sure ?</DialogDescription>
+                <div className={"bg-primary mt-5 text-primary-foreground rounded text-center py-1 text-lg"} onClick={() => handleSave("signout")}>
+                  Yes
+                </div>
               </DialogHeader>
             </DialogContent>
           </Dialog>
