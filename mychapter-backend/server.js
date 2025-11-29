@@ -1,14 +1,13 @@
 console.log("Server starting...");
-
 import express from "express";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
 import cors from "cors";
 import { rateLimit } from "express-rate-limit";
 
-const app = express();
 dotenv.config({ path: "./env/.env" });
 
+const app = express();
 app.use(
   cors({
     origin: ["http://localhost:5173", "https://mychapter-production.up.railway.app"],
@@ -16,7 +15,6 @@ app.use(
     credentials: true,
   })
 );
-
 app.options(/.*/, cors());
 
 const limiter = rateLimit({
@@ -46,6 +44,14 @@ process.on("uncaughtException", (err) => {
   // Exit secara paksa
   process.exit(1);
 });
+
+process.on("unhandledRejection", (err) => {
+  console.error("⚠️ UNHANDLED REJECTION! Shutting down...");
+  console.error(err.name, err.message, err.stack);
+  // Exit secara paksa jika ada kegagalan Promise yang tidak tertangkap
+  process.exit(1);
+});
+// (Handler uncaughtException Anda sudah ada di bawah ini)
 
 app.use(express.json());
 app.use(cookieParser());
