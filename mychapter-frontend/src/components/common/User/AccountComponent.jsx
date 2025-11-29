@@ -45,7 +45,7 @@ const AccountComponent = () => {
       try {
         const response = await requestBE("POST", "api/user/me/changeprofile", formatUpdateUsername, ``, {
           headers: {
-            Bearer: accessToken,
+            Authorization: `Bearer ${accessToken}`,
             "Content-Type": "application/json",
           },
           withCredentials: true,
@@ -61,7 +61,7 @@ const AccountComponent = () => {
       try {
         const response = await requestBE("POST", "auth/change-password", formatUpdatePassword, ``, {
           headers: {
-            Bearer: accessToken,
+            Authorization: `Bearer ${accessToken}`,
             "Content-Type": "application/json",
           },
           withCredentials: true,
@@ -84,7 +84,7 @@ const AccountComponent = () => {
       try {
         const response = await requestBE("GET", "auth/signout", null, ``, {
           headers: {
-            Bearer: accessToken,
+            Authorization: `Bearer ${accessToken}`,
             "Content-Type": "application/json",
           },
           withCredentials: true,
@@ -173,14 +173,14 @@ const AccountComponent = () => {
           </Dialog>
         </div>
         <div className="mt-3 bg-destructive p-2 rounded flex justify-between cursor-pointer">
-          <h1>Sign out</h1>
+          <h1 className="text-destructive-foreground">Sign out</h1>
           <Dialog>
             <DialogTrigger>
-              <LogOut />
+              <LogOut color="#fff" />
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle className={`text-lg sm:text-2xl text-center`}>Sign out</DialogTitle>
+                <DialogTitle className={`text-lg sm:text-2xl text-center text-destructive-foreground`}>Sign out</DialogTitle>
                 <DialogDescription className={`text-md text-foreground`}>Are you sure ?</DialogDescription>
                 <div className={"bg-primary mt-5 text-primary-foreground rounded text-center py-1 text-lg"} onClick={() => handleSave("signout")}>
                   Yes

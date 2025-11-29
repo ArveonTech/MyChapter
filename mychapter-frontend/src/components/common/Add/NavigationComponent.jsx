@@ -58,7 +58,7 @@ const NavigationComponent = ({ mode, dataNotes }) => {
       try {
         const response = await requestBE("PATCH", "api/note/notes/update", formEdit, ``, {
           headers: {
-            Bearer: accessToken,
+            Authorization: `Bearer ${accessToken}`,
             "Content-Type": "application/json",
           },
           withCredentials: true,
@@ -71,7 +71,7 @@ const NavigationComponent = ({ mode, dataNotes }) => {
       try {
         const response = await requestBE("POST", "api/note/notes/add", formatAdd, ``, {
           headers: {
-            Bearer: accessToken,
+            Authorization: `Bearer ${accessToken}`,
             "Content-Type": "application/json",
           },
           withCredentials: true,
