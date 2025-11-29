@@ -163,6 +163,7 @@ app.post("/auth/change-password", verifyUser, async (req, res) => {
   res.status(result.code).json({ accessToken, result });
 });
 
-app.listen(port, "0.0.0.0", function () {
+// Hapus "0.0.0.0"
+app.listen(port, function () {
   console.info(`listen to port ${port}`);
 });
