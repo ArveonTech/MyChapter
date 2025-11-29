@@ -39,7 +39,10 @@ app.options(/.*/, cors());
 
 app.use(express.json());
 app.use(cookieParser());
-app.use(limiter);
+app.use((req, res, next) => {
+  if (req.method === "OPTIONS") return next();
+  limiter(req, res, next);
+});
 
 dotenv.config({ path: "./env/.env" });
 
