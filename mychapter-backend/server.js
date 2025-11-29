@@ -48,6 +48,13 @@ app.use("/api/note", noteRoute);
 
 const PORT = process.env.PORT || 3000;
 
+app.get("/", (req, res) => {
+  res.json({
+    status: "ok",
+    message: "server is running",
+  });
+});
+
 // auth
 app.get("/auth/validate", verifyUser, async (req, res) => {
   res.json({ accessToken: req.accessToken });
