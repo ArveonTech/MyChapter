@@ -37,22 +37,6 @@ import { changePasswordById } from "./utils/changePasswordById.js";
 import userRoute from "./routers/userRoutes.js";
 import noteRoute from "./routers/noteRoutes.js";
 import validatePassword from "./helper/validatePassword.js";
-import { database } from "./config/db.js";
-
-process.on("uncaughtException", (err) => {
-  console.error("💥 UNCAUGHT EXCEPTION! Shutting down...");
-  console.error(err.name, err.message, err.stack);
-  // Exit secara paksa
-  process.exit(1);
-});
-
-process.on("unhandledRejection", (err) => {
-  console.error("⚠️ UNHANDLED REJECTION! Shutting down...");
-  console.error(err.name, err.message, err.stack);
-  // Exit secara paksa jika ada kegagalan Promise yang tidak tertangkap
-  process.exit(1);
-});
-// (Handler uncaughtException Anda sudah ada di bawah ini)
 
 app.use(express.json());
 app.use(cookieParser());
@@ -65,8 +49,6 @@ app.use("/api/user", userRoute);
 app.use("/api/note", noteRoute);
 
 const port = process.env.PORT || 3000;
-
-app.get("/favicon.ico", (req, res) => res.sendStatus(204));
 
 app.get("/", (req, res) => {
   res.json({
@@ -176,22 +158,6 @@ app.post("/auth/change-password", verifyUser, async (req, res) => {
   res.status(result.code).json({ accessToken, result });
 });
 
-const connectAndStartServer = async () => {
-  try {
-    // --- Langkah 1: KONEKSI KE DB
-    await database(); // Panggil fungsi koneksi DB Anda
-    console.log("✅ Database connected successfully!");
-
-    // --- Langkah 2: START SERVER (Hanya jika DB Sukses)
-    app.listen(port, "0.0.0.0", function () {
-      console.info(`listen to port ${port}`);
-    });
-  } catch (err) {
-    // --- Langkah 3: TANGANI KEGAGALAN
-    console.error("❌ FATAL: Database connection failed. Server failed to start.");
-    console.error(err.message);
-    process.exit(1);
-  }
-};
-
-connectAndStartServer();
+app.listen(port, "0.0.0.0", function () {
+  console.info(`listen to port ${port}`);
+});
