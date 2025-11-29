@@ -33,7 +33,7 @@ Proyek ini bebas digunakan untuk pembelajaran dan pengembangan pribadi / This pr
 1.Backend / Backend Setup
 
 ```bash
-cd backend
+cd mychapter-backend
 npm install
 npm run start
 ```
@@ -41,7 +41,7 @@ npm run start
 2. Frontend / Frontend Setup
 
 ```bash
-cd frontend
+cd mychapter-frontend
 npm install         # install semua dependency frontend
 npm run dev           # jalankan React app (default: localhost:5173)
 ```
