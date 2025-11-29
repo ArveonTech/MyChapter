@@ -5,11 +5,11 @@ import { useDispatch, useSelector } from "react-redux";
 import { status } from "@/features/deleteStatusSlice";
 
 // components
-import HeaderComponent from "@/components/common/Home/HeaderComponent";
-import IncomingUserNotificationComponent from "@/components/common/Home/IncomingUserNotificationComponent";
-import HeroComponent from "@/components/common/Home/HeroComponent";
-import FilterNoteComponent from "@/components/common/Home/FilterNoteComponent";
-import NotesCardComponent from "@/components/common/Home/NotesCardComponent";
+import HeaderComponent from "@/components/common/Home/HeaderComponent.jsx";
+import IncomingUserNotificationComponent from "@/components/common/Home/IncomingUserNotificationComponent.jsx";
+import HeroComponent from "@/components/common/Home/HeroComponent.jsx";
+import FilterNoteComponent from "@/components/common/Home/FilterNoteComponent.jsx";
+import NotesCardComponent from "@/components/common/Home/NotesCardComponent.jsx";
 
 const HomePage = () => {
   const theme = localStorage.getItem("app-theme");
