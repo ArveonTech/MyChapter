@@ -49,7 +49,3 @@ npm run dev           # jalankan React app (default: localhost:5173)
 ## Penting : keamanan login ini sangat rendah,jika terjadi hal tidak di inginkan,kami tidak bertanggung jawab
 
 ## Important: This login security is very low, if something undesirable happens, we are not responsible.
-
-```
-
-```
