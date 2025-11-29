@@ -46,7 +46,7 @@ dotenv.config({ path: "./env/.env" });
 app.use("/api/user", userRoute);
 app.use("/api/note", noteRoute);
 
-const PORT = process.env.PORT || 3000;
+const port = process.env.PORT || 3000;
 
 app.get("/", (req, res) => {
   res.json({
@@ -156,6 +156,6 @@ app.post("/auth/change-password", verifyUser, async (req, res) => {
   res.status(result.code).json({ accessToken, result });
 });
 
-app.listen(PORT, () => {
-  console.info(`listen to port ${PORT}`);
+app.listen(port, "0.0.0.0", function () {
+  console.info(`listen to port ${port}`);
 });
