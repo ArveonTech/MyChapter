@@ -26,23 +26,25 @@ import noteRoute from "./routers/noteRoutes.js";
 import validatePassword from "./helper/validatePassword.js";
 
 const app = express();
-app.use(express.json());
-app.use(cookieParser());
-app.use(limiter);
 
 app.use(
   cors({
     origin: ["http://localhost:5173", "https://mychapter-production.up.railway.app"],
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     credentials: true,
   })
 );
+
+app.options("*", cors());
+
+app.use(express.json());
+app.use(cookieParser());
+app.use(limiter);
 
 dotenv.config({ path: "./env/.env" });
 
 app.use("/api/user", userRoute);
 app.use("/api/note", noteRoute);
-app.options("*", cors());
 
 const PORT = process.env.PORT || 3000;
 
