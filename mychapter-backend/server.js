@@ -183,7 +183,7 @@ const connectAndStartServer = async () => {
     console.log("✅ Database connected successfully!");
 
     // --- Langkah 2: START SERVER (Hanya jika DB Sukses)
-    app.listen(port, function () {
+    app.listen(port, "0.0.0.0", function () {
       console.info(`listen to port ${port}`);
     });
   } catch (err) {
