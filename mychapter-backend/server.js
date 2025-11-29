@@ -176,11 +176,6 @@ app.post("/auth/change-password", verifyUser, async (req, res) => {
   res.status(result.code).json({ accessToken, result });
 });
 
-// server.js (di bagian bawah)
-
-// Import fungsi koneksi DB Anda
-// import { connectToDatabase } from "./path/to/dbConnection.js";
-
 const connectAndStartServer = async () => {
   try {
     // --- Langkah 1: KONEKSI KE DB
@@ -195,8 +190,8 @@ const connectAndStartServer = async () => {
     // --- Langkah 3: TANGANI KEGAGALAN
     console.error("❌ FATAL: Database connection failed. Server failed to start.");
     console.error(err.message);
-    process.exit(1); // Keluar agar Railway tahu server gagal
+    process.exit(1);
   }
 };
 
-connectAndStartServer(); // Mulai proses koneksi dan server
+connectAndStartServer();
