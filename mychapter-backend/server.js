@@ -32,7 +32,7 @@ app.use(limiter);
 
 app.use(
   cors({
-    origin: `http://localhost:5173`,
+    origin: ["http://localhost:5173", "https://mychapter-production.up.railway.app"],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH"],
     credentials: true,
   })
