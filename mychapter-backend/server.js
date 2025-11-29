@@ -37,6 +37,7 @@ import { changePasswordById } from "./utils/changePasswordById.js";
 import userRoute from "./routers/userRoutes.js";
 import noteRoute from "./routers/noteRoutes.js";
 import validatePassword from "./helper/validatePassword.js";
+import { database } from "./config/db.js";
 
 process.on("uncaughtException", (err) => {
   console.error("💥 UNCAUGHT EXCEPTION! Shutting down...");
@@ -175,7 +176,27 @@ app.post("/auth/change-password", verifyUser, async (req, res) => {
   res.status(result.code).json({ accessToken, result });
 });
 
-// Hapus "0.0.0.0"
-app.listen(port, function () {
-  console.info(`listen to port ${port}`);
-});
+// server.js (di bagian bawah)
+
+// Import fungsi koneksi DB Anda
+// import { connectToDatabase } from "./path/to/dbConnection.js";
+
+const connectAndStartServer = async () => {
+  try {
+    // --- Langkah 1: KONEKSI KE DB
+    await database(); // Panggil fungsi koneksi DB Anda
+    console.log("✅ Database connected successfully!");
+
+    // --- Langkah 2: START SERVER (Hanya jika DB Sukses)
+    app.listen(port, function () {
+      console.info(`listen to port ${port}`);
+    });
+  } catch (err) {
+    // --- Langkah 3: TANGANI KEGAGALAN
+    console.error("❌ FATAL: Database connection failed. Server failed to start.");
+    console.error(err.message);
+    process.exit(1); // Keluar agar Railway tahu server gagal
+  }
+};
+
+connectAndStartServer(); // Mulai proses koneksi dan server
