@@ -150,5 +150,5 @@ app.post("/auth/change-password", verifyUser, async (req, res) => {
 });
 
 app.listen(PORT, "0.0.0.0", () => {
-  console.info(`listen to port 3000`);
+  console.info(`listen to port ${PORT}`);
 });
