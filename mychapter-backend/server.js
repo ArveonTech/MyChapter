@@ -9,6 +9,13 @@ import { rateLimit } from "express-rate-limit";
 const app = express();
 dotenv.config({ path: "./env/.env" });
 
+process.on("uncaughtException", (err) => {
+  console.error("💥 UNCAUGHT EXCEPTION! Shutting down...");
+  console.error(err.name, err.message, err.stack);
+  // Exit secara paksa
+  process.exit(1);
+});
+
 app.use(
   cors({
     origin: ["http://localhost:5173", "https://mychapter-production.up.railway.app"],
