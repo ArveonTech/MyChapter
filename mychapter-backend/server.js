@@ -4,6 +4,18 @@ import dotenv from "dotenv";
 import cors from "cors";
 import { rateLimit } from "express-rate-limit";
 
+const app = express();
+
+app.use(
+  cors({
+    origin: ["http://localhost:5173", "https://mychapter-production.up.railway.app"],
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    credentials: true,
+  })
+);
+
+app.options(/.*/, cors());
+
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
@@ -25,18 +37,6 @@ import userRoute from "./routers/userRoutes.js";
 import noteRoute from "./routers/noteRoutes.js";
 import validatePassword from "./helper/validatePassword.js";
 
-const app = express();
-
-app.use(
-  cors({
-    origin: ["http://localhost:5173", "https://mychapter-production.up.railway.app"],
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    credentials: true,
-  })
-);
-
-app.options(/.*/, cors());
-
 app.use(express.json());
 app.use(cookieParser());
 app.use((req, res, next) => {
@@ -57,6 +57,8 @@ app.get("/", (req, res) => {
     message: "server is running",
   });
 });
+
+app.get("/health", (req, res) => res.sendStatus(200));
 
 // auth
 app.get("/auth/validate", verifyUser, async (req, res) => {
