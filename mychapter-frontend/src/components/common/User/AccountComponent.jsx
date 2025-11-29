@@ -180,7 +180,7 @@ const AccountComponent = () => {
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
-                <DialogTitle className={`text-lg sm:text-2xl text-center text-destructive-foreground`}>Sign out</DialogTitle>
+                <DialogTitle className={`text-lg sm:text-2xl text-center text-foreground`}>Sign out</DialogTitle>
                 <DialogDescription className={`text-md text-foreground`}>Are you sure ?</DialogDescription>
                 <div className={"bg-primary mt-5 text-primary-foreground rounded text-center py-1 text-lg"} onClick={() => handleSave("signout")}>
                   Yes
