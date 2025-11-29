@@ -3,6 +3,10 @@ import jwt from "jsonwebtoken";
 
 // buat middleware dari request
 export const verifyUser = (req, res, next) => {
+  if (req.method === "OPTIONS") {
+    return res.sendStatus(200);
+  }
+
   // ambil access token di header
   const authHeader = req.headers["authorization"];
   const accessToken = authHeader && authHeader.split(" ")[1];
