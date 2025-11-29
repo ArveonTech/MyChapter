@@ -1,3 +1,5 @@
+console.log("Server starting...");
+
 import express from "express";
 import cookieParser from "cookie-parser";
 import dotenv from "dotenv";
@@ -59,7 +61,6 @@ app.get("/", (req, res) => {
     message: "server is running",
   });
 });
-
 
 // auth
 app.get("/auth/validate", verifyUser, async (req, res) => {
