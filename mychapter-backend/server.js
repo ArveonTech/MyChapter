@@ -51,6 +51,8 @@ app.use("/api/note", noteRoute);
 
 const port = process.env.PORT || 3000;
 
+app.get("/favicon.ico", (req, res) => res.sendStatus(204));
+
 app.get("/", (req, res) => {
   res.json({
     status: "ok",
@@ -58,7 +60,6 @@ app.get("/", (req, res) => {
   });
 });
 
-app.get("/health", (req, res) => res.sendStatus(200));
 
 // auth
 app.get("/auth/validate", verifyUser, async (req, res) => {
