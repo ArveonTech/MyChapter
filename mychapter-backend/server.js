@@ -42,6 +42,7 @@ dotenv.config({ path: "./env/.env" });
 
 app.use("/api/user", userRoute);
 app.use("/api/note", noteRoute);
+app.options("*", cors());
 
 const PORT = process.env.PORT || 3000;
 
