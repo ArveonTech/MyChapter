@@ -56,11 +56,11 @@ const UserPage = () => {
         theme={theme === "dark" ? "dark" : "light"}
         transition={Bounce}
       />
-      <div className="fixed bottom-16 ml-10 bg-secondary p-3 rounded-full hover:bg-accent cursor-pointer">
-        <Link to={`/home`}>
+      <Link to={`/home`}>
+        <div className="fixed bottom-16 ml-10 bg-secondary p-3 rounded-full hover:bg-accent cursor-pointer">
           <Home size={28} />
-        </Link>
-      </div>
+        </div>
+      </Link>
     </div>
   );
 };

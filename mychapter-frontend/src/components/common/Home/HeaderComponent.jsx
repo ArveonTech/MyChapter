@@ -1,6 +1,6 @@
 // utils
 import { useState } from "react";
-import { useLocation } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { useTheme } from "@/features/ThemeProvider";
 import DOMPurify from "dompurify";
 
@@ -41,10 +41,12 @@ const HeaderComponent = () => {
   return (
     <header className="mt-5 px-2 xss:px-3 sm:px-10 flex items-center justify-between relative">
       <div className="flex items-center bg-accent w-max p-2 rounded-full gap-2">
-        <Avatar className="md:w-12 md:h-12">
-          <AvatarImage src={profileImages[dataProfile?.avatar]} alt="avatar-images" />
-          <AvatarFallback>{profileImages["avatar-1"]}</AvatarFallback>
-        </Avatar>
+        <Link to={`/user`}>
+          <Avatar className="md:w-12 md:h-12">
+            <AvatarImage src={profileImages[dataProfile?.avatar]} alt="avatar-images" />
+            <AvatarFallback>{profileImages["avatar-1"]}</AvatarFallback>
+          </Avatar>
+        </Link>
         <p className="hidden xss:block xss:text-[clamp(8px,5vw,14px)] mr-1 xm:text-lg xm:mr-3 line-clamp-1">Hello, {DOMPurify.sanitize(dataProfile?.username)}</p>
       </div>
       <div className="hidden md:block">
