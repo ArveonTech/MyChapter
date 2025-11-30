@@ -1,6 +1,4 @@
-[build]
-  base = "mychapter-frontend"
-  
+[build]  
   command = "npm run build" 
 
-  publish = "mychapter-frontend/dist"
+  publish = "/dist"
