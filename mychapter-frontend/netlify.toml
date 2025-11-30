@@ -1,0 +1,4 @@
+[[headers]]
+  for = "/*.jsx"  # Targetkan semua file dengan ekstensi .jsx di seluruh situs
+  [headers.values]
+    Content-Type = "application/javascript"
