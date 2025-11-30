@@ -1,6 +1,6 @@
-# 📚 MyChapter – Web App untuk Baca & Kelola Chapter
+# 📚 MyChapter – Web App untuk Baca & Kelola Catatan
 
-**MyChapter** adalah web app simpel buat baca, simpan, dan kelola chapter dari berbagai sumber. Cocok buat yang suka baca tapi pengen punya kontrol penuh atas catatan dan tampilan bacaan.
+**MyChapter** adalah web app simpel buat baca, simpan, dan kelola catatan dari pemikiranmu. Cocok buat yang suka baca tapi pengen punya kontrol penuh atas catatan dan tampilan bacaan.
 
 ---
 
@@ -15,8 +15,8 @@
 
 ## 📚 Fitur Utama / Main Features
 
-- Baca Chapter / Read Chapters
-- Edit Chapter / Catatan / Edit Chapters / Notes
+- Baca catatan / Read notes
+- Edit catatan / Catatan / Edit notes / Notes
 - Gunakan **Quill Editor** / Use **Quill Editor**
 
 ### ⚙️ Pengaturan / Settings
@@ -42,8 +42,8 @@ npm run start
 
 ```bash
 cd mychapter-frontend
-npm install         # install semua dependency frontend
-npm run dev           # jalankan React app (default: localhost:5173)
+npm install
+npm run dev
 ```
 
 ## Penting : keamanan login ini sangat rendah,jika terjadi hal tidak di inginkan,kami tidak bertanggung jawab
