@@ -1,4 +1,6 @@
-[[headers]]
-  for = "/*.jsx"  # Targetkan semua file dengan ekstensi .jsx di seluruh situs
-  [headers.values]
-    Content-Type = "application/javascript"
+[build]
+  base = "mychapter-frontend"
+  
+  command = "npm run build" 
+
+  publish = "mychapter-frontend/dist"
