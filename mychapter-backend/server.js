@@ -9,7 +9,7 @@ dotenv.config({ path: "./env/.env" });
 const app = express();
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://mychapter-production.up.railway.app"],
+    origin: ["http://localhost:5173", "https://mychapter-production.up.railway.app", "https://mychapter.netlify.app"],
     methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
     credentials: true,
   })
