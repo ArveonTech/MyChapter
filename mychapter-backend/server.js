@@ -77,7 +77,7 @@ app.post("/auth/signin", async (req, res) => {
   res.cookie("refresh-token", refreshToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    sameSite: "none",
     maxAge: 1000 * 60 * 60 * 168,
     path: "/",
   });
@@ -101,7 +101,7 @@ app.post("/auth/signup", validateUserMiddleware, async (req, res) => {
   res.cookie("refresh-token", refreshToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    sameSite: "none",
     maxAge: 1000 * 60 * 60 * 168,
     path: "/",
   });
@@ -112,7 +112,7 @@ app.get("/auth/signout", (req, res) => {
   res.clearCookie("refresh-token", {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    sameSite: "none",
     maxAge: 1000 * 60 * 60 * 168,
     path: "/",
   });
@@ -149,7 +149,7 @@ app.post("/auth/change-password", verifyUser, async (req, res) => {
   res.cookie("refresh-token", refreshToken, {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
-    sameSite: "lax",
+    sameSite: "none",
     maxAge: 1000 * 60 * 60 * 168,
     path: "/",
   });
