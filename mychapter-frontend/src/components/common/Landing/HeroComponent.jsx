@@ -16,7 +16,7 @@ const HeroComponent = () => {
       <div className="flex-1 text-center md:text-left space-y-5" data-aos="fade-right" data-aos-duration="1300">
         <h1 className="text-[clamp(3px,100vw,18px)] xs:text-3xl font-semibold text-primary">MyChapter</h1>
         <p className="text-sm sm:text-lg md:text-xl italic text-foreground">"A place where every thought has its own space. Write, save, and rediscover your inspiration whenever you want."🍃</p>
-        <Button asChild>
+        <Button asChild size={`lg`}>
           <Link to="/auth/signin">Try Now</Link>
         </Button>
       </div>

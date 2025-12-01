@@ -6,7 +6,7 @@ const ContactComponent = () => {
   const { theme, setTheme } = useTheme();
 
   return (
-    <div className="mt-10 bg-primary/80 sm:mt-20 md:mt-30 pb-20 pt-10" id="contact">
+    <div className="mt-10 bg-primary/80 sm:mt-20 md:mt-30 pb-5 pt-5" id="contact">
       <div className="flex justify-center items-center gap-5">
         <h1 className="text-lg sm:text-2xl font-semibold text-primary-foreground">Contact Me</h1>
         <Contact strokeWidth={2.5} size={28} className="text-primary-foreground" />
