@@ -23,11 +23,13 @@ const NavigationComponent = () => {
         </Link>
       </div>
       <div className="hidden md:block">
-        {navLinks.map((link, index) => (
-          <Button asChild variant="link" className="text-md" key={index}>
-            <a href={link.href}>{link.label}</a>
-          </Button>
-        ))}
+        <div className="flex gap-5">
+          {navLinks.map((link, index) => (
+            <a href={link.href} className="text-foreground underline-offset-4 hover:underline" key={index}>
+              {link.label}
+            </a>
+          ))}
+        </div>
       </div>
       <div className="flex gap-5 items-center">
         <div className="flex gap-5">
@@ -50,11 +52,11 @@ const NavigationComponent = () => {
         </div>
       </div>
       <div className={`w-30 absolute top-20 right-5 sm:right-10 md:hidden ${navigationHamburger ? "block" : "hidden"}`}>
-        <div className="bg-card flex flex-col rounded-lg">
+        <div className="bg-card flex flex-col rounded-lg justify-center items-center gap-2 py-2">
           {navLinks.map((link, index) => (
-            <Button asChild variant="link" className="text-md" key={index}>
-              <a href={link.href}>{link.label}</a>
-            </Button>
+            <a href={link.href} className="text-foreground underline-offset-4 hover:underline" key={index}>
+              {link.label}
+            </a>
           ))}
         </div>
       </div>

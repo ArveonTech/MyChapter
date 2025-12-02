@@ -37,6 +37,8 @@ const NotesCardComponent = () => {
         )
       ) : loading ? (
         <LoadingComponent />
+      ) : dataNotes.length === 0 ? (
+        <p className="text-center text-xl mt-10 text-destructive">Note not found</p>
       ) : (
         <>
           <div className="grid justify-items-center justify-center gap-10 sm:gap-4 md:gap-7 lg:gap-10 sm:grid-cols-2 sd:grid-cols-3 xl:grid-cols-5">

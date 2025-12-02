@@ -85,7 +85,7 @@ const HeaderComponent = () => {
 
   return (
     <div>
-      <div className="flex items-center mx-auto bg-accent w-8/12 rounded py-5 px-3 md:p-5 gap-5 mt-10">
+      <div className="flex items-center mx-auto bg-accent w-8/12 min-h-12 rounded py-5 px-3 md:p-5 gap-5 mt-10">
         <Avatar className="h-fit md:w-fit md:h-fit relative">
           <AvatarImage src={profileImages[dataProfile?.avatar]} alt="avatar-images" className="w-16 h-16 md:w-28 md:h-28 object-cover" />
           <AvatarFallback>{profileImages["avatar-1"]}</AvatarFallback>

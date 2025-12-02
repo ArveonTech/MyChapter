@@ -324,7 +324,7 @@ const RichEditorComponent = ({ mode, dataNotes }) => {
 
           {/* Font Select */}
           <Select
-            value={fontTitle || fontContent || "default"}
+            value={fontTitle || fontContent || "sansserif"}
             onValueChange={(value) => {
               if (!activeEditor) return;
               activeEditor.quill.format("font", value);
@@ -336,7 +336,6 @@ const RichEditorComponent = ({ mode, dataNotes }) => {
               <SelectValue placeholder="Font" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="default">Default</SelectItem>
               <SelectItem value="serif">Serif</SelectItem>
               <SelectItem value="monospace">Monospace</SelectItem>
               <SelectItem value="sansserif">Sans-serif</SelectItem>

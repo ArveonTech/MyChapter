@@ -38,7 +38,7 @@ const NotesCardComponent = () => {
     <section className="w-9/12 sm:w-10/12 mx-auto mt-10">
       {errorToRender ? (
         errorToRender.status === 404 ? (
-          <p className="text-center text-xl mt-10 text-destructive">Note not found</p>
+          <p className="text-center text-xl mt-10 text-destructive">There is an error</p>
         ) : (
           <Activity mode="visible">
             <ErrorComponent />
@@ -46,6 +46,8 @@ const NotesCardComponent = () => {
         )
       ) : loadingToRender ? (
         <LoadingComponent />
+      ) : dataToRender.length === 0 ? (
+        <p className="text-center text-xl mt-10 text-destructive">Note not found</p>
       ) : (
         <>
           <div className="grid justify-items-center justify-center gap-7 lg:gap-10 sm:grid-cols-2 sd:grid-cols-3 xl:grid-cols-5">

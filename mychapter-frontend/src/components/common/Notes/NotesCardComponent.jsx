@@ -73,6 +73,8 @@ const NotesCardComponent = () => {
           )
         ) : loading || loadingSearch ? (
           <LoadingComponent />
+        ) : dataNotes.length === 0 ? (
+          <p className="text-center text-xl mt-10 text-destructive">Note not found</p>
         ) : (
           <>
             <div className={`grid justify-items-center justify-center gap-10 sm:gap-4 md:gap-7 lg:gap-10  ${valueLayoutRow ? "lg:grid-cols-2" : "sm:grid-cols-2 sd:grid-cols-3 xl:grid-cols-4"}`}>
@@ -103,46 +105,46 @@ const NotesCardComponent = () => {
           </>
         )}
       </section>
-      {errorNotes ? (
-        ""
-      ) : (
-        <Pagination className={`mt-14`}>
-          <PaginationContent>
-            {pageFromQuery <= 1 ? (
-              ""
-            ) : (
-              <PaginationItem>
-                <PaginationPrevious className={`cursor-pointer`} onClick={handlePrevPage} />
-              </PaginationItem>
-            )}
-            {pageFromQuery - 1 !== 0 && pageFromQuery - 1 <= totalPage ? (
-              <PaginationItem>
-                <PaginationLink onClick={handlePrevPage} className={`cursor-pointer`}>
-                  {pageFromQuery - 1}
-                </PaginationLink>
-              </PaginationItem>
-            ) : (
-              ""
-            )}
-            <PaginationItem>
-              <PaginationLink isActive={true}>{pageFromQuery}</PaginationLink>
-            </PaginationItem>
-            <PaginationItem>
-              <PaginationEllipsis />
-            </PaginationItem>
-            {pageFromQuery + 2 <= totalPage ? (
-              <PaginationItem>
-                <PaginationLink onClick={() => handleNextPage(2)} className={`cursor-pointer`}>
-                  {pageFromQuery + 2}
-                </PaginationLink>
-              </PaginationItem>
-            ) : (
-              ""
-            )}
-            <PaginationItem>{pageFromQuery >= totalPage ? "" : <PaginationNext className={`cursor-pointer`} onClick={() => handleNextPage(1)} />}</PaginationItem>
-          </PaginationContent>
-        </Pagination>
-      )}
+      {errorNotes
+        ? ""
+        : dataNotes?.length !== 0 && (
+            <Pagination className={`mt-14`}>
+              <PaginationContent>
+                {pageFromQuery <= 1 ? (
+                  ""
+                ) : (
+                  <PaginationItem>
+                    <PaginationPrevious className={`cursor-pointer`} onClick={handlePrevPage} />
+                  </PaginationItem>
+                )}
+                {pageFromQuery - 1 !== 0 && pageFromQuery - 1 <= totalPage ? (
+                  <PaginationItem>
+                    <PaginationLink onClick={handlePrevPage} className={`cursor-pointer`}>
+                      {pageFromQuery - 1}
+                    </PaginationLink>
+                  </PaginationItem>
+                ) : (
+                  ""
+                )}
+                <PaginationItem>
+                  <PaginationLink isActive={true}>{pageFromQuery}</PaginationLink>
+                </PaginationItem>
+                <PaginationItem>
+                  <PaginationEllipsis />
+                </PaginationItem>
+                {pageFromQuery + 2 <= totalPage ? (
+                  <PaginationItem>
+                    <PaginationLink onClick={() => handleNextPage(2)} className={`cursor-pointer`}>
+                      {pageFromQuery + 2}
+                    </PaginationLink>
+                  </PaginationItem>
+                ) : (
+                  ""
+                )}
+                <PaginationItem>{pageFromQuery >= totalPage ? "" : <PaginationNext className={`cursor-pointer`} onClick={() => handleNextPage(1)} />}</PaginationItem>
+              </PaginationContent>
+            </Pagination>
+          )}
     </>
   );
 };

@@ -84,7 +84,7 @@ const CarouselComponent = () => {
             key={index}
             onClick={() => api && api.scrollTo(index)}
             className={`h-2 w-2 rounded-full transition-all
-              ${current === index ? "bg-accent-foreground" : "bg-muted"}`}
+              ${current === index ? "bg-accent-foreground" : "bg-secondary"}`}
           ></button>
         ))}
       </div>

@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 
 // components
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
-import { LogOut, RectangleEllipsis, User } from "lucide-react";
+import { Eye, LogOut, RectangleEllipsis, User } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import UseGetProfile from "@/hooks/Endpoint/UseGetProfile";
 import { useDispatch, useSelector } from "react-redux";
@@ -23,6 +23,7 @@ const AccountComponent = () => {
 
   const [usernameNew, setUsernameNew] = useState("");
   const [passwordNew, setNewPassword] = useState("");
+  const [showPassword, setShowPassword] = useState(false);
   const [errorFormatPassword, setErrorFormatPassword] = useState("");
   const [openPassword, setOpenPassword] = useState(false);
   const [errorSavePassword, setErrorSavePassword] = useState(false);
@@ -144,7 +145,7 @@ const AccountComponent = () => {
         </div>
         <div className="mt-3 bg-secondary p-2 rounded flex justify-between cursor-pointer">
           <h1>Change Password</h1>
-          <Dialog openPassword={openPassword} onOpenPasswordChange={setOpenPassword}>
+          <Dialog open={openPassword} onOpenChange={setOpenPassword}>
             <DialogTrigger>
               <RectangleEllipsis onClick={() => setOpenPassword(true)} />
             </DialogTrigger>
@@ -152,18 +153,19 @@ const AccountComponent = () => {
               <DialogHeader>
                 <DialogTitle className={`text-lg sm:text-2xl text-center mb-5`}>Change New Password</DialogTitle>
                 <DialogDescription className={`text-destructive italic ${errorFormatPassword ? "block" : "hidden"}`}>*{errorFormatPassword}</DialogDescription>
-                <DialogDescription>
-                  <Input
-                    className={` text-foreground`}
+                <DialogDescription className={`relative`}>
+                  <input
                     id="password"
-                    type="text"
-                    placeholder="Enter new password"
+                    type={showPassword ? "text" : "password"}
                     name="password"
+                    placeholder="********"
                     required
                     autoComplete="new-password"
                     value={passwordNew}
+                    className="text-foreground dark:text-white file:text-foreground placeholder:text-muted-foreground selection:bg-primary selection:text-textprimary dark:bg-input/30 border-input h-9 w-full min-w-0 rounded-md border bg-white px-3 py-1 text-base shadow-xs transition-[color,box-shadow] outline-none file:inline-flex file:h-7 file:border-0 file:bg-transparent file:text-sm file:font-medium disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-50 md:text-sm focus-visible:border-ring focus-visible:ring-ring/50 focus-visible:ring-[3px] aria-invalid:ring-destructive/20 dark:aria-invalid:ring-destructive/40 aria-invalid:border-destructive"
                     onChange={(event) => setNewPassword(event.target.value)}
                   />
+                  <Eye className="absolute right-3 top-1/2 -translate-y-1/2 cursor-pointer" onClick={() => setShowPassword(!showPassword)} />
                 </DialogDescription>
                 <div className={"bg-primary mt-5 text-primary-foreground rounded text-center py-1 text-lg"} onClick={() => handleSave("password")}>
                   Save

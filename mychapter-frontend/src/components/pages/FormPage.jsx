@@ -6,7 +6,6 @@ import { useParams } from "react-router-dom";
 import useGetNote from "@/hooks/Endpoint/useGetNote";
 import LoadingComponent from "../Status/LoadingComponent";
 import ErrorComponent from "../Status/ErrorComponent";
-import { Bounce, ToastContainer, toast } from "react-toastify";
 
 const FormPage = ({ mode }) => {
   const { id } = useParams();
