@@ -7,59 +7,60 @@ import { rateLimit } from "express-rate-limit";
 dotenv.config({ path: "./env/.env" });
 
 const app = express();
+
 app.use(
   cors({
-    origin: ["http://localhost:5173", "https://mychapter-production.up.railway.app", "https://mychapter.netlify.app"],
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    origin: ["http://localhost:5173", "https://mychapter.netlify.app", "https://mychapter-production.up.railway.app"],
     credentials: true,
+    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
+    allowedHeaders: ["Content-Type", "Authorization"],
   })
 );
-app.options(/.*/, cors());
 
-const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, // 15 minutes
-  limit: 100, // Limit each IP to 100 requests per `window` (here, per 15 minutes).
-  standardHeaders: "draft-8", // draft-6: `RateLimit-*` headers; draft-7 & draft-8: combined `RateLimit` header
-  legacyHeaders: false, // Disable the `X-RateLimit-*` headers.
-  ipv6Subnet: 56, // Set to 60 or 64 to be less aggressive, or 52 or 48 to be more aggressive
-  // store: ... , // Redis, Memcached, etc. See below.
-});
-
-// utils / middleware
-import { createAccessToken, createRefreshToken } from "./utils/authToken.js";
-import { validateUserMiddleware } from "./middleware/validateUserMiddleware.js";
-import { findUser, addUser, loadUser } from "./controllers/usersControllers.js";
-import { verifyUser } from "./middleware/authMiddleware.js";
-import { changePasswordById } from "./utils/changePasswordById.js";
-
-// routers
-import userRoute from "./routers/userRoutes.js";
-import noteRoute from "./routers/noteRoutes.js";
-import validatePassword from "./helper/validatePassword.js";
+app.options("*", cors());
 
 app.use(express.json());
 app.use(cookieParser());
+
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  limit: 100,
+  standardHeaders: "draft-8",
+  legacyHeaders: false,
+});
+
 app.use((req, res, next) => {
   if (req.method === "OPTIONS") return next();
   limiter(req, res, next);
 });
 
+import userRoute from "./routers/userRoutes.js";
+import noteRoute from "./routers/noteRoutes.js";
+import { verifyUser } from "./middleware/authMiddleware.js";
+import { findUser, addUser, loadUser } from "./controllers/usersControllers.js";
+import { createAccessToken, createRefreshToken } from "./utils/authToken.js";
+import { validateUserMiddleware } from "./middleware/validateUserMiddleware.js";
+import validatePassword from "./helper/validatePassword.js";
+import { changePasswordById } from "./utils/changePasswordById.js";
+
 app.use("/api/user", userRoute);
 app.use("/api/note", noteRoute);
 
-const port = process.env.PORT || 3000;
-
 app.get("/", (req, res) => {
-  res.json({
-    status: "ok",
-    message: "server is running",
-  });
+  res.json({ status: "ok", message: "server is running" });
 });
 
-// auth
-app.get("/auth/validate", verifyUser, async (req, res) => {
-  res.json({ accessToken: req.accessToken });
-});
+app.get(
+  "/auth/validate",
+  (req, res, next) => {
+    if (req.method === "OPTIONS") return res.sendStatus(200);
+    next();
+  },
+  verifyUser,
+  (req, res) => {
+    res.json({ accessToken: req.accessToken });
+  }
+);
 
 app.post("/auth/signin", async (req, res) => {
   const user = req.body;
@@ -79,15 +80,13 @@ app.post("/auth/signin", async (req, res) => {
     secure: process.env.NODE_ENV === "production",
     sameSite: "none",
     maxAge: 1000 * 60 * 60 * 168,
-    path: "/",
   });
 
   res.status(200).json({ username: rest.username, accessToken });
 });
 
 app.post("/auth/signup", validateUserMiddleware, async (req, res) => {
-  const user = req.body;
-  const userNew = await addUser(user);
+  const userNew = await addUser(req.body);
 
   if (userNew.code < 200 || userNew.code >= 300) {
     return res.status(401).json(userNew.message);
@@ -103,8 +102,8 @@ app.post("/auth/signup", validateUserMiddleware, async (req, res) => {
     secure: process.env.NODE_ENV === "production",
     sameSite: "none",
     maxAge: 1000 * 60 * 60 * 168,
-    path: "/",
   });
+
   res.status(201).json({ username: rest.username, accessToken });
 });
 
@@ -113,36 +112,25 @@ app.get("/auth/signout", (req, res) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
     sameSite: "none",
-    maxAge: 1000 * 60 * 60 * 168,
-    path: "/",
   });
-  res.status(200).json({ message: "Signed out" });
+  res.json({ message: "Signed out" });
 });
 
 app.post("/auth/change-password", verifyUser, async (req, res) => {
-  const idUserCookie = req.user._id;
   const { idUser, newPassword } = req.body;
   const user = await loadUser(req.user._id);
-  const { password, ...rest } = user.data;
 
-  if (idUser !== idUserCookie) return res.status(401).json({ error: "You don't have access" });
+  if (idUser !== req.user._id) return res.status(401).json({ error: "No access" });
 
-  if (password === newPassword) return res.status(400).json({ error: "Passwords cannot be the same" });
+  if (user.data.password === newPassword) return res.status(400).json({ error: "Same password" });
 
   const validate = validatePassword(newPassword);
-
   if (validate) return res.status(400).json({ error: validate });
 
   const result = await changePasswordById(idUser, newPassword);
+  if (result.code >= 300) return res.status(result.code).json(result.message);
 
-  if (result.code < 200 || result.code >= 300) {
-    return res.status(result.code).json(result.message);
-  }
-
-  if (user.code < 200 || user.code >= 300) {
-    return res.status(user.code).json(user.message);
-  }
-
+  const { password, ...rest } = user.data;
   const accessToken = createAccessToken(rest);
   const refreshToken = createRefreshToken(rest);
 
@@ -151,12 +139,10 @@ app.post("/auth/change-password", verifyUser, async (req, res) => {
     secure: process.env.NODE_ENV === "production",
     sameSite: "none",
     maxAge: 1000 * 60 * 60 * 168,
-    path: "/",
   });
 
-  res.status(result.code).json({ accessToken, result });
+  res.json({ accessToken });
 });
 
-app.listen(port, "0.0.0.0", function () {
-  console.info(`listen to port ${port}`);
-});
+const port = process.env.PORT || 3000;
+app.listen(port, "0.0.0.0", () => console.info(`🚀 listen on ${port}`));
